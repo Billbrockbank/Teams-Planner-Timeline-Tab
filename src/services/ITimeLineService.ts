@@ -22,7 +22,7 @@ export interface ITimeLineService {
 
   getTaskUsers(): User[];
 
-  getTasksForBucket(bucketId: string, showActiveTasks: boolean): PlannerTask[];
+  getTasksForBucket(): PlannerTask[];
 
   saveFilterSettings(bucketId: string, showActiveTasks: boolean): void;
 

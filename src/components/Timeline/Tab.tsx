@@ -23,7 +23,7 @@ import {
   PlannerTask,
   PlannerBucket
 } from '@microsoft/microsoft-graph-types'
-import { ITimeLineData } from "../../models"
+import { IFilterSettings, ITimeLineData } from "../../models"
 import { 
   TimeLineService,  
   ITimeLineService
@@ -68,6 +68,10 @@ export default function Tab() {
     if (option) {
       setBucketId(option.key.toString());
 
+      if (timelineService) {
+        timelineService.saveFilterSettings(option.key.toString(), showActiveTasks);
+      }
+
       if (option.key === 'All') {
         setBucketName("For all buckets");
       } else {
@@ -108,9 +112,7 @@ export default function Tab() {
           
           if (timelineService) {
             if (renderSettings.buckets.length > 0) {
-              setTasks(timelineService.getTasksForBucket(bucketId, !showActiveTasks));
-
-              timelineService.saveFilterSettings(bucketId, !showActiveTasks);
+              setTasks(timelineService.getTasksForBucket());
 
               renderSettings.lastRenderedDate = new Date();
             }
@@ -118,9 +120,13 @@ export default function Tab() {
             (async () => {
               const timelineService: ITimeLineService = new TimeLineService(graphClient!, groupId);
 
+              const filterSettings: IFilterSettings = timelineService.getFilterSettings();
+              setBucketId(filterSettings.bucketId);
+              setShowActiveTasks(filterSettings.showActiveTasks);
+
               setTimeLineService(timelineService)
 
-              settimeLineData(await timelineService.getTimelineData(true));
+              settimeLineData(await timelineService.getTimelineData(false));
               
               setTasks(timelineService.getTasks("dueDate"));
               
@@ -162,7 +168,13 @@ export default function Tab() {
                       checked={showActiveTasks} 
                       boxSide="end" 
                       styles={activeTaskscheckbox} 
-                      onChange={(ev, checked) => { setShowActiveTasks(!showActiveTasks); }} />   
+                      onChange={(ev, checked) => { 
+                        setShowActiveTasks(!showActiveTasks);
+                        
+                        if (timelineService) {
+                          timelineService.saveFilterSettings(bucketId, !showActiveTasks);
+                        }
+                      }} />   
             <Dropdown placeholder="Select Plan Bucket"          
                       selectedKey={bucketId ? bucketId : undefined}
                       onChange={onDropDownChange}

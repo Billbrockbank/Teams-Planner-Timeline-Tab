@@ -16,8 +16,8 @@ export class TimeLineService implements ITimeLineService {
   private _buckets: PlannerBucket[] = [];
   private _taskUsers: User[] = [];
   private _tasks: PlannerTask[] = [];
-  private _bucketId: string = "";
-  private _showActiveTasks: boolean = true;
+  private _bucketId: string = "All";
+  private _showActiveTasks: boolean = false;
 
   private _timeLine: ITimeLineData = {
     groupId: "",
@@ -181,20 +181,20 @@ export class TimeLineService implements ITimeLineService {
     return tasks;
   }
 
-  public getTasksForBucket(bucketId: string, showActiveTasks: boolean): PlannerTask[] {
+  public getTasksForBucket(): PlannerTask[] {
     let tasks: PlannerTask[] = [];
 
-    if (showActiveTasks) {
-      tasks = this.getActiveTasks("dueDate");      
-    } else {
+    if (this._showActiveTasks) {
       tasks = this.getTasks("dueDate");
+    } else {
+      tasks = this.getActiveTasks("dueDate");      
     }
 
-    if (bucketId !== "All" && bucketId !== "") {    
+    if (this._bucketId !== "All" && this._bucketId !== "") {    
       const filteredTasks: PlannerTask[] = [];
 
       tasks.forEach((task) => {
-        if (task.bucketId && task.bucketId.startsWith(bucketId)) {
+        if (task.bucketId && task.bucketId.startsWith(this._bucketId)) {
           filteredTasks.push(task);          
         }
       });
@@ -241,11 +241,14 @@ export class TimeLineService implements ITimeLineService {
     sessionStorage.setItem("_pmsTimelineData", JSON.stringify(new Date()));
   }
 
-  public saveFilterSettings(bucketId: string,showActiveTasks: boolean) {
+  public saveFilterSettings(bucketId: string, showActiveTasks: boolean) {
     const TimelineFilterData = {
       bucketId,
       showActiveTasks
     };
+
+    this._bucketId = bucketId;
+    this._showActiveTasks = showActiveTasks;
 
     sessionStorage.setItem("_TimeLineFilterData", JSON.stringify(TimelineFilterData));
     sessionStorage.setItem("_pmsFilterTime", JSON.stringify(new Date()));  

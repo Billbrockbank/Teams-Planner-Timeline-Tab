@@ -16,3 +16,4 @@ appPackage/build
 
 # Dev tool directories
 /devTools/
+.fake
