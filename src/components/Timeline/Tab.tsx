@@ -26,7 +26,10 @@ import {
 import { IFilterSettings, ITimeLineData } from "../../models"
 import { 
   TimeLineService,  
-  ITimeLineService
+  ITimeLineService,
+  IFilterService,
+  FilterService
+  
 } from "../../services";
 import { TimelineItem } from '..';
 import {
@@ -60,7 +63,8 @@ export default function Tab() {
   const [showActiveTasks, setShowActiveTasks] = useState(false);
   const [bucketName, setBucketName] = useState<string>("For all buckets");
   const [retrievingTasks, setRetrievingTasks] = useState(true);
-  const [bucketOptions, setBucketOptions ] = useState<IDropdownOption[]>([]);  
+  const [bucketOptions, setBucketOptions ] = useState<IDropdownOption[]>([]);
+  const filterService: IFilterService = new FilterService("All", true);
   
   const { teamsUserCredential, renderSettings } = useContext(TeamsFxContext);
 
@@ -69,7 +73,7 @@ export default function Tab() {
       setBucketId(option.key.toString());
 
       if (timelineService) {
-        timelineService.saveFilterSettings(option.key.toString(), showActiveTasks);
+        filterService.saveFilterSettings(option.key.toString(), showActiveTasks);
       }
 
       if (option.key === 'All') {
@@ -120,7 +124,7 @@ export default function Tab() {
             (async () => {
               const timelineService: ITimeLineService = new TimeLineService(graphClient!, groupId);
 
-              const filterSettings: IFilterSettings = timelineService.getFilterSettings();
+              const filterSettings: IFilterSettings = filterService.getFilterSettings();
               setBucketId(filterSettings.bucketId);
               setShowActiveTasks(filterSettings.showActiveTasks);
 
@@ -172,7 +176,7 @@ export default function Tab() {
                         setShowActiveTasks(!showActiveTasks);
                         
                         if (timelineService) {
-                          timelineService.saveFilterSettings(bucketId, !showActiveTasks);
+                          filterService.saveFilterSettings(bucketId, !showActiveTasks);
                         }
                       }} />   
             <Dropdown placeholder="Select Plan Bucket"          

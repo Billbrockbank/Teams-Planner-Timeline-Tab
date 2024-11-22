@@ -4,8 +4,3 @@ export interface ITimeLineData {
   planId: string;
   error?: string;
 }
-
-export interface IFilterSettings {
-  bucketId: string;
-  showActiveTasks: boolean;
-}

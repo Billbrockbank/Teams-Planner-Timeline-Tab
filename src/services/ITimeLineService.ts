@@ -22,9 +22,5 @@ export interface ITimeLineService {
 
   getTaskUsers(): User[];
 
-  getTasksForBucket(): PlannerTask[];
-
-  saveFilterSettings(bucketId: string, showActiveTasks: boolean): void;
-
-  getFilterSettings(): IFilterSettings;
+  getTasksForBucket(): PlannerTask[];  
 }
