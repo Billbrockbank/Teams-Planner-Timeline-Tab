@@ -16,8 +16,6 @@ export class TimeLineService implements ITimeLineService {
   private _buckets: PlannerBucket[] = [];
   private _taskUsers: User[] = [];
   private _tasks: PlannerTask[] = [];
-  private _bucketId: string = "All";
-  private _showActiveTasks: boolean = false;
 
   private _timeLine: ITimeLineData = {
     groupId: "",
@@ -32,11 +30,10 @@ export class TimeLineService implements ITimeLineService {
   public async getTimelineData(refersh: boolean): Promise<ITimeLineData> {
     let loadedData: boolean = !refersh;
 
-    if (!refersh)
-      loadedData = await this._getTimelineData();
+    if (!refersh) loadedData = await this._getTimelineData();
 
     if (!loadedData) {
-      try {      
+      try {
         const allUsers = await this._graphClient
           .api("/users")
           .select("id,displayName,mail")
@@ -80,7 +77,12 @@ export class TimeLineService implements ITimeLineService {
         this._timeLine.error = error?.message;
       }
 
-      this._saveTimelineData(this._timeLine, this._buckets, this._taskUsers, this._tasks);
+      this._saveTimelineData(
+        this._timeLine,
+        this._buckets,
+        this._taskUsers,
+        this._tasks
+      );
     }
 
     return this._timeLine;
@@ -181,21 +183,21 @@ export class TimeLineService implements ITimeLineService {
     return tasks;
   }
 
-  public getTasksForBucket(): PlannerTask[] {
+  public getTasksForBucket(fileterSettings: IFilterSettings): PlannerTask[] {
     let tasks: PlannerTask[] = [];
 
-    if (this._showActiveTasks) {
+    if (fileterSettings.showActiveTasks) {
       tasks = this.getTasks("dueDate");
     } else {
-      tasks = this.getActiveTasks("dueDate");      
+      tasks = this.getActiveTasks("dueDate");
     }
 
-    if (this._bucketId !== "All" && this._bucketId !== "") {    
+    if (fileterSettings.bucketId !== "All" && fileterSettings.bucketId !== "") {
       const filteredTasks: PlannerTask[] = [];
 
       tasks.forEach((task) => {
-        if (task.bucketId && task.bucketId.startsWith(this._bucketId)) {
-          filteredTasks.push(task);          
+        if (task.bucketId && task.bucketId.startsWith(fileterSettings.bucketId)) {
+          filteredTasks.push(task);
         }
       });
 
@@ -207,23 +209,26 @@ export class TimeLineService implements ITimeLineService {
 
   private async _getTimelineData(): Promise<boolean> {
     const timelineData = sessionStorage.getItem("_TimelineData");
-    
+
     if (timelineData) {
       const buckets = sessionStorage.getItem("_buckets");
       const Users = sessionStorage.getItem("_Users");
-      const tasks = sessionStorage.getItem("_tasks");    
+      const tasks = sessionStorage.getItem("_tasks");
       const timelineDataString = sessionStorage.getItem("_pmsTimelineData");
 
-      if (timelineDataString) {        
-        const dataTime: Date = new Date(timelineDataString.replace(/"/g, ''));
+      if (timelineDataString) {
+        const dataTime: Date = new Date(timelineDataString.replace(/"/g, ""));
         const nowTime: Date = new Date();
-        const deplay: number = (nowTime.getTime() - dataTime.getTime()) / (1000 * 60);
+        const deplay: number =
+          (nowTime.getTime() - dataTime.getTime()) / (1000 * 60);
 
         if (deplay < 30) {
           this._timeLine = JSON.parse(timelineData) as ITimeLineData;
-          this._buckets = buckets ? JSON.parse(buckets) as PlannerBucket[] : [];
-          this._taskUsers = Users ? JSON.parse(Users) as User[] : [];
-          this._tasks = tasks ? JSON.parse(tasks) as PlannerTask[] : [];
+          this._buckets = buckets
+            ? (JSON.parse(buckets) as PlannerBucket[])
+            : [];
+          this._taskUsers = Users ? (JSON.parse(Users) as User[]) : [];
+          this._tasks = tasks ? (JSON.parse(tasks) as PlannerTask[]) : [];
 
           return true;
         }
@@ -233,7 +238,12 @@ export class TimeLineService implements ITimeLineService {
     return false;
   }
 
-  private async _saveTimelineData(timelineData: ITimeLineData, buckets: PlannerBucket[], Users: User[], tasks: PlannerTask[]) {
+  private async _saveTimelineData(
+    timelineData: ITimeLineData,
+    buckets: PlannerBucket[],
+    Users: User[],
+    tasks: PlannerTask[]
+  ) {
     sessionStorage.setItem("_TimelineData", JSON.stringify(timelineData));
     sessionStorage.setItem("_buckets", JSON.stringify(buckets));
     sessionStorage.setItem("_Users", JSON.stringify(Users));

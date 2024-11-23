@@ -59,12 +59,14 @@ export default function Tab() {
   const [groupId, setGroupId] = useState('');
   const [timeLineData, settimeLineData] = useState<ITimeLineData | undefined>(undefined);
   const [tasks, setTasks] = useState<PlannerTask[]>([]);
-  const [bucketId, setBucketId] = useState<string>("All");
-  const [showActiveTasks, setShowActiveTasks] = useState(false);
   const [bucketName, setBucketName] = useState<string>("For all buckets");
   const [retrievingTasks, setRetrievingTasks] = useState(true);
   const [bucketOptions, setBucketOptions ] = useState<IDropdownOption[]>([]);
-  const filterService: IFilterService = new FilterService("All", true);
+  const filterService: IFilterService = new FilterService( {bucketId: "All", showActiveTasks: true});
+    
+  const [filterSettings, setFilterSettings] = useState<IFilterSettings>({bucketId: "All", showActiveTasks: true});
+  const [bucketId, setBucketId] = useState<string>("");
+  const [showActiveTasks, setShowActiveTasks] = useState(false);
   
   const { teamsUserCredential, renderSettings } = useContext(TeamsFxContext);
 
@@ -72,9 +74,14 @@ export default function Tab() {
     if (option) {
       setBucketId(option.key.toString());
 
-      if (timelineService) {
-        filterService.saveFilterSettings(option.key.toString(), showActiveTasks);
+      if (filterService) {
+        filterService.saveFilterSettings({
+          bucketId: option.key.toString(),
+          showActiveTasks: showActiveTasks
+        });
       }
+
+      setFilterSettings({bucketId: option.key.toString(), showActiveTasks: showActiveTasks});
 
       if (option.key === 'All') {
         setBucketName("For all buckets");
@@ -83,6 +90,15 @@ export default function Tab() {
       }
     }
   };
+
+  useEffect(() => {
+    if (bucketId === 'All') {
+      setBucketName("For all buckets");
+    } else {
+      const name: string = renderSettings?.buckets.find((bucket) => bucket.id === bucketId)?.name || "Unknown Bucket";
+      setBucketName("For bucket: " + name);
+    }
+  }, [filterSettings]);
 
   const { loading, error, data, reload } = useGraphWithCredential(
     async (graph, teamsUserCredential, scope) => {
@@ -102,6 +118,13 @@ export default function Tab() {
         if (context?.team?.groupId)
           setGroupId(context?.team?.groupId);        
       })();
+
+      const settings = filterService.getFilterSettings();
+
+      setBucketId(settings.bucketId);
+      setShowActiveTasks(settings.showActiveTasks);
+
+      setFilterSettings({bucketId: settings.bucketId, showActiveTasks: settings.showActiveTasks});
     } 
   }, [context]);
 
@@ -116,7 +139,7 @@ export default function Tab() {
           
           if (timelineService) {
             if (renderSettings.buckets.length > 0) {
-              setTasks(timelineService.getTasksForBucket());
+              setTasks(timelineService.getTasksForBucket(filterSettings));
 
               renderSettings.lastRenderedDate = new Date();
             }
@@ -125,9 +148,10 @@ export default function Tab() {
               const timelineService: ITimeLineService = new TimeLineService(graphClient!, groupId);
 
               const filterSettings: IFilterSettings = filterService.getFilterSettings();
+              
               setBucketId(filterSettings.bucketId);
               setShowActiveTasks(filterSettings.showActiveTasks);
-
+              
               setTimeLineService(timelineService)
 
               settimeLineData(await timelineService.getTimelineData(false));
@@ -138,12 +162,13 @@ export default function Tab() {
               renderSettings.users = timelineService.getTaskUsers();
 
               setRetrievingTasks(false);
+              setFilterSettings({bucketId: filterSettings.bucketId, showActiveTasks: filterSettings.showActiveTasks});
             })();
           }
        }      
       }
     }
-  }, [graphClient, showActiveTasks, bucketId]);
+  }, [graphClient, filterSettings]);
 
   useEffect(() => {
     const opt= [
@@ -170,17 +195,18 @@ export default function Tab() {
           <Stack enableScopedSelectors horizontal horizontalAlign="start" styles={stackStyles}>
             <Checkbox label="All Tasks" 
                       checked={showActiveTasks} 
-                      boxSide="end" 
+                      boxSide="end"
                       styles={activeTaskscheckbox} 
                       onChange={(ev, checked) => { 
-                        setShowActiveTasks(!showActiveTasks);
-                        
-                        if (timelineService) {
-                          filterService.saveFilterSettings(bucketId, !showActiveTasks);
+                        if (filterService) {
+                          setShowActiveTasks(!showActiveTasks);
+                          const fliters: IFilterSettings = { bucketId: bucketId, showActiveTasks: !showActiveTasks };
+                          filterService.saveFilterSettings(fliters);                          
+                          setFilterSettings(fliters);
                         }
                       }} />   
             <Dropdown placeholder="Select Plan Bucket"          
-                      selectedKey={bucketId ? bucketId : undefined}
+                      selectedKey={bucketId}
                       onChange={onDropDownChange}
                       options={bucketOptions}
                       styles={dropdownStyles} />

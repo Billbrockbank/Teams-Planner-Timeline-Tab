@@ -3,7 +3,7 @@ import {
   } from "../models";
   
 export interface IFilterService {
-  saveFilterSettings(bucketId: string, showActiveTasks: boolean): void;
+  saveFilterSettings(filterSettings: IFilterSettings): void;
 
   getFilterSettings(): IFilterSettings;
 }
