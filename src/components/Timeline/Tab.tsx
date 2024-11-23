@@ -62,11 +62,12 @@ export default function Tab() {
   const [bucketName, setBucketName] = useState<string>("For all buckets");
   const [retrievingTasks, setRetrievingTasks] = useState(true);
   const [bucketOptions, setBucketOptions ] = useState<IDropdownOption[]>([]);
-  const filterService: IFilterService = new FilterService( {bucketId: "All", showActiveTasks: true});
+  const filterService: IFilterService = new FilterService( {bucketId: "All", showActiveTasks: true, refreshData: false});
     
-  const [filterSettings, setFilterSettings] = useState<IFilterSettings>({bucketId: "All", showActiveTasks: true});
+  const [filterSettings, setFilterSettings] = useState<IFilterSettings>({bucketId: "All", showActiveTasks: true, refreshData: false});
   const [bucketId, setBucketId] = useState<string>("");
   const [showActiveTasks, setShowActiveTasks] = useState(false);
+  const [refreshData, setRefreshData] = useState(true);
   
   const { teamsUserCredential, renderSettings } = useContext(TeamsFxContext);
 
@@ -77,11 +78,12 @@ export default function Tab() {
       if (filterService) {
         filterService.saveFilterSettings({
           bucketId: option.key.toString(),
-          showActiveTasks: showActiveTasks
+          showActiveTasks: showActiveTasks,
+          refreshData: refreshData
         });
       }
 
-      setFilterSettings({bucketId: option.key.toString(), showActiveTasks: showActiveTasks});
+      setFilterSettings({bucketId: option.key.toString(), showActiveTasks: showActiveTasks, refreshData: refreshData});
 
       if (option.key === 'All') {
         setBucketName("For all buckets");
@@ -124,51 +126,67 @@ export default function Tab() {
       setBucketId(settings.bucketId);
       setShowActiveTasks(settings.showActiveTasks);
 
-      setFilterSettings({bucketId: settings.bucketId, showActiveTasks: settings.showActiveTasks});
+      setFilterSettings({bucketId: settings.bucketId, showActiveTasks: settings.showActiveTasks, refreshData: settings.refreshData});
     } 
   }, [context]);
 
   useEffect(() => {
-    if (graphClient) {
-      if (groupId) {
-        if (renderSettings) {          
-          renderSettings.renderYear =false;
-          renderSettings.currentYear = 0;
-          renderSettings.renderMonth = true;
-          renderSettings.currentMonth = -1;
-          
-          if (timelineService) {
-            if (renderSettings.buckets.length > 0) {
-              setTasks(timelineService.getTasksForBucket(filterSettings));
-
-              renderSettings.lastRenderedDate = new Date();
-            }
-          } else { 
-            (async () => {
-              const timelineService: ITimeLineService = new TimeLineService(graphClient!, groupId);
-
-              const filterSettings: IFilterSettings = filterService.getFilterSettings();
+      const fetchData = async () => {
+        if (graphClient) {
+          if (groupId) {
+            if (renderSettings) {          
+              renderSettings.renderYear =false;
+              renderSettings.currentYear = 0;
+              renderSettings.renderMonth = true;
+              renderSettings.currentMonth = -1;
               
-              setBucketId(filterSettings.bucketId);
-              setShowActiveTasks(filterSettings.showActiveTasks);
-              
-              setTimeLineService(timelineService)
-
-              settimeLineData(await timelineService.getTimelineData(false));
-              
-              setTasks(timelineService.getTasks("dueDate"));
-              
-              renderSettings.buckets = timelineService.getBuckets();
-              renderSettings.users = timelineService.getTaskUsers();
-
-              setRetrievingTasks(false);
-              setFilterSettings({bucketId: filterSettings.bucketId, showActiveTasks: filterSettings.showActiveTasks});
-            })();
+              if (timelineService) {
+                if (renderSettings.buckets.length > 0) {
+                  if (refreshData) {
+                    settimeLineData(await timelineService.getTimelineData(true));
+                  
+                    setTasks(timelineService.getTasks("dueDate"));
+                    
+                    renderSettings.buckets = timelineService.getBuckets();
+                    renderSettings.users = timelineService.getTaskUsers();
+                    
+                    setRetrievingTasks(false);
+                    setFilterSettings({bucketId: filterSettings.bucketId, showActiveTasks: filterSettings.showActiveTasks, refreshData: false});
+                    setRefreshData(false);
+                  } else {
+                    setTasks(timelineService.getTasksForBucket(filterSettings));
+                  }
+  
+                  renderSettings.lastRenderedDate = new Date();
+                }
+              } else { 
+                const timelineService: ITimeLineService = new TimeLineService(graphClient!, groupId);
+  
+                const filterSettings: IFilterSettings = filterService.getFilterSettings();
+                
+                setBucketId(filterSettings.bucketId);
+                setShowActiveTasks(filterSettings.showActiveTasks);
+                
+                setTimeLineService(timelineService)
+  
+                settimeLineData(await timelineService.getTimelineData(filterSettings.refreshData));
+                
+                setTasks(timelineService.getTasks("dueDate"));
+                
+                renderSettings.buckets = timelineService.getBuckets();
+                renderSettings.users = timelineService.getTaskUsers();
+                
+                setRetrievingTasks(false);
+                setFilterSettings({bucketId: filterSettings.bucketId, showActiveTasks: filterSettings.showActiveTasks, refreshData: false});
+                setRefreshData(false);
+              }
+           }      
           }
-       }      
-      }
-    }
-  }, [graphClient, filterSettings]);
+        }
+      };
+  
+      fetchData();
+    }, [graphClient, filterSettings]);
 
   useEffect(() => {
     const opt= [
@@ -200,7 +218,7 @@ export default function Tab() {
                       onChange={(ev, checked) => { 
                         if (filterService) {
                           setShowActiveTasks(!showActiveTasks);
-                          const fliters: IFilterSettings = { bucketId: bucketId, showActiveTasks: !showActiveTasks };
+                          const fliters: IFilterSettings = { bucketId: bucketId, showActiveTasks: !showActiveTasks, refreshData: refreshData };
                           filterService.saveFilterSettings(fliters);                          
                           setFilterSettings(fliters);
                         }

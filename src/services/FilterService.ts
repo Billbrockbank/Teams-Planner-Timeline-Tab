@@ -28,9 +28,10 @@ export class FilterService implements IFilterService {
         const deplay: number = (nowTime.getTime() - dataTime.getTime()) / (1000 * 60);
 
         if (deplay < 30) {
-          const filterSet: IFilterSettings = { 
-            bucketId: filter.bucketId, 
-            showActiveTasks: (filter.showActiveTasks === true)
+          const filterSet: IFilterSettings = {
+            bucketId: filter.bucketId,
+            showActiveTasks: filter.showActiveTasks === true,
+            refreshData: filter.refreshData === true,
           };
 
           this._filterSettings = filterSet;          
