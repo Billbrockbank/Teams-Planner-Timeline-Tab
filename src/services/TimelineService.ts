@@ -12,6 +12,7 @@ import {
 } from '@microsoft/microsoft-graph-types'
 
 export class TimeLineService implements ITimeLineService {
+  // Private members
   private _graphClient: Client;
   private _buckets: PlannerBucket[] = [];
   private _taskUsers: User[] = [];
@@ -22,17 +23,17 @@ export class TimeLineService implements ITimeLineService {
     planId: "",
   };
 
+  // Constructor
   constructor(graphClient: Client, groupId: string) {
     this._graphClient = graphClient;
     this._timeLine.groupId = groupId;
   }
 
   public async getTimelineData(refersh: boolean): Promise<ITimeLineData> {
-    let loadedData: boolean = !refersh;
+    const check = !refersh; 
+    if (check) refersh = await this._getTimelineData();
 
-    if (!refersh) loadedData = await this._getTimelineData();
-
-    if (!loadedData) {
+    if (refersh) {
       try {
         const allUsers = await this._graphClient
           .api("/users")
@@ -129,18 +130,22 @@ export class TimeLineService implements ITimeLineService {
     return tasks;
   }
 
+  // Get timeline data
   public getTimeLine(): ITimeLineData {
     return this._timeLine;
   }
 
+  // Get Planner buckets
   public getBuckets(): PlannerBucket[] {
     return this._buckets;
   }
 
+  // Get tenant users
   public getTaskUsers(): User[] {
     return this._taskUsers;
   }
 
+  // Get Planner tasks
   public getTasks(sortBy: string): PlannerTask[] {
     if (sortBy.toLowerCase() === "duedate") {
       return this._sortTasksByDueDate(this._tasks);
@@ -151,6 +156,7 @@ export class TimeLineService implements ITimeLineService {
     }
   }
 
+  // Get active tasks
   public getActiveTasks(sortBy: string): PlannerTask[] {
     const orderedTasks = this.getTasks(sortBy);
 
@@ -159,6 +165,7 @@ export class TimeLineService implements ITimeLineService {
     });
   }
 
+  // Get tasks sort by start date
   private _sortTasksByStartDate(tasks: PlannerTask[]): PlannerTask[] {
     tasks = tasks.sort((a, b) => {
       if (a.startDateTime && b.startDateTime) {
@@ -171,6 +178,7 @@ export class TimeLineService implements ITimeLineService {
     return tasks;
   }
 
+  // get tasks sort by due date
   private _sortTasksByDueDate(tasks: PlannerTask[]): PlannerTask[] {
     tasks = tasks.sort((a, b) => {
       if (a.dueDateTime && b.dueDateTime) {
@@ -207,6 +215,7 @@ export class TimeLineService implements ITimeLineService {
     return tasks;
   }
 
+  // Get timeline data from session storage
   private async _getTimelineData(): Promise<boolean> {
     const timelineData = sessionStorage.getItem("_TimelineData");
 
@@ -230,14 +239,15 @@ export class TimeLineService implements ITimeLineService {
           this._taskUsers = Users ? (JSON.parse(Users) as User[]) : [];
           this._tasks = tasks ? (JSON.parse(tasks) as PlannerTask[]) : [];
 
-          return true;
+          return false;
         }
       }
     }
 
-    return false;
+    return true;
   }
 
+  // Save timeline data to session storage
   private async _saveTimelineData(
     timelineData: ITimeLineData,
     buckets: PlannerBucket[],

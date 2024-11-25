@@ -79,6 +79,7 @@ export const errorStyle = mergeStyles({
 });
 
 export const spinnerStyle = mergeStyles({
+  paddingTop: "2rem",
   color: "#5b5fc7",
   Label: { 
     color: "#5b5fc7"
@@ -194,6 +195,15 @@ export const calloutStyles = mergeStyleSets({
 });
 
 export const activeTaskscheckbox: ICheckboxStyles = {
+  root: {
+    paddingTop: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    background: DefaultPalette.neutralLighterAlt,
+  },
+};
+
+export const refreshTaskscheckbox: ICheckboxStyles = {
   root: {
     paddingTop: 5,
     paddingLeft: 10,

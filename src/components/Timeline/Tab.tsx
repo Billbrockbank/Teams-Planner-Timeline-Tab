@@ -40,6 +40,7 @@ import {
   timelineHeaderStyle,
   timelineYearStyle,
   activeTaskscheckbox, 
+  refreshTaskscheckbox,
   dropdownStyles, 
   stackStyles,
 } from '../../Styles';
@@ -57,146 +58,192 @@ export default function Tab() {
   const [graphClient, setGraphClient] = useState<Client | undefined>(undefined);
   const [timelineService, setTimeLineService] = useState<ITimeLineService | undefined>(undefined);
   const [groupId, setGroupId] = useState('');
-  const [timeLineData, settimeLineData] = useState<ITimeLineData | undefined>(undefined);
+  const [timeLineData, setTimeLineData] = useState<ITimeLineData | undefined>(undefined);
   const [tasks, setTasks] = useState<PlannerTask[]>([]);
   const [bucketName, setBucketName] = useState<string>("For all buckets");
   const [retrievingTasks, setRetrievingTasks] = useState(true);
   const [bucketOptions, setBucketOptions ] = useState<IDropdownOption[]>([]);
-  const filterService: IFilterService = new FilterService( {bucketId: "All", showActiveTasks: true, refreshData: false});
+  const filterService: IFilterService = new FilterService( {bucketId: "All", showActiveTasks: true});
     
-  const [filterSettings, setFilterSettings] = useState<IFilterSettings>({bucketId: "All", showActiveTasks: true, refreshData: false});
+  const [filterSettings, setFilterSettings] = useState<IFilterSettings>({bucketId: "All", showActiveTasks: false});
   const [bucketId, setBucketId] = useState<string>("");
   const [showActiveTasks, setShowActiveTasks] = useState(false);
-  const [refreshData, setRefreshData] = useState(true);
+  const [refreshData, setRefreshData] = useState(false);
   
   const { teamsUserCredential, renderSettings } = useContext(TeamsFxContext);
 
   const onDropDownChange = (event: React.FormEvent<HTMLDivElement>, option?: IDropdownOption, index?: number): void => {
+    // Set the bucket id
     if (option) {
+      // Set the bucket id
       setBucketId(option.key.toString());
 
+      // Set the retrieving tasks flag
       if (filterService) {
         filterService.saveFilterSettings({
           bucketId: option.key.toString(),
-          showActiveTasks: showActiveTasks,
-          refreshData: refreshData
+          showActiveTasks: showActiveTasks
         });
       }
 
-      setFilterSettings({bucketId: option.key.toString(), showActiveTasks: showActiveTasks, refreshData: refreshData});
+      // Set the filter settings
+      setFilterSettings({bucketId: option.key.toString(), showActiveTasks: showActiveTasks});
 
       if (option.key === 'All') {
+        // Set the bucket name
         setBucketName("For all buckets");
       } else {
+        // Set the bucket name
         setBucketName("For bucket: " + option.text);
       }
     }
   };
 
+  // Set the bucket name when the bucket id changes
   useEffect(() => {
     if (bucketId === 'All') {
+      // Set the bucket name
       setBucketName("For all buckets");
     } else {
       const name: string = renderSettings?.buckets.find((bucket) => bucket.id === bucketId)?.name || "Unknown Bucket";
+      // Set the bucket name
       setBucketName("For bucket: " + name);
     }
   }, [filterSettings]);
 
+  // Get the graph client
   const { loading, error, data, reload } = useGraphWithCredential(
     async (graph, teamsUserCredential, scope) => {
       // Call graph api directly to get user profile information      
       const profile = await graph.api("/me").get();
 
+      // Set the graph client
       setGraphClient(graph);
 
+      // Return the profile
       return profile;
-    },
-    { scope: scopes }
-  );
+    }, { scope: scopes } );
 
+  // Set the graph client
   useEffect(() => {
+    // Check if the data is available
     if (context) {
       (async () => {        
         if (context?.team?.groupId)
+          // Set the group id
           setGroupId(context?.team?.groupId);        
       })();
 
       const settings = filterService.getFilterSettings();
 
+      // Set the filter settings
       setBucketId(settings.bucketId);
       setShowActiveTasks(settings.showActiveTasks);
 
-      setFilterSettings({bucketId: settings.bucketId, showActiveTasks: settings.showActiveTasks, refreshData: settings.refreshData});
+      // Set the filter settings
+      setFilterSettings({bucketId: settings.bucketId, showActiveTasks: settings.showActiveTasks});
     } 
   }, [context]);
 
-  useEffect(() => {
-      const fetchData = async () => {
-        if (graphClient) {
-          if (groupId) {
-            if (renderSettings) {          
-              renderSettings.renderYear =false;
-              renderSettings.currentYear = 0;
-              renderSettings.renderMonth = true;
-              renderSettings.currentMonth = -1;
-              
-              if (timelineService) {
-                if (renderSettings.buckets.length > 0) {
-                  if (refreshData) {
-                    settimeLineData(await timelineService.getTimelineData(true));
-                  
-                    setTasks(timelineService.getTasks("dueDate"));
-                    
-                    renderSettings.buckets = timelineService.getBuckets();
-                    renderSettings.users = timelineService.getTaskUsers();
-                    
-                    setRetrievingTasks(false);
-                    setFilterSettings({bucketId: filterSettings.bucketId, showActiveTasks: filterSettings.showActiveTasks, refreshData: false});
-                    setRefreshData(false);
-                  } else {
-                    setTasks(timelineService.getTasksForBucket(filterSettings));
-                  }
-  
-                  renderSettings.lastRenderedDate = new Date();
-                }
-              } else { 
-                const timelineService: ITimeLineService = new TimeLineService(graphClient!, groupId);
-  
-                const filterSettings: IFilterSettings = filterService.getFilterSettings();
+  useEffect( () => {
+    const fetchData = async () => {
+      if (refreshData) {
+        if (timelineService && renderSettings) {
+          setTimeLineData(await timelineService.getTimelineData(refreshData));
                 
-                setBucketId(filterSettings.bucketId);
-                setShowActiveTasks(filterSettings.showActiveTasks);
-                
-                setTimeLineService(timelineService)
-  
-                settimeLineData(await timelineService.getTimelineData(filterSettings.refreshData));
-                
-                setTasks(timelineService.getTasks("dueDate"));
-                
-                renderSettings.buckets = timelineService.getBuckets();
-                renderSettings.users = timelineService.getTaskUsers();
-                
-                setRetrievingTasks(false);
-                setFilterSettings({bucketId: filterSettings.bucketId, showActiveTasks: filterSettings.showActiveTasks, refreshData: false});
-                setRefreshData(false);
-              }
-           }      
-          }
+          setTasks(timelineService.getTasks("dueDate"));
+          
+          renderSettings.buckets = timelineService.getBuckets();
+          renderSettings.users = timelineService.getTaskUsers();
+
+          setTasks(timelineService?.getTasksForBucket(filterSettings) ?? []);
+          setRetrievingTasks(false);
+          setRefreshData(false);
         }
-      };
-  
-      fetchData();
-    }, [graphClient, filterSettings]);
+      }
+    };
+
+    fetchData();
+  }, [refreshData]);
 
   useEffect(() => {
+    // Fetch the data
+    const fetchData = async () => {
+      // Check if the graph client is available
+      if (graphClient) {
+        // Create a new timeline service
+        if (groupId) {
+          // Check if the render settings are available
+          if (renderSettings) {        
+            // Set the render settings  
+            renderSettings.renderYear =false;
+            renderSettings.currentYear = 0;
+            renderSettings.renderMonth = true;
+            renderSettings.currentMonth = -1;
+            
+            // Check if the timeline service is available
+            if (timelineService) {
+              // Check if the render settings are available
+              if (renderSettings.buckets.length > 0) {
+                // Check if the tasks have been retrieved
+                if (refreshData) {
+                  // Set the retrieving tasks flag
+                  setTimeLineData(await timelineService.getTimelineData(false));
+                  
+                  renderSettings.buckets = timelineService.getBuckets();
+                  renderSettings.users = timelineService.getTaskUsers();                  
+                } 
+                  
+                setTasks(timelineService.getTasksForBucket(filterSettings));                  
+                renderSettings.lastRenderedDate = new Date();
+              }
+            } else { 
+              // Create a new timeline service
+              const timelineService: ITimeLineService = new TimeLineService(graphClient!, groupId);
+              // Set the timeline service
+              setTimeLineService(timelineService)
+
+              const filterSettings: IFilterSettings = filterService.getFilterSettings();
+              
+              setTimeLineData(await timelineService.getTimelineData(false));
+              
+              setTasks(timelineService.getTasksForBucket(filterSettings));
+              
+              renderSettings.buckets = timelineService.getBuckets();
+              renderSettings.users = timelineService.getTaskUsers();
+              
+              // Set the render settings
+              setRetrievingTasks(false);              
+
+              // Set the filter settings
+              setBucketId(filterSettings.bucketId);
+              // Set the show active tasks
+              setShowActiveTasks(filterSettings.showActiveTasks);
+
+            }
+          }      
+        }
+      }
+    };
+  
+    // Fetch the data
+    fetchData();
+    }, [graphClient, filterSettings]);
+
+  // Update the bucket options when the render settings change
+  useEffect(() => {
+    // Add the default option
     const opt= [
       { key: 'All', text: 'All Buckets' },    
     ];
 
+    // Add the buckets
     for (const bucket of renderSettings?.buckets ?? []) {
-        opt.push({ key: bucket.id ?? 'unknown', text: bucket.name ?? 'Unnamed Bucket' });
+      // Add the bucket to the options
+      opt.push({ key: bucket.id ?? 'unknown', text: bucket.name ?? 'Unnamed Bucket' });
     };
 
+    // Set the options
     setBucketOptions(opt);
   }, [renderSettings?.buckets]);
 
@@ -218,7 +265,7 @@ export default function Tab() {
                       onChange={(ev, checked) => { 
                         if (filterService) {
                           setShowActiveTasks(!showActiveTasks);
-                          const fliters: IFilterSettings = { bucketId: bucketId, showActiveTasks: !showActiveTasks, refreshData: refreshData };
+                          const fliters: IFilterSettings = { bucketId: bucketId, showActiveTasks: !showActiveTasks};
                           filterService.saveFilterSettings(fliters);                          
                           setFilterSettings(fliters);
                         }
@@ -228,38 +275,47 @@ export default function Tab() {
                       onChange={onDropDownChange}
                       options={bucketOptions}
                       styles={dropdownStyles} />
+            <Checkbox label="Refresh Tasks" 
+                      checked={refreshData} 
+                      boxSide="end"
+                      styles={refreshTaskscheckbox} 
+                      onChange={(ev, checked) => { 
+                          setRefreshData(!refreshData); 
+                          setRetrievingTasks(!refreshData);
+                        }} />   
           </Stack>
-          <div>        
-            <div className={pagepaddingStyle}>
-              { timeLineData?.error &&
-                <pre className={errorStyle}>Error: {timeLineData?.error}</pre>
-              }        
+          <div>
+            { retrievingTasks &&
               <div>
-                <div className={planTitleStyle}>
-                  <span>{showActiveTasks ? "All Plannner Tasks" : "Active Planner Tasks"}</span>
-                </div>
-                <div style={{ paddingBottom: '10px', fontSize: '20px' }}>
-                  {bucketName}
-                </div>
-                { tasks.map((task: PlannerTask) =>
+                <Spinner className={spinnerStyle} labelPosition="below"  label="Retrieving Tasks..."/>
+              </div>
+            }
+            { !retrievingTasks &&      
+              <div className={pagepaddingStyle}>
+                { timeLineData?.error &&
+                  <pre className={errorStyle}>Error: {timeLineData?.error}</pre>
+                }        
+                <div>
+                  <div className={planTitleStyle}>
+                    <span>{showActiveTasks ? "All Plannner Tasks" : "Active Planner Tasks"}</span>
+                  </div>
+                  <div style={{ paddingBottom: '10px', fontSize: '20px' }}>
+                    {bucketName}
+                  </div>
+                  { tasks.map((task: PlannerTask) =>
                     <> 
                       <TimelineItem key={task.id} {...task}/>        
                     </>
-                )}
-                { retrievingTasks &&
-                  <div>
-                    <Spinner className={spinnerStyle} labelPosition="below"  label="Retrieving Tasks..."/>
-                  </div>
-                } 
-                { !retrievingTasks &&
+                  )}                
+                
                   <header className={timelineHeaderStyle}>
                     <span className={timelineYearStyle}>
                       { tasks.length > 0 ? "End" : tasks.length === 0 && "No Tasks" }
                     </span>
-                  </header>
-                }
+                  </header>                
+                </div>
               </div>
-            </div>
+            }
           </div>
         </>
       }
