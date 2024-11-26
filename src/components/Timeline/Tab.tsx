@@ -1,7 +1,7 @@
 import { 
   useContext, 
   useState,
-  useEffect,  
+  useEffect,
 } from "react";
 import { TeamsFxContext } from "../Context";
 import { Client } from "@microsoft/microsoft-graph-client";
@@ -9,15 +9,24 @@ import {
   useTeams,
   useGraphWithCredential
 } from "@microsoft/teamsfx-react";
-import { 
-  PrimaryButton,
-  Checkbox, 
-  Dropdown, 
-  IDropdownOption, 
-  Stack
-  
-} from '@fluentui/react';
-import { Spinner} from '@fluentui/react-components';
+import { Stack } from '@fluentui/react';
+import {
+  bundleIcon,
+  CalendarMonthFilled,
+  CalendarMonthRegular,  
+} from "@fluentui/react-icons";
+import {
+  Button, 
+  Spinner,
+  ToggleButton, 
+  Tooltip,
+  Checkbox,
+  Dropdown,
+  Option,
+  useId, 
+  OptionOnSelectData, 
+  SelectionEvents,
+} from '@fluentui/react-components';
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
 import { 
   PlannerTask,
@@ -33,15 +42,13 @@ import {
 } from "../../services";
 import { TimelineItem } from '..';
 import {
+  TabStyles,
   pagepaddingStyle,
   errorStyle,
   planTitleStyle,  
   spinnerStyle,
   timelineHeaderStyle,
   timelineYearStyle,
-  activeTaskscheckbox, 
-  refreshTaskscheckbox,
-  dropdownStyles, 
   stackStyles,
 } from '../../Styles';
 
@@ -50,6 +57,8 @@ export default function Tab() {
   const [{ context }] = useTeams();
 
   initializeIcons();
+  const CalendarMonth = bundleIcon(CalendarMonthFilled, CalendarMonthRegular);
+  const dropdownId = useId("dropdown-bucket");
 
   // scopes
   const scopes = ['User.Read.All', 'Tasks.Read', 'Tasks.ReadWrite', 'TeamSettings.Read.All'];
@@ -62,42 +71,44 @@ export default function Tab() {
   const [tasks, setTasks] = useState<PlannerTask[]>([]);
   const [bucketName, setBucketName] = useState<string>("For all buckets");
   const [retrievingTasks, setRetrievingTasks] = useState(true);
-  const [bucketOptions, setBucketOptions ] = useState<IDropdownOption[]>([]);
   const filterService: IFilterService = new FilterService( {bucketId: "All", showActiveTasks: true});
     
-  const [filterSettings, setFilterSettings] = useState<IFilterSettings>({bucketId: "All", showActiveTasks: false});
+  const [filterSettings, setFilterSettings] = useState<IFilterSettings>({bucketId: "All", showActiveTasks: true});
   const [bucketId, setBucketId] = useState<string>("");
   const [showActiveTasks, setShowActiveTasks] = useState(false);
   const [refreshData, setRefreshData] = useState(false);
   
   const { teamsUserCredential, renderSettings } = useContext(TeamsFxContext);
 
-  const onDropDownChange = (event: React.FormEvent<HTMLDivElement>, option?: IDropdownOption, index?: number): void => {
+  //const onDropDownChange = (event: React.FormEvent<HTMLDivElement>, option?: IDropdownOption, index?: number): void => {
+  const onDropDownChange = ((event: SelectionEvents, data: OptionOnSelectData) => {
     // Set the bucket id
-    if (option) {
+    if (data) {
       // Set the bucket id
-      setBucketId(option.key.toString());
+      if (data.optionValue) {
+        setBucketId(data.optionValue.toString());
 
-      // Set the retrieving tasks flag
-      if (filterService) {
-        filterService.saveFilterSettings({
-          bucketId: option.key.toString(),
-          showActiveTasks: showActiveTasks
-        });
-      }
+        // Set the retrieving tasks flag
+        if (filterService) {
+          filterService.saveFilterSettings({
+            bucketId: data.optionValue.toString(),
+            showActiveTasks: showActiveTasks
+          });
+        }
 
-      // Set the filter settings
-      setFilterSettings({bucketId: option.key.toString(), showActiveTasks: showActiveTasks});
+        // Set the filter settings
+        setFilterSettings({bucketId: data.optionValue.toString(), showActiveTasks: showActiveTasks});
 
-      if (option.key === 'All') {
-        // Set the bucket name
-        setBucketName("For all buckets");
-      } else {
-        // Set the bucket name
-        setBucketName("For bucket: " + option.text);
+        if (data.optionText === 'All') {
+          // Set the bucket name
+          setBucketName("For all buckets");
+        } else {
+          // Set the bucket name
+          setBucketName("For bucket: " + data.optionText);
+        }
       }
     }
-  };
+  });
 
   // Set the bucket name when the bucket id changes
   useEffect(() => {
@@ -144,7 +155,7 @@ export default function Tab() {
       setFilterSettings({bucketId: settings.bucketId, showActiveTasks: settings.showActiveTasks});
     } 
   }, [context]);
-
+  
   useEffect( () => {
     const fetchData = async () => {
       if (refreshData) {
@@ -211,12 +222,23 @@ export default function Tab() {
               
               renderSettings.buckets = timelineService.getBuckets();
               renderSettings.users = timelineService.getTaskUsers();
+
+               if (filterSettings.bucketId === 'All') {
+                   // Set the bucket name
+                  setBucketName("For all buckets");
+              } else {
+                const buckets: PlannerBucket[] = timelineService.getBuckets();
+                const name: string = buckets.find((bucket) => bucket.id === filterSettings.bucketId)?.name || "Unknown Bucket";                
+                // Set the bucket name
+                setBucketName("For bucket: " + name);
+              }
               
               // Set the render settings
               setRetrievingTasks(false);              
 
               // Set the filter settings
               setBucketId(filterSettings.bucketId);
+              
               // Set the show active tasks
               setShowActiveTasks(filterSettings.showActiveTasks);
 
@@ -225,64 +247,62 @@ export default function Tab() {
         }
       }
     };
-  
-    // Fetch the data
-    fetchData();
-    }, [graphClient, filterSettings]);
-
-  // Update the bucket options when the render settings change
-  useEffect(() => {
-    // Add the default option
-    const opt= [
-      { key: 'All', text: 'All Buckets' },    
-    ];
-
-    // Add the buckets
-    for (const bucket of renderSettings?.buckets ?? []) {
-      // Add the bucket to the options
-      opt.push({ key: bucket.id ?? 'unknown', text: bucket.name ?? 'Unnamed Bucket' });
-    };
-
-    // Set the options
-    setBucketOptions(opt);
-  }, [renderSettings?.buckets]);
+  // Fetch the data
+  fetchData();
+  }, [graphClient, filterSettings]);
 
   return (
     <div>
       { !graphClient && !loading &&
         <div>
           <p>Authorize to grant permission to access Planner Tasks.</p>
-          <PrimaryButton text="Authorize" disabled={loading} onClick={reload} />          
+          <Button appearance="primary" disabled={loading} onClick={reload} >
+            Authorize
+          </Button>          
         </div>
       }
       { graphClient &&
         <>
           <Stack enableScopedSelectors horizontal horizontalAlign="start" styles={stackStyles}>
-            <Checkbox label="All Tasks" 
-                      checked={showActiveTasks} 
-                      boxSide="end"
-                      styles={activeTaskscheckbox} 
-                      onChange={(ev, checked) => { 
-                        if (filterService) {
-                          setShowActiveTasks(!showActiveTasks);
-                          const fliters: IFilterSettings = { bucketId: bucketId, showActiveTasks: !showActiveTasks};
-                          filterService.saveFilterSettings(fliters);                          
-                          setFilterSettings(fliters);
-                        }
-                      }} />   
-            <Dropdown placeholder="Select Plan Bucket"          
-                      selectedKey={bucketId}
-                      onChange={onDropDownChange}
-                      options={bucketOptions}
-                      styles={dropdownStyles} />
-            <Checkbox label="Refresh Tasks" 
-                      checked={refreshData} 
-                      boxSide="end"
-                      styles={refreshTaskscheckbox} 
-                      onChange={(ev, checked) => { 
-                          setRefreshData(!refreshData); 
-                          setRetrievingTasks(!refreshData);
+            <div className="activeTaskscheckbox">              
+              <Checkbox label="All Tasks" 
+                        checked={showActiveTasks} 
+                        labelPosition="before"
+                        onChange={(ev, checked) => { 
+                          if (filterService) {
+                            setShowActiveTasks(!showActiveTasks);
+                            const fliters: IFilterSettings = { bucketId: bucketId, showActiveTasks: !showActiveTasks};
+                            filterService.saveFilterSettings(fliters);                          
+                            setFilterSettings(fliters);
+                          }
                         }} />   
+            </div>
+            <div>
+              <Dropdown placeholder={bucketName ? bucketName.replace("For bucket: ", "").replace("For all buckets", "All") : "Select a bucket"} 
+                        aria-labelledby={dropdownId}
+                        onOptionSelect={onDropDownChange}
+                        selectedOptions={[bucketId]}
+                        defaultValue={bucketId}                        
+                        size="medium" >
+                <Option key="All" value="All" text="All">All Buckets</Option>
+                { renderSettings?.buckets.map((bucket: PlannerBucket) => (
+                    <Option key={bucket.id} value={bucket.id} text={bucket.name ?? 'Unnamed Bucket'}>{bucket.name}</Option>
+                ))}
+              </Dropdown>
+            </div>
+            <Tooltip content="Refreah Timeline Tasks" relationship="label">
+              <ToggleButton
+                checked={refreshData}
+                style={{ width: '30px', height: '30px', marginLeft: '5px' }}
+                icon={<CalendarMonth />}
+                appearance="subtle"
+                disabled={refreshData}
+                onClick={() => {
+                  setRefreshData(!refreshData); 
+                  setRetrievingTasks(!refreshData);
+                }}
+              />
+            </Tooltip>
           </Stack>
           <div>
             { retrievingTasks &&
