@@ -14,6 +14,7 @@ import {
 export class TimeLineService implements ITimeLineService {
   // Private members
   private _graphClient: Client;
+  private _pageId = "";
   private _buckets: PlannerBucket[] = [];
   private _taskUsers: User[] = [];
   private _tasks: PlannerTask[] = [];
@@ -24,13 +25,14 @@ export class TimeLineService implements ITimeLineService {
   };
 
   // Constructor
-  constructor(graphClient: Client, groupId: string) {
+  constructor(graphClient: Client, groupId: string, pageId: string) {
     this._graphClient = graphClient;
     this._timeLine.groupId = groupId;
+    this._pageId = pageId;
   }
 
   public async getTimelineData(refersh: boolean): Promise<ITimeLineData> {
-    const check = !refersh; 
+    const check = !refersh;
     if (check) refersh = await this._getTimelineData();
 
     if (refersh) {
@@ -204,7 +206,10 @@ export class TimeLineService implements ITimeLineService {
       const filteredTasks: PlannerTask[] = [];
 
       tasks.forEach((task) => {
-        if (task.bucketId && task.bucketId.startsWith(fileterSettings.bucketId)) {
+        if (
+          task.bucketId &&
+          task.bucketId.startsWith(fileterSettings.bucketId)
+        ) {
           filteredTasks.push(task);
         }
       });
@@ -217,13 +222,13 @@ export class TimeLineService implements ITimeLineService {
 
   // Get timeline data from session storage
   private async _getTimelineData(): Promise<boolean> {
-    const timelineData = sessionStorage.getItem("_TimelineData");
+    const timelineData = sessionStorage.getItem("_" + this._pageId + "TimelineData");
 
     if (timelineData) {
-      const buckets = sessionStorage.getItem("_buckets");
-      const Users = sessionStorage.getItem("_Users");
-      const tasks = sessionStorage.getItem("_tasks");
-      const timelineDataString = sessionStorage.getItem("_pmsTimelineData");
+      const buckets = sessionStorage.getItem("_" + this._pageId + "buckets");
+      const Users = sessionStorage.getItem("_" + this._pageId + "Users");
+      const tasks = sessionStorage.getItem("_" + this._pageId + "tasks");
+      const timelineDataString = sessionStorage.getItem("_pms" + this._pageId + "TimelineData");
 
       if (timelineDataString) {
         const dataTime: Date = new Date(timelineDataString.replace(/"/g, ""));
@@ -254,11 +259,11 @@ export class TimeLineService implements ITimeLineService {
     Users: User[],
     tasks: PlannerTask[]
   ) {
-    sessionStorage.setItem("_TimelineData", JSON.stringify(timelineData));
-    sessionStorage.setItem("_buckets", JSON.stringify(buckets));
-    sessionStorage.setItem("_Users", JSON.stringify(Users));
-    sessionStorage.setItem("_tasks", JSON.stringify(tasks));
-    sessionStorage.setItem("_pmsTimelineData", JSON.stringify(new Date()));
+    sessionStorage.setItem("_" + this._pageId + "TimelineData", JSON.stringify(timelineData));
+    sessionStorage.setItem("_" + this._pageId + "buckets", JSON.stringify(buckets));
+    sessionStorage.setItem("_" + this._pageId + "Users", JSON.stringify(Users));
+    sessionStorage.setItem("_" + this._pageId + "tasks", JSON.stringify(tasks));
+    sessionStorage.setItem("_pms" + this._pageId + "TimelineData", JSON.stringify(new Date()));
   }
 }
 

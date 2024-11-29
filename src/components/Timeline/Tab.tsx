@@ -72,7 +72,7 @@ export default function Tab() {
   const [bucketName, setBucketName] = useState<string>("For all buckets");
   const [retrievingTasks, setRetrievingTasks] = useState(true);
   const filterService: IFilterService = new FilterService( {bucketId: "All", showActiveTasks: true});
-    
+  const [pageId, setPageId] = useState<string>('');
   const [filterSettings, setFilterSettings] = useState<IFilterSettings>({bucketId: "All", showActiveTasks: true});
   const [bucketId, setBucketId] = useState<string>("");
   const [showActiveTasks, setShowActiveTasks] = useState(false);
@@ -90,7 +90,7 @@ export default function Tab() {
 
         // Set the retrieving tasks flag
         if (filterService) {
-          filterService.saveFilterSettings({
+          filterService.saveFilterSettings(pageId, {
             bucketId: data.optionValue.toString(),
             showActiveTasks: showActiveTasks
           });
@@ -145,7 +145,10 @@ export default function Tab() {
           setGroupId(context?.team?.groupId);        
       })();
 
-      const settings = filterService.getFilterSettings();
+      const pageId = context.page?.id ?? ''
+      setPageId(pageId);
+
+      const settings = filterService.getFilterSettings(pageId);
 
       // Set the filter settings
       setBucketId(settings.bucketId);
@@ -166,6 +169,11 @@ export default function Tab() {
           
           renderSettings.buckets = timelineService.getBuckets();
           renderSettings.users = timelineService.getTaskUsers();
+          renderSettings.renderYear =false;
+          renderSettings.currentYear = 0;
+          renderSettings.renderMonth = true;
+          renderSettings.currentMonth = -1;
+          renderSettings.lastRenderedDate = new Date();
 
           setTasks(timelineService?.getTasksForBucket(filterSettings) ?? []);
           setRetrievingTasks(false);
@@ -210,11 +218,11 @@ export default function Tab() {
               }
             } else { 
               // Create a new timeline service
-              const timelineService: ITimeLineService = new TimeLineService(graphClient!, groupId);
+              const timelineService: ITimeLineService = new TimeLineService(graphClient!, groupId, pageId);
               // Set the timeline service
               setTimeLineService(timelineService)
 
-              const filterSettings: IFilterSettings = filterService.getFilterSettings();
+              const filterSettings: IFilterSettings = filterService.getFilterSettings(pageId);
               
               setTimeLineData(await timelineService.getTimelineData(false));
               
@@ -232,7 +240,7 @@ export default function Tab() {
                 // Set the bucket name
                 setBucketName("For bucket: " + name);
               }
-              
+
               // Set the render settings
               setRetrievingTasks(false);              
 
@@ -268,23 +276,26 @@ export default function Tab() {
               <Checkbox label="All Tasks" 
                         checked={showActiveTasks} 
                         labelPosition="before"
+                        disabled={retrievingTasks}
                         onChange={(ev, checked) => { 
                           if (filterService) {
                             setShowActiveTasks(!showActiveTasks);
                             const fliters: IFilterSettings = { bucketId: bucketId, showActiveTasks: !showActiveTasks};
-                            filterService.saveFilterSettings(fliters);                          
+                            filterService.saveFilterSettings(pageId, fliters);                          
                             setFilterSettings(fliters);
                           }
                         }} />   
             </div>
             <div>
-              <Dropdown placeholder={bucketName ? bucketName.replace("For bucket: ", "").replace("For all buckets", "All") : "Select a bucket"} 
-                        aria-labelledby={dropdownId}
+              <label style={{ paddingRight: '5px', verticalAlign: "middle" }}>Planner Bucket</label>
+              <Dropdown placeholder={bucketName ? bucketName.replace("For bucket: ", "").replace("For all buckets", "All Buckets") : "Select a bucket"} 
+                        aria-labelledby={dropdownId}                        
                         onOptionSelect={onDropDownChange}
                         selectedOptions={[bucketId]}
-                        defaultValue={bucketId}                        
+                        defaultValue={bucketId}
+                        disabled={retrievingTasks}
                         size="medium" >
-                <Option key="All" value="All" text="All">All Buckets</Option>
+                <Option key="All" value="All" text="All Buckets">All Buckets</Option>
                 { renderSettings?.buckets.map((bucket: PlannerBucket) => (
                     <Option key={bucket.id} value={bucket.id} text={bucket.name ?? 'Unnamed Bucket'}>{bucket.name}</Option>
                 ))}
@@ -296,7 +307,7 @@ export default function Tab() {
                 style={{ width: '30px', height: '30px', marginLeft: '5px' }}
                 icon={<CalendarMonth />}
                 appearance="subtle"
-                disabled={refreshData}
+                disabled={retrievingTasks}
                 onClick={() => {
                   setRefreshData(!refreshData); 
                   setRetrievingTasks(!refreshData);

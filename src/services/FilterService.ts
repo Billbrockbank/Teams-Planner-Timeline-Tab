@@ -13,25 +13,25 @@ export class FilterService implements IFilterService {
   }
 
   // save filter settings in session storage
-  public saveFilterSettings(filterSettings: IFilterSettings) {
+  public saveFilterSettings(pageID: string, filterSettings: IFilterSettings) {
     // save filter settings in session storage
-    this._filterSettings = filterSettings;    
+    this._filterSettings = filterSettings;
 
     // save filter settings in session storage
-    sessionStorage.setItem("_TimeLineFilterData", JSON.stringify(this._filterSettings));
+    sessionStorage.setItem( "_" + pageID + "TimeLineFilterData", JSON.stringify(this._filterSettings));
     // save filter settings time in session storage
-    sessionStorage.setItem("_pmsFilterTime", JSON.stringify(new Date()));
+    sessionStorage.setItem("_pms" + pageID + "FilterTime", JSON.stringify(new Date()));
   }
 
   // get filter settings from session storage
-  public getFilterSettings(): IFilterSettings {
+  public getFilterSettings(pageID: string): IFilterSettings {
     // get filter settings from session storage
-    const fliterData = sessionStorage.getItem("_TimeLineFilterData");
+    const fliterData = sessionStorage.getItem("_" + pageID + "TimeLineFilterData");
 
     // check if filter settings are available
     if (fliterData) {
-      // parse filter settings 
-      const fliterDataString = sessionStorage.getItem("_pmsFilterTime");
+      // parse filter settings
+      const fliterDataString = sessionStorage.getItem("_pms" + pageID + "FilterTime");
 
       // check if filter settings time is available
       if (fliterDataString) {
@@ -41,18 +41,19 @@ export class FilterService implements IFilterService {
         // get current time
         const nowTime: Date = new Date();
         // calculate delay
-        const deplay: number = (nowTime.getTime() - dataTime.getTime()) / (1000 * 60);
+        const deplay: number =
+          (nowTime.getTime() - dataTime.getTime()) / (1000 * 60);
 
         // check if delay is less than 30 minutes
         if (deplay < 30) {
           // create filter settings object
           const filterSet: IFilterSettings = {
             bucketId: filter.bucketId,
-            showActiveTasks: filter.showActiveTasks === true
+            showActiveTasks: filter.showActiveTasks === true,
           };
 
           // return filter settings
-          this._filterSettings = filterSet;          
+          this._filterSettings = filterSet;
         }
       }
     }

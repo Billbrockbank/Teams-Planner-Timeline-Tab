@@ -4,7 +4,7 @@ import {
   useRef,
   useState
 } from "react";
-
+import{ v4 as uuidv4 } from 'uuid';
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
 
 import * as microsoftTeams from "@microsoft/teams-js";
@@ -12,21 +12,21 @@ import { useTeams } from "@microsoft/teamsfx-react";
 import { TeamsFxContext } from "../Context";
 
 export default function Config() {
-  const [isChecked, setIsChecked] = useState(false);
-  // const [groupId, setgroupId] = useState("All");
-
   const { themeString } = useContext(TeamsFxContext);
   const [{ context }] = useTeams();
-  const entityId = useRef("");
+  
   initializeIcons();
   
+  const uniqueId = generateShortUniqueId();
+  const entityId = useRef(uniqueId);
+
   const onSaveHandler = (saveEvent: microsoftTeams.pages.config.SaveEvent) => {
     const baseUrl = `https://${window.location.hostname}:${window.location.port}/index.html#`;
-    
+
     microsoftTeams.pages.config.setConfig({
       suggestedDisplayName: 'Planner Tasks Timeline',
       entityId: entityId.current,
-      contentUrl: `${baseUrl}/TimelineTab`
+      contentUrl: `${baseUrl}/TimelineTab`,
     }).then(() => {      
       saveEvent.notifySuccess();
     });
@@ -35,8 +35,6 @@ export default function Config() {
   useEffect(() => {
     if (context) {
       (async () => {
-        const currentConfig = await microsoftTeams.pages.getConfig();
-        setIsChecked(currentConfig?.entityId === "FilterActiveTasks");
         microsoftTeams.pages.config.registerOnSaveHandler(onSaveHandler);
         microsoftTeams.pages.config.setValidityState(true);        
       })();
@@ -49,5 +47,11 @@ export default function Config() {
       </div>      
     </>
   );
+}
 
+function generateShortUniqueId() {
+    // Generate a full UUID
+    const fullUuid = uuidv4();
+    // Take the first 14 characters of the UUID
+    return fullUuid.replace(/-/g, '').substring(0, 14);
 }

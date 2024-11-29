@@ -103,14 +103,21 @@ export const tabStyle = mergeStyles({
 });
 
 export const isPrimaryStyle = mergeStyles({
+  backgroundColor: palette.blue,
+  border: `1px solid ${palette.blue}`,
+  color: palette.blue,
+});
+
+export const yearMonthStyle = mergeStyles({
   backgroundColor: palette.themePrimary,
   border: `1px solid ${palette.themePrimary}`,
-  color: palette.themeLighterAlt,
+  color: palette.white,
 });
+
 
 export const isOutlinedStyle = mergeStyles({
   backgroundColor: "#fff !important",
-  border: "1px solid #0078d4"
+  border: "0.1em solid #b5b5b5"  
 });
 
 export const isMediumStyle = mergeStyles({
@@ -118,40 +125,39 @@ export const isMediumStyle = mergeStyles({
 });
 
 export const timelineMonthStyle = mergeStyles(
-  tabStyle,
-  isPrimaryStyle
+  tabStyle, 
+  yearMonthStyle
 );
 
 export const timelineYearStyle = mergeStyles(
   tabStyle, 
-  isMediumStyle,
-  isPrimaryStyle,
+  isMediumStyle, 
+  yearMonthStyle
 );
 
 export const overDueTaskStyle = mergeStyles({
   color: palette.red,
-  fontWeight: "400",
+  fontWeight: 400,
 });
 
 export const completedTaskStyle = mergeStyles({
   color: palette.green,
-  fontWeight: 500,
+  fontWeight: 400,
 });
 
 export const inprogressTaskStyle = mergeStyles({
   color: palette.blue,
-  fontWeight: 500,
+  fontWeight: 400,
 });
 
 export const notstartedTaskStyle = mergeStyles({
-  color: palette.black,
-  fontWeight: 500,
+  fontWeight: 400,
 });
 
 export const timelineMarkerStyle = mergeStyles({
   position: "absolute",
-  background: "#b5b5b5",
-  border: "0.1em solid #b5b5b5",
+  // background: "#b5b5b5",
+  // border: "0.1em solid #b5b5b5",
   borderRadius: "100%",
   content: '""',
   display: "block",
@@ -221,8 +227,8 @@ export const dropdownStyles: Partial<IDropdownStyles> = {
 
 export const stackStyles: IStackStyles = {
   root: {
-    paddingTop: 10,
-    height: 30,
-    background: DefaultPalette.neutralLighterAlt,
+    paddingTop: 10,    
+    height: 50,    
+    background: DefaultPalette.whiteTranslucent40,
   },
 };
