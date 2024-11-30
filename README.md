@@ -6,9 +6,7 @@ _The purpose of this sample Teams Toolkit Tab is to remder the tasks in the buck
 
 **TODO: ADD MORE HERE!**
 
-**Nead Screen Image**
-
-![picture of the app in action](#)
+![picture of the app in action](images/Planner-Timeline-tab.gif)
 
 ## Tools and Frameworks
 
@@ -30,15 +28,13 @@ _Teams Toolkit pulls in some standard libraries and SDK's such as the Bot Framew
 3. Press F5 to start debugging which launches your app in Teams using a web browser. Select `Debug in Teams (Edge)` or `Debug in Teams (Chrome)`.
 4. When Teams launches in the browser, select the Add button in the dialog to install your app to Teams.
 
-
-
 _Please list any portions of the toolchain required to build and use the sample, along with download links_
 
 ## Version history
 
 Version|Date|Author|Comments
 -------|----|----|--------
-1.0|January 5, 2025|Bill Brockbank|Initial release
+1.0|January 15, 2025|Bill Brockbank|Initial release
 
 ## Features
 
