@@ -68,13 +68,16 @@ Version|Date|Author|Comments
 - When prompted, click on the link in the console to perform the tenant-wide admin consent
 - Wait for deploy and provision tasks to complete.
 - The first time you run the code you will need to "Authorize permission to access Planner Tasks" 
-**Insert IMAGE HERE**
+
+    ![picture of the app Authorization](images/Authorize.gif)
 
     | Graph API Permissions |
     | --------------------- |
     | User.Read.All         |
     | Tasks.Read            |
     | TeamSettings.Read.All |      
+
+    ![picture of the app Authorization](images/Accept-Permissions.gif)
 
 - The Planner Tasks reneder will by from the same Team tou add the App into.
 
