@@ -12,7 +12,7 @@ provision:
       # based on the definition in manifest. If you don't want to change the
       # name, make sure the name in Microsoft Entra manifest is the same with the name
       # defined here.
-      name: TabAccesMSGraph
+      name: PlannerTimeline
       # If the value is false, the action will not generate client secret for you
       generateClientSecret: true
       # Authenticate users with a Microsoft work or school account in your
@@ -34,7 +34,7 @@ provision:
   - uses: teamsApp/create
     with:
       # Teams app name
-      name: TabAccesMSGraph${{APP_NAME_SUFFIX}}
+      name: PlannerTimeline-${{APP_NAME_SUFFIX}}
     # Write the information of created resources into environment file for
     # the specified environment variable(s).
     writeToEnvironmentFile:
@@ -121,11 +121,11 @@ deploy:
       args: install --no-audit
 
   # Run npm command
-  - uses: cli/runNpmCommand
-    name: install dependencies
-    with:
-      workingDirectory: api
-      args: install --no-audit
+  # - uses: cli/runNpmCommand
+  #   name: install dependencies
+  #   with:
+  #     workingDirectory: api
+  #     args: install --no-audit
 
   # Generate runtime environment variables for tab
   - uses: file/createOrUpdateEnvironmentFile

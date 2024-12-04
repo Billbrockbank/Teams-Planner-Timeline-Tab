@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "resourceBaseName": {
-      "value": "helloworld${{RESOURCE_SUFFIX}}"
+      "value": "plannerTimelne${{RESOURCE_SUFFIX}}"
     },
     "aadAppClientId": {
       "value": "${{AAD_APP_CLIENT_ID}}"
@@ -16,9 +16,6 @@
     },
     "aadAppOauthAuthorityHost": {
       "value": "${{AAD_APP_OAUTH_AUTHORITY_HOST}}"
-    },
-    "functionAppSKU": {
-      "value": "B1"
     },
     "staticWebAppSku": {
       "value": "Free"
