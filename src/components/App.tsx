@@ -11,7 +11,7 @@ import { useTeamsUserCredential } from "@microsoft/teamsfx-react";
 import Privacy from "./Privacy";
 import TermsOfUse from "./TermsOfUse";
 import { TeamsFxContext } from "./Context";
-import config from "./sample/lib/config";
+import config from "../config";
 import {
   TimelineConfig,
   TimelineTab,

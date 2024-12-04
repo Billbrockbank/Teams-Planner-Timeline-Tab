@@ -50,6 +50,7 @@ import {
   timelineHeaderStyle,
   timelineYearStyle,
   stackStyles,
+  spinnerDiv,
 } from '../../Styles';
 
 export default function Tab() {
@@ -317,7 +318,7 @@ export default function Tab() {
           </Stack>
           <div>
             { retrievingTasks &&
-              <div>
+              <div className={spinnerDiv}>
                 <Spinner className={spinnerStyle} labelPosition="below"  label="Retrieving Tasks..."/>
               </div>
             }

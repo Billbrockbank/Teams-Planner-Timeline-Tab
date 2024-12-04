@@ -86,7 +86,7 @@ export default function CalloutPane(task: PlannerTask) {
           { task.details?.description &&
               <>
                 <br />
-                <strong>Description: </strong>
+                <strong>Notes: </strong>
                 <div>
                   {task.details?.description}
                 </div>

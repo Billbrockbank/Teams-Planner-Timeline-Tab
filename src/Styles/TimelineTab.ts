@@ -78,9 +78,13 @@ export const errorStyle = mergeStyles({
   fontWeight: "bold"
 });
 
+export const spinnerDiv = mergeStyles({
+  maxWidth: "500px",  
+});
+
 export const spinnerStyle = mergeStyles({
   paddingTop: "2rem",
-  color: "#5b5fc7",
+  color: "#5b5fc7",  
   Label: { 
     color: "#5b5fc7"
   }  
