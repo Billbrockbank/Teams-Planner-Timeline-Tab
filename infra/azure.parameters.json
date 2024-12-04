@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "resourceBaseName": {
-      "value": "plannerTimelne${{RESOURCE_SUFFIX}}"
+      "value": "plannerTimeline${{RESOURCE_SUFFIX}}"
     },
     "aadAppClientId": {
       "value": "${{AAD_APP_CLIENT_ID}}"
