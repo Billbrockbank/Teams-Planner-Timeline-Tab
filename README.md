@@ -1,17 +1,33 @@
 # M365 Planner Timeline view Teams App
 
+## Table of Contents
+
+- [Summary](#summary)
+- [Tools and Frameworks](#tools-and-frameworks)
+- [Prerequisites](#prerequisites)
+- [Version history](#version-history)
+- [Features](#features)
+- [Minimal path to awesome](#minimal-path-to-awesome---debug-against-a-real-microsoft-365-tenant)
+- [Help](#help)
+- [References](#references)
+- [Disclaimer](#disclaimer)
+
 ## Summary
+
 ![License.](https://img.shields.io/badge/license-MIT-green.svg)
 
 _The purpose of this sample Teams Toolkit Tab is to remder the tasks in the buckets of a M365 Group's Planner. It also implements single sign-on authentication._
 
 **TODO: ADD MORE HERE!**
 
-![picture of the app in action](images/Planner-Timeline-tab.gif)
+<p>
+    <img src="images/Planner-Timeline-tab.gif" width=700>    
+</p>
 
 ## Tools and Frameworks
 
 ![drop](https://img.shields.io/badge/Teams&nbsp;Toolkit&nbsp;for&nbsp;VS&nbsp;Code-5.10.1-blue.svg)
+
 
 _Teams Toolkit pulls in some standard libraries and SDK's to Create React App. Since these are aligned with Teams Toolkit versions._
 
@@ -42,14 +58,14 @@ Version|Date|Author|Comments
 - React with Fluent Web application.
 - Access the Planner task via Microsoft Graph in the Web app (not through a Azure function)
 - Filter task by active or all tasks including completed.
-- Tasks render in different colors:
+- Tasks rendering colors:
 
-    Color     | Status     | Criteria 
+    Color | Status | Criteria 
     ----------|------------|--------------------------------
-    **Red**   | Overdue    | Passed Due Date
-    **Green** | Complete   | Progress set to "Completed"
-    **Blue**  | In progress| Progress set to "In Progress"
-    **Black** | Not Due    | Progress set to "Not Started"
+    **Red** | Overdue | Passed Due Date
+    **Green** | Complete | Progress set to "Completed"
+    **Blue** | In progress| Progress set to "In Progress"
+    **Black** | Not Due | Progress set to "Not Started"
 
 - Filter by Task bucket in Planner.
 - Refresh Planner Tasks then re-rending with the selected filter settings.
@@ -69,7 +85,9 @@ Version|Date|Author|Comments
 - Wait for deploy and provision tasks to complete.
 - The first time you run the code you will need to "Authorize permission to access Planner Tasks" 
 
-    ![picture of the app Authorization](images/Authorize.gif)
+    <p>
+        <img src="images/Authorize.gif" width=550>
+    </p>
 
     | Graph API Permissions |
     | --------------------- |
@@ -77,7 +95,10 @@ Version|Date|Author|Comments
     | Tasks.Read            |
     | TeamSettings.Read.All |      
 
-    ![picture of the app Authorization](images/Accept-Permissions.gif)
+    <p>
+        <img src="images/Accept-Permissions.gif" width=300>
+    </p>    
+    
 
 - The Planner Tasks reneder will by from the same Team tou add the App into.
 
