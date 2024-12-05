@@ -16,22 +16,29 @@
 
 ![License.](https://img.shields.io/badge/license-MIT-green.svg)
 
-_The purpose of this sample Teams Toolkit Tab is to remder the tasks in the buckets of a M365 Group's Planner. It also implements single sign-on authentication._
+The purpose of this sample Teams Toolkit Tab is to render the buckets of tasks for a M365 Group's Planner.
+<br/>It also implements single sign-on authentication and access Planner Task in Microsoft Graph.
+<br/>The timeline is rendered in due date order with tags for years and months.
 
-**TODO: ADD MORE HERE!**
+- This sample was generated with Teams Toolkit as a "Tab => React with Fluent UI => Typescript".
+- Coding is done with React Hooks.
+- The Azure Function is not needed and has been deleted from the sample.
 
-<p>
-    <img src="images/Planner-Timeline-tab.gif" width=700>    
-</p>
+<img src="images/Planner-Timeline-tab.gif" width=700 />
+
+### **Task details in callout**
+<img src="images/callout.gif" width=300 />    
 
 ## Tools and Frameworks
 
 ![drop](https://img.shields.io/badge/Teams&nbsp;Toolkit&nbsp;for&nbsp;VS&nbsp;Code-5.10.1-blue.svg)
 
-
 _Teams Toolkit pulls in some standard libraries and SDK's to Create React App. Since these are aligned with Teams Toolkit versions._
 
-### **To Do:** *Add notes on project configuration and the removal of the Azure Function*
+### ___Steps used for removal of the Azure Function___
+
+**TODO:**
+1. Delete 
 
 ## Prerequisites
 
@@ -72,7 +79,7 @@ Version|Date|Author|Comments
 
 - Filter by Task bucket in Planner.
 - Refresh Planner Tasks then re-rending with the selected filter settings.
-- Caching Planner Task and filter settings in the browswer session Storage.
+- Caches Planner Task and filter settings in the browser session Storage.
 - Callout on tasks for more details. **Insert IMAGE HERE**
 ---
 
@@ -94,16 +101,15 @@ Version|Date|Author|Comments
 
     | Graph API Permissions |
     | --------------------- |
-    | User.Read.All         |
-    | Tasks.Read            |
-    | TeamSettings.Read.All |      
+    | User.Read.All|
+    | Tasks.Read |
+    |Tasks.ReadWrite|
+    | TeamSettings.Read.All |
 
-    <p>
-        <img src="images/Accept-Permissions.gif" width=300>
-    </p>    
-    
+    <img src="images/Accept-Permissions.gif" width=400>
 
-- The Planner Tasks reneder will by from the same Team tou add the App into.
+- The Planner Timeline renders the Tasks in the group Planner of Team of the Channel added to.
+- Can be added to different Channels of same teams.
 
 ## Help
 
