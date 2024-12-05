@@ -31,7 +31,10 @@ _The purpose of this sample Teams Toolkit Tab is to remder the tasks in the buck
 
 _Teams Toolkit pulls in some standard libraries and SDK's to Create React App. Since these are aligned with Teams Toolkit versions._
 
+### **To Do:** *Add notes on project configuration and the removal of the Azure Function*
+
 ## Prerequisites
+
 > - A [Microsoft 365 account for development](https://docs.microsoft.com/microsoftteams/platform/toolkit/accounts)
 > - Admins Access to a Office 365 tenant
 > - [Node.js](https://nodejs.org/), supported versions: 18, 20
