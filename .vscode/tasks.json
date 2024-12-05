@@ -57,7 +57,7 @@
             "label": "Start application",
             "dependsOn": [
                 "Start frontend",
-                "Start backend"
+                // "Start backend"
             ]
         },
         {
