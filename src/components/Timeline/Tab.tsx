@@ -2,6 +2,7 @@ import {
   useContext, 
   useState,
   useEffect,
+  useRef
 } from "react";
 import { TeamsFxContext } from "../Context";
 import { Client } from "@microsoft/microsoft-graph-client";
@@ -56,6 +57,7 @@ import {
 export default function Tab() {
   // get context from useTeams
   const [{ context }] = useTeams();
+  console.log("updated");
 
   initializeIcons();
   const CalendarMonth = bundleIcon(CalendarMonthFilled, CalendarMonthRegular);
@@ -65,21 +67,24 @@ export default function Tab() {
   const scopes = ['User.Read.All', 'Tasks.Read', 'Tasks.ReadWrite', 'TeamSettings.Read.All'];
   
   // states
-  const [graphClient, setGraphClient] = useState<Client | undefined>(undefined);
-  const [timelineService, setTimeLineService] = useState<ITimeLineService | undefined>(undefined);
-  const [groupId, setGroupId] = useState('');
-  const [timeLineData, setTimeLineData] = useState<ITimeLineData | undefined>(undefined);
+  const graphClient = useRef<Client | undefined>(undefined);  
+  const timelineService = useRef<ITimeLineService | undefined>(undefined);
+  const groupId = useRef('');  
+  const pageId = useRef<string>('');  
+  const timeLineData = useRef<ITimeLineData | undefined>(undefined);
+  
   const [tasks, setTasks] = useState<PlannerTask[]>([]);
-  const [bucketName, setBucketName] = useState<string>("For all buckets");
+
   const [retrievingTasks, setRetrievingTasks] = useState(true);
   const filterService: IFilterService = new FilterService( {bucketId: "All", showActiveTasks: true});
-  const [pageId, setPageId] = useState<string>('');
   const [filterSettings, setFilterSettings] = useState<IFilterSettings>({bucketId: "All", showActiveTasks: true});
+  
   const [bucketId, setBucketId] = useState<string>("");
+  const [bucketName, setBucketName] = useState<string>("For all buckets");
   const [showActiveTasks, setShowActiveTasks] = useState(false);
   const [refreshData, setRefreshData] = useState(false);
   
-  const { teamsUserCredential, renderSettings } = useContext(TeamsFxContext);
+  const { renderSettings } = useContext(TeamsFxContext);
 
   //const onDropDownChange = (event: React.FormEvent<HTMLDivElement>, option?: IDropdownOption, index?: number): void => {
   const onDropDownChange = ((event: SelectionEvents, data: OptionOnSelectData) => {
@@ -91,7 +96,7 @@ export default function Tab() {
 
         // Set the retrieving tasks flag
         if (filterService) {
-          filterService.saveFilterSettings(pageId, {
+          filterService.saveFilterSettings(pageId.current, {
             bucketId: data.optionValue.toString(),
             showActiveTasks: showActiveTasks
           });
@@ -130,7 +135,7 @@ export default function Tab() {
       const profile = await graph.api("/me").get();
 
       // Set the graph client
-      setGraphClient(graph);
+      graphClient.current = graph;
 
       // Return the profile
       return profile;
@@ -143,13 +148,12 @@ export default function Tab() {
       (async () => {        
         if (context?.team?.groupId)
           // Set the group id
-          setGroupId(context?.team?.groupId);        
+          groupId.current = context?.team?.groupId;        
       })();
 
-      const pageId = context.page?.id ?? ''
-      setPageId(pageId);
+      pageId.current = context.page?.id ?? ''      
 
-      const settings = filterService.getFilterSettings(pageId);
+      const settings = filterService.getFilterSettings(pageId.current);
 
       // Set the filter settings
       setBucketId(settings.bucketId);
@@ -163,20 +167,20 @@ export default function Tab() {
   useEffect( () => {
     const fetchData = async () => {
       if (refreshData) {
-        if (timelineService && renderSettings) {
-          setTimeLineData(await timelineService.getTimelineData(refreshData));
+        if (timelineService.current && renderSettings) {
+          timeLineData.current = await timelineService.current.getTimelineData(refreshData);
                 
-          setTasks(timelineService.getTasks("dueDate"));
+          setTasks(timelineService.current.getTasks("dueDate"));
           
-          renderSettings.buckets = timelineService.getBuckets();
-          renderSettings.users = timelineService.getTaskUsers();
+          renderSettings.buckets = timelineService.current.getBuckets();
+          renderSettings.users = timelineService.current.getTaskUsers();
           renderSettings.renderYear =false;
           renderSettings.currentYear = 0;
           renderSettings.renderMonth = true;
           renderSettings.currentMonth = -1;
           renderSettings.lastRenderedDate = new Date();
 
-          setTasks(timelineService?.getTasksForBucket(filterSettings) ?? []);
+          setTasks(timelineService.current.getTasksForBucket(filterSettings) ?? []);
           setRetrievingTasks(false);
           setRefreshData(false);
         }
@@ -190,9 +194,9 @@ export default function Tab() {
     // Fetch the data
     const fetchData = async () => {
       // Check if the graph client is available
-      if (graphClient) {
+      if (graphClient.current) {
         // Create a new timeline service
-        if (groupId) {
+        if (groupId.current !== '') {
           // Check if the render settings are available
           if (renderSettings) {        
             // Set the render settings  
@@ -202,41 +206,40 @@ export default function Tab() {
             renderSettings.currentMonth = -1;
             
             // Check if the timeline service is available
-            if (timelineService) {
+            if (timelineService.current) {
               // Check if the render settings are available
               if (renderSettings.buckets.length > 0) {
                 // Check if the tasks have been retrieved
                 if (refreshData) {
                   // Set the retrieving tasks flag
-                  setTimeLineData(await timelineService.getTimelineData(false));
+                  timeLineData.current = await timelineService.current.getTimelineData(false);
                   
-                  renderSettings.buckets = timelineService.getBuckets();
-                  renderSettings.users = timelineService.getTaskUsers();                  
+                  renderSettings.buckets = timelineService.current.getBuckets();
+                  renderSettings.users = timelineService.current.getTaskUsers();                  
                 } 
                   
-                setTasks(timelineService.getTasksForBucket(filterSettings));                  
+                setTasks(timelineService.current.getTasksForBucket(filterSettings));                  
                 renderSettings.lastRenderedDate = new Date();
               }
             } else { 
               // Create a new timeline service
-              const timelineService: ITimeLineService = new TimeLineService(graphClient!, groupId, pageId);
               // Set the timeline service
-              setTimeLineService(timelineService)
+              timelineService.current = new TimeLineService(graphClient.current, groupId.current, pageId.current);
+                            
+              const filterSettings: IFilterSettings = filterService.getFilterSettings(pageId.current);
+              
+              timeLineData.current = await timelineService.current.getTimelineData(false);
+              
+              setTasks(timelineService.current.getTasksForBucket(filterSettings));
+              
+              renderSettings.buckets = timelineService.current.getBuckets();
+              renderSettings.users = timelineService.current.getTaskUsers();
 
-              const filterSettings: IFilterSettings = filterService.getFilterSettings(pageId);
-              
-              setTimeLineData(await timelineService.getTimelineData(false));
-              
-              setTasks(timelineService.getTasksForBucket(filterSettings));
-              
-              renderSettings.buckets = timelineService.getBuckets();
-              renderSettings.users = timelineService.getTaskUsers();
-
-               if (filterSettings.bucketId === 'All') {
+              if (filterSettings.bucketId === 'All') {
                    // Set the bucket name
                   setBucketName("For all buckets");
               } else {
-                const buckets: PlannerBucket[] = timelineService.getBuckets();
+                const buckets: PlannerBucket[] = timelineService.current.getBuckets();
                 const name: string = buckets.find((bucket) => bucket.id === filterSettings.bucketId)?.name || "Unknown Bucket";                
                 // Set the bucket name
                 setBucketName("For bucket: " + name);
@@ -258,11 +261,11 @@ export default function Tab() {
     };
   // Fetch the data
   fetchData();
-  }, [graphClient, filterSettings]);
+  }, [graphClient.current, filterSettings]);
 
   return (
     <div>
-      { !graphClient && !loading &&
+      { !graphClient.current && !loading &&
         <div>
           <p>Authorize to grant permission to access Planner Tasks.</p>
           <Button appearance="primary" disabled={loading} onClick={reload} >
@@ -270,7 +273,7 @@ export default function Tab() {
           </Button>          
         </div>
       }
-      { graphClient &&
+      { graphClient.current &&
         <>
           <Stack enableScopedSelectors horizontal horizontalAlign="start" styles={stackStyles}>
             <div className="activeTaskscheckbox">              
@@ -281,9 +284,9 @@ export default function Tab() {
                         onChange={(ev, checked) => { 
                           if (filterService) {
                             setShowActiveTasks(!showActiveTasks);
-                            const fliters: IFilterSettings = { bucketId: bucketId, showActiveTasks: !showActiveTasks};
-                            filterService.saveFilterSettings(pageId, fliters);                          
-                            setFilterSettings(fliters);
+                            const filters: IFilterSettings = { bucketId: bucketId, showActiveTasks: !showActiveTasks};
+                            filterService.saveFilterSettings(pageId.current, filters);                          
+                            setFilterSettings(filters);
                           }
                         }} />   
             </div>
@@ -324,8 +327,8 @@ export default function Tab() {
             }
             { !retrievingTasks &&      
               <div className={pagepaddingStyle}>
-                { timeLineData?.error &&
-                  <pre className={errorStyle}>Error: {timeLineData?.error}</pre>
+                { timeLineData.current?.error &&
+                  <pre className={errorStyle}>Error: {timeLineData.current?.error}</pre>
                 }        
                 <div>
                   <div className={planTitleStyle}>
