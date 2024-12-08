@@ -2,7 +2,8 @@ import {
   useContext, 
   useState,
   useEffect,
-  useRef
+  useRef,
+  useMemo
 } from "react";
 import { TeamsFxContext } from "../Context";
 import { Client } from "@microsoft/microsoft-graph-client";
@@ -74,13 +75,11 @@ export default function Tab() {
   const timeLineData = useRef<ITimeLineData | undefined>(undefined);
   
   const [tasks, setTasks] = useState<PlannerTask[]>([]);
-
-  const [retrievingTasks, setRetrievingTasks] = useState(true);
   const filterService: IFilterService = new FilterService( {bucketId: "All", showActiveTasks: true});
   const [filterSettings, setFilterSettings] = useState<IFilterSettings>({bucketId: "All", showActiveTasks: true});
   
+  const [retrievingTasks, setRetrievingTasks] = useState(true);
   const [bucketId, setBucketId] = useState<string>("");
-  const [bucketName, setBucketName] = useState<string>("For all buckets");
   const [showActiveTasks, setShowActiveTasks] = useState(false);
   const [refreshData, setRefreshData] = useState(false);
   
@@ -104,41 +103,25 @@ export default function Tab() {
 
         // Set the filter settings
         setFilterSettings({bucketId: data.optionValue.toString(), showActiveTasks: showActiveTasks});
-
-        if (data.optionText === 'All') {
-          // Set the bucket name
-          setBucketName("For all buckets");
-        } else {
-          // Set the bucket name
-          setBucketName("For bucket: " + data.optionText);
-        }
       }
     }
   });
 
-  // Set the bucket name when the bucket id changes
-  useEffect(() => {
+  const bucketName = useMemo((): string => {
     if (bucketId === 'All') {
       // Set the bucket name
-      setBucketName("For all buckets");
+      return "For all buckets";
     } else {
-      const name: string = renderSettings?.buckets.find((bucket) => bucket.id === bucketId)?.name || "Unknown Bucket";
       // Set the bucket name
-      setBucketName("For bucket: " + name);
+      return "For bucket: " + renderSettings?.buckets.find((bucket) => bucket.id === bucketId)?.name || "Unknown Bucket";
     }
-  }, [filterSettings]);
+  }, [bucketId, renderSettings]);
 
   // Get the graph client
   const { loading, error, data, reload } = useGraphWithCredential(
     async (graph, teamsUserCredential, scope) => {
-      // Call graph api directly to get user profile information      
-      const profile = await graph.api("/me").get();
-
       // Set the graph client
       graphClient.current = graph;
-
-      // Return the profile
-      return profile;
     }, { scope: scopes } );
 
   // Set the graph client
@@ -155,9 +138,9 @@ export default function Tab() {
 
       const settings = filterService.getFilterSettings(pageId.current);
 
-      // Set the filter settings
-      setBucketId(settings.bucketId);
+      // Set the filter settings      
       setShowActiveTasks(settings.showActiveTasks);
+      setBucketId(filterSettings.bucketId ? filterSettings.bucketId: "All" );
 
       // Set the filter settings
       setFilterSettings({bucketId: settings.bucketId, showActiveTasks: settings.showActiveTasks});
@@ -235,16 +218,8 @@ export default function Tab() {
               renderSettings.buckets = timelineService.current.getBuckets();
               renderSettings.users = timelineService.current.getTaskUsers();
 
-              if (filterSettings.bucketId === 'All') {
-                   // Set the bucket name
-                  setBucketName("For all buckets");
-              } else {
-                const buckets: PlannerBucket[] = timelineService.current.getBuckets();
-                const name: string = buckets.find((bucket) => bucket.id === filterSettings.bucketId)?.name || "Unknown Bucket";                
-                // Set the bucket name
-                setBucketName("For bucket: " + name);
-              }
-
+              setBucketId(filterSettings.bucketId ? "All" : filterSettings.bucketId);
+  
               // Set the render settings
               setRetrievingTasks(false);              
 
