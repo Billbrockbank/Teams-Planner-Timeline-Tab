@@ -54,7 +54,7 @@ export const timelineHeaderStyle = mergeStyles({
   justifyContent: "center",  
 });
 
-export const pagepaddingStyle = mergeStyles({
+export const pagePaddingStyle = mergeStyles({
   paddingTop: "2rem",
   paddingBottom: "2rem",
   paddingLeft: "2rem",
@@ -83,6 +83,7 @@ export const spinnerDiv = mergeStyles({
 });
 
 export const spinnerStyle = mergeStyles({
+  paddingLeft: "10rem",
   paddingTop: "2rem",
   color: "#5b5fc7",  
   Label: { 
