@@ -6,13 +6,10 @@ import { Text } from "@fluentui/react";
 import { useId } from '@fluentui/react-hooks';
 import moment from "moment";
 import { useContext } from "react";
-import { initializeIcons } from '@fluentui/font-icons-mdl2';
 import { TeamsFxContext } from "../Context";
 import { calloutStyles } from '../../Styles';
 
 export default function CalloutPane(task: PlannerTask) {
-  initializeIcons();
-  
   const labelId = useId('callout-label');
   const descriptionId = useId('callout-description');
 
@@ -33,13 +30,13 @@ export default function CalloutPane(task: PlannerTask) {
       // if (!checklistItem.isChecked)
         checklist.push(checklistItem);
     });
- };
+  };
 
   if (task.bucketId) {
     bucketName = task.bucketId.split(':')[1];
   }
-   
-  let aUsers: string = "";
+
+  let aUsers: string = "- ";
   // get the users assigned to the task
   if (task.assignments) {
     // loop through the assignments
@@ -50,7 +47,7 @@ export default function CalloutPane(task: PlannerTask) {
       );
 
       // add the user's display name to the list of users
-      aUsers += user?.displayName + ' ';
+      aUsers += user?.displayName + ' - ';
     });
   }
   
