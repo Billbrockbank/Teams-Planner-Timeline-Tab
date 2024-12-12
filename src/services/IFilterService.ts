@@ -3,7 +3,7 @@ import {
   } from "../models";
   
 export interface IFilterService {
-  saveFilterSettings(pageID: string, filterSettings: IFilterSettings): void;
+  saveFilterSettings(pageId: string, filterSettings: IFilterSettings): void;
 
-  getFilterSettings(pageID: string): IFilterSettings;
+  getFilterSettings(pageId: string): IFilterSettings;
 }

@@ -10,7 +10,9 @@ import {
 
 export interface ITimeLineService {
   // all inventory items
-  getTimelineData(refersh: boolean): Promise<ITimeLineData>;
+  getTimelineData(): Promise<ITimeLineData>;
+
+  refreshTasks(): Promise<ITimeLineData>;
 
   getTimeLine(): ITimeLineData;
 

@@ -1,6 +1,7 @@
 import { 
   IFilterSettings,
-  ITimeLineData
+  ITimeLineData,
+  IConfigSettings
 } from '../models';
 import { ITimeLineService } from '.';
 import { Client } from "@microsoft/microsoft-graph-client";
@@ -25,69 +26,91 @@ export class TimeLineService implements ITimeLineService {
   };
 
   // Constructor
-  constructor(graphClient: Client, groupId: string, pageId: string) {
+  constructor(graphClient: Client, configSettings: IConfigSettings) {
     this._graphClient = graphClient;
-    this._timeLine.groupId = groupId;
-    this._pageId = pageId;
+    this._timeLine.groupId = configSettings.groupId;
+    this._pageId = configSettings.pageId;
   }
 
-  public async getTimelineData(refersh: boolean): Promise<ITimeLineData> {
-    const check = !refersh;
-    if (check) refersh = await this._getTimelineData();
+  public async getTimelineData(): Promise<ITimeLineData> {
+    // Check session timeline data is expired or not
+    const check = await this._getTimelineData();
 
-    if (refersh) {
-      try {
-        const allUsers = await this._graphClient
-          .api("/users")
-          .select("id,displayName,mail")
-          .get();
-
-        this._taskUsers = allUsers.value;
-
-        const plansData = await await this._graphClient
-          .api(
-            "/groups/" +
-              this._timeLine.groupId +
-              "/planner/plans?$select=id,title"
-          )
-          .get();
-
-        const plans: PlannerPlan[] = plansData.value;
-
-        console.log(plans);
-
-        const planId = plansData.value[0].id;
-
-        if (planId) {
-          this._timeLine.planId = planId;
-          const bucketsData = await await this._graphClient
-            .api("/planner/plans/" + planId + "/buckets")
-            .get();
-
-          this._buckets = bucketsData.value;
-
-          if (this._timeLine.planId) {
-            const tasksData = await this._graphClient
-              .api("/planner/plans/" + planId + "/Tasks")
-              .orderby("dueDateTime")
-              .get();
-
-            const tasks: PlannerTask[] = tasksData.value;
-            this._tasks = await this._getTaskDetails(tasks);
-          }
-        }
-      } catch (error: any) {
-        this._timeLine.error = error?.message;
-      }
-
-      this._saveTimelineData(
-        this._timeLine,
-        this._buckets,
-        this._taskUsers,
-        this._tasks
-      );
+    // Refresh timeline data
+    if (check) {
+      this._timeLine = await this.refreshTasks();
     }
 
+    return this._timeLine;
+  }
+
+  public async refreshTasks(): Promise<ITimeLineData> {
+    try {
+      // Get all users
+      const allUsers = await this._graphClient
+        .api("/groups/" + this._timeLine.groupId + "/members")
+        .select("id,displayName,mail")
+        .get();
+
+      // Set all users
+      this._taskUsers = allUsers.value;
+
+      // Get all plans
+      // TODO: Get only the first time  
+      const plansData = await await this._graphClient
+        .api(
+          "/groups/" +
+            this._timeLine.groupId +
+            "/planner/plans?$select=id,title"
+        )
+        .get();     
+
+      // Get first plan id
+      const planId = plansData.value[0].id;
+
+      if (planId) {        
+        // Set plan id
+        // ToDO: Set only the first time
+        this._timeLine.planId = planId;
+
+        // Get all buckets
+        // TODO: only get is bucket list have changed!
+        const bucketsData = await await this._graphClient
+          .api("/planner/plans/" + planId + "/buckets")
+          .get();
+
+        // Set buckets
+        this._buckets = bucketsData.value.sort((a: PlannerBucket, b: PlannerBucket) => (a.name ?? "").localeCompare(b.name ?? ""));
+
+        // Get all tasks
+        // TODO: only get if task list have changed!
+        if (this._timeLine.planId) {
+          const tasksData = await this._graphClient
+            .api("/planner/plans/" + planId + "/Tasks")
+            .orderby("dueDateTime")
+            .get();
+
+          // Set tasks
+          const tasks: PlannerTask[] = tasksData.value;
+
+          // Get task details
+          this._tasks = await this._getTaskDetails(tasks);
+        }
+      }
+    } catch (error: any) {
+      // Set error message
+      this._timeLine.error = error?.message;
+    }
+
+    // Save timeline data to session storage
+    this._saveTimelineData(
+      this._timeLine,
+      this._buckets,
+      this._taskUsers,
+      this._tasks
+    );
+
+    // Return timeline data
     return this._timeLine;
   }
 

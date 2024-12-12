@@ -9,9 +9,8 @@ import {
   useBoolean, 
   useId 
 } from '@fluentui/react-hooks';
-import { IconButton } from '@fluentui/react/lib/Button';
 import moment from "moment";
-import { initializeIcons } from '@fluentui/font-icons-mdl2';
+import { Info24Filled as InfoIcon } from "@fluentui/react-icons";
 import CalloutPane from './CalloutPane'; // Adjust the import path as necessary
 import { 
   timelineItemStyle,
@@ -32,11 +31,8 @@ import {
 export default function TimelineDetails(task: PlannerTask) {
   const aline: string = "right";
   
-  initializeIcons();
   const [isCalloutVisible, { toggle: toggleIsCalloutVisible }] = useBoolean(false);
   
-  const infoIcon: IIconProps = { iconName: 'InfoSolid' }; //'Info' };
-
   const buttonId = useId('callout-button');
   const labelId = useId('callout-label');
   const descriptionId = useId('callout-description');
@@ -92,12 +88,10 @@ export default function TimelineDetails(task: PlannerTask) {
               <div className="ms-Grid-row">
                 <div className="ms-Grid-col">
                   <span>
-                    <IconButton
+                    <InfoIcon
+                      style={{ marginTop: '5px', marginRight: '5px', paddingBottom: '5px', cursor: 'pointer' }}
                       id={buttonId}
-                      iconProps={infoIcon}                      
-                      onClick={toggleIsCalloutVisible}                      
-                      disabled={false}
-                      checked={false} />
+                      onClick={toggleIsCalloutVisible}/>                    
                   </span>
                   <span className={taskItemTitleStyle}>
                     {task.title}

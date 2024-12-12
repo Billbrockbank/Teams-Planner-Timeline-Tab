@@ -13,25 +13,25 @@ export class FilterService implements IFilterService {
   }
 
   // save filter settings in session storage
-  public saveFilterSettings(pageID: string, filterSettings: IFilterSettings) {
+  public saveFilterSettings(pageId: string, filterSettings: IFilterSettings) {
     // save filter settings in session storage
     this._filterSettings = filterSettings;
 
     // save filter settings in session storage
-    sessionStorage.setItem( "_" + pageID + "TimeLineFilterData", JSON.stringify(this._filterSettings));
+    sessionStorage.setItem( "_" + pageId + "TimeLineFilterData", JSON.stringify(this._filterSettings));
     // save filter settings time in session storage
-    sessionStorage.setItem("_pms" + pageID + "FilterTime", JSON.stringify(new Date()));
+    sessionStorage.setItem("_pms" + pageId + "FilterTime", JSON.stringify(new Date()));
   }
 
   // get filter settings from session storage
-  public getFilterSettings(pageID: string): IFilterSettings {
+  public getFilterSettings(pageId: string): IFilterSettings {
     // get filter settings from session storage
-    const fliterData = sessionStorage.getItem("_" + pageID + "TimeLineFilterData");
+    const fliterData = sessionStorage.getItem("_" + pageId + "TimeLineFilterData");
 
     // check if filter settings are available
     if (fliterData) {
       // parse filter settings
-      const fliterDataString = sessionStorage.getItem("_pms" + pageID + "FilterTime");
+      const fliterDataString = sessionStorage.getItem("_pms" + pageId + "FilterTime");
 
       // check if filter settings time is available
       if (fliterDataString) {
@@ -50,6 +50,7 @@ export class FilterService implements IFilterService {
           const filterSet: IFilterSettings = {
             bucketId: filter.bucketId,
             showActiveTasks: filter.showActiveTasks === true,
+            refreshData: filter.refreshData === true,
           };
 
           // return filter settings
