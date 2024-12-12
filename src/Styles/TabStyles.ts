@@ -29,3 +29,13 @@ export class TabStyles {
     },
   };
 }
+
+export const BucketNameStyle = mergeStyles({
+  paddingBottom: '10px', 
+  fontSize: '20px' 
+});
+
+export const BucketDDLabelStyle = mergeStyles({
+  paddingRight: '5px', 
+  verticalAlign: "middle" 
+});
