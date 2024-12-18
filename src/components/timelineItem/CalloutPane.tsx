@@ -1,29 +1,55 @@
 import { 
   PlannerTask,
   PlannerChecklistItem,
+  PlannerTaskDetails,
 } from '@microsoft/microsoft-graph-types'
 import { Text } from "@fluentui/react";
 import { useId } from '@fluentui/react-hooks';
 import moment from "moment";
-import { useContext } from "react";
+import { 
+  useContext,
+  useState,
+  useEffect
+} from "react";
 import { TeamsFxContext } from "../Context";
 import { calloutStyles } from '../../Styles';
+import { 
+  ICategoryData
+} from '../../models';
 
-export default function CalloutPane(task: PlannerTask) {
+export default function CalloutPane( task: PlannerTask ) {
   const labelId = useId('callout-label');
   const descriptionId = useId('callout-description');
+const [taskDetails, setTaskDetails] = useState<PlannerTaskDetails | undefined>(undefined);
 
-  const { renderSettings } = useContext(TeamsFxContext);
+  const { renderSettings, categorySettings, services} = useContext(TeamsFxContext);
   let completedDate: string = "";
   let bucketName: string = "N/A";
   let checklist: PlannerChecklistItem[] = [];
   
+  useEffect(() => {
+    if (services && !taskDetails) {
+      const taskId = task.id;
+      // Get Task Details
+      if (taskDetails === undefined && taskId) {
+        (async () => {
+          if (services && services.timeLineService) {
+            const details = await services.timeLineService.getTaskDetails(taskId);
+            if (details) {
+              setTaskDetails(details);
+            }
+          }
+        })();
+      }
+    }
+  }, [taskDetails, services, task.id]);
+
   // if the task is completed, get the completed date
   if (task.percentComplete === 100)
     if (task.completedDateTime)
       completedDate = moment(new Date(task.completedDateTime)).format("MMM D, YYYY");
 
-  const checklistItems: Record<string, any> = task.details?.checklist || {};   
+  const checklistItems: Record<string, any> = taskDetails?.checklist || {};   
   if (checklistItems) {
     Object.keys(checklistItems).forEach((key: keyof typeof checklistItems) => {
       const checklistItem: PlannerChecklistItem = checklistItems[key];
@@ -50,12 +76,42 @@ export default function CalloutPane(task: PlannerTask) {
       aUsers += user?.displayName + ' - ';
     });
   }
-  
+
+  // get the labels
+  const labels: ICategoryData[] = [];
+  if (task.appliedCategories) {
+    for (let i = 1; i < 26; i++) {
+      const categoryKey = `category${i}` as keyof typeof task.appliedCategories;
+      if (task.appliedCategories[categoryKey] === true) {
+        if (categorySettings) {
+          const categoryData: ICategoryData = categorySettings[categoryKey];
+          labels.push(categoryData);
+        }
+      }
+    }
+  }
+
   return (
       <>
         <Text block variant="large" className={calloutStyles.title} id={labelId}>
           <strong>{task.title}</strong>
         </Text>
+        {/* TODO: Update label from Planner settings
+            TODO: fix layout and styles for labels */}
+        { labels.length > 0 &&
+          <div className="ms-Grid" dir="ltr">
+            <div className="ms-Grid-row" style={{ paddingBottom: '10px' }}>                              
+                {labels.map((label, index) => (
+                  <div className="ms-Grid-col" >
+                    <span key={index} style={{ padding: "1px 2px", fontSize: "10px", backgroundColor: label.backgroundColor, color: label.color, borderRadius: '5px' }}>
+                      {label.text}
+                    </span>
+                    </div>
+                ))}
+            </div>
+          </div>
+      } 
+              
         <Text block variant="small" id={descriptionId}>                
           <strong>Bucket: </strong>{bucketName}
           <br />
@@ -80,12 +136,12 @@ export default function CalloutPane(task: PlannerTask) {
               </div>
             </>
           )}
-          { task.details?.description &&
+          { taskDetails?.description &&
               <>
                 <br />
                 <strong>Notes: </strong>
                 <div>
-                  {task.details?.description}
+                  {taskDetails?.description}
                 </div>
                 <br />
               </>
@@ -103,7 +159,7 @@ export default function CalloutPane(task: PlannerTask) {
               <strong>Checklist:</strong>
               <ul>                      
                 {checklist.map((item: PlannerChecklistItem) => (
-                  <li>
+                  <li key={item.orderHint}>
                     <div>
                       <strong>{item.isChecked && "Completed: "}</strong><span style={{ textDecoration: item.isChecked ? 'line-through' : 'none' }}>{item.title}</span>
                     </div>
@@ -112,7 +168,7 @@ export default function CalloutPane(task: PlannerTask) {
               </ul>  
             </>
           }
-        </Text>            
+        </Text>        
       </>
     )
 }

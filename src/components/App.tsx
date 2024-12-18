@@ -22,7 +22,9 @@ import {
 import {
   IRenderSettings,
   IConfigSettings,  
-  IFilterSettings
+  IFilterSettings,
+  IServices,
+  AppliedCategoryColors,
 } from "../models";
 import { FilterService } from "../services";
 import { 
@@ -62,6 +64,10 @@ export default function App() {
     pageId: pageId,  
   }
 
+  const services: IServices = {
+    timeLineService: undefined,
+  }
+
   const filterSettings = useMemo<IFilterSettings>(() => {  
     if (!pageId || !filterService) {
       return {
@@ -88,7 +94,7 @@ export default function App() {
   }
   
   return (
-    <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential, configSettings, filterSettings, filterService, renderSettings }}>
+    <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential, configSettings, filterSettings, filterService, renderSettings, categorySettings: AppliedCategoryColors, services }}>
       <FluentProvider
         theme={
           themeString === "dark"

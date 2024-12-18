@@ -5,6 +5,9 @@ import {
   IRenderSettings,
   IConfigSettings,
   IFilterSettings,
+  IAppliedCategoryColors,
+  AppliedCategoryColors,
+  IServices
 } from "../models";
 import { IFilterService } from "../services";
 
@@ -15,7 +18,9 @@ export const TeamsFxContext = createContext<{
   configSettings: IConfigSettings;
   renderSettings?: IRenderSettings;
   filterSettings?: IFilterSettings;
-  filterService?: IFilterService;
+  filterService?: IFilterService;  
+  categorySettings?: IAppliedCategoryColors;
+  services?: IServices | undefined;
 }>({
   theme: undefined,
   themeString: "",
@@ -40,5 +45,7 @@ export const TeamsFxContext = createContext<{
     orderBy: "dueDateTime",
     buckets: [],
     users: []
-  }
+  },
+  categorySettings: AppliedCategoryColors,
+  services: undefined
 });

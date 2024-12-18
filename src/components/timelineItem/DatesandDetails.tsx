@@ -2,8 +2,7 @@ import { PlannerTask } from '@microsoft/microsoft-graph-types'
 import { 
   mergeStyles,
   Callout,
-  DirectionalHint,
-  IIconProps  
+  DirectionalHint  
  } from "@fluentui/react";
  import { 
   useBoolean, 
@@ -70,14 +69,14 @@ export default function TimelineDetails(task: PlannerTask) {
     timelineMarkerClass.push(isOutlinedStyle);
     gridClass.push(notstartedTaskStyle);
   }
-  
+
   return (
       <>
         <div className={timelineItemStyle}>
           <div className={timelineMarkerClass.join(' ')}></div>
           <div className={timelineContentStyle}>
             <div className={gridClass.join(' ')} dir={aline === 'right' ? 'ltr' : 'rtl'}>
-              <div className="ms-Grid-row">
+              <div className="ms-Grid-row">                
                   <div className="ms-Grid-col">
                     <span>{dueDate}</span>
                   </div>

@@ -3,4 +3,5 @@ export interface ITimeLineData {
   groupName?: string;
   planId: string | undefined;
   error?: string;
+  refresh: boolean;
 }

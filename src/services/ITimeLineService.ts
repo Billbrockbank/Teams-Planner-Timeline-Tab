@@ -5,6 +5,7 @@ import {
 import {  
   PlannerBucket, 
   PlannerTask,
+  PlannerTaskDetails,
   User 
 } from "@microsoft/microsoft-graph-types";
 
@@ -20,9 +21,13 @@ export interface ITimeLineService {
 
   getActiveTasks(sortBy: string): PlannerTask[];
 
+  getPlannerCategoryDescriptions(): { [key: string]: string };
+
   getTasks(sortBy: string): PlannerTask[];
+
+  getTaskDetails(taskId: string): Promise<PlannerTaskDetails | undefined>;
 
   getTaskUsers(): User[];
 
-  getTasksForBucket(fileterSettings: IFilterSettings): PlannerTask[];
+  getTasksForBucket(filterSettings: IFilterSettings): PlannerTask[];
 }

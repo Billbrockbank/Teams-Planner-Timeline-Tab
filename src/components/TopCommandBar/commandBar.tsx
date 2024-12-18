@@ -2,7 +2,6 @@ import {
   useContext, 
   useState,
   useEffect,
-  useRef,
   useMemo,
   useCallback
 } from "react";
@@ -18,10 +17,6 @@ import {
   useId,  
 } from '@fluentui/react-components';
 import { PlannerBucket } from '@microsoft/microsoft-graph-types'
-import { 
-  IFilterService,
-  FilterService  
-} from "../../services";
 import {
   stackStyles,  
   BucketDDLabelStyle,
@@ -30,9 +25,10 @@ import {
 interface CommandBarProps {
   onBucketId: (params: { bucketId: string; bucketName: string }) => void;
   onAllTask: (showActiveTasks: boolean) => void;
+  onTaskRefresh: (callbackFunction: (callbackFunction: any) => void) => void;
 }
 
-export default function CommandBar({ onBucketId, onAllTask }: CommandBarProps) {
+export default function CommandBar({ onBucketId, onAllTask, onTaskRefresh }: CommandBarProps) {
   const { renderSettings, filterSettings, configSettings, filterService } = useContext(TeamsFxContext);
 
   const dropdownId = useId('dropdown');
@@ -40,7 +36,15 @@ export default function CommandBar({ onBucketId, onAllTask }: CommandBarProps) {
   const [bucketName, setBucketName] = useState<string>("In all buckets");  
   const [retrievingTasks, setRetrievingTasks] = useState<boolean>(false);  
   const [refreshData, setRefreshData] = useState<boolean>(false);
-  
+  const [bucketId, setBucketId] = useState<string[]>([]);  
+
+  const clearTaskRefresh = () => {
+    setRefreshData(false);    
+    setRetrievingTasks(false);
+    if (filterSettings)
+      filterSettings.refreshData = false;
+  }
+
   const AllTasksClick = useCallback(() => { 
     // Set the show active tasks flag
     setShowActiveTasks(!showActiveTasks);
@@ -69,6 +73,7 @@ export default function CommandBar({ onBucketId, onAllTask }: CommandBarProps) {
         filterService.saveFilterSettings(configSettings.pageId, filterSettings);
 
       onBucketId({ bucketId: bucketId, bucketName: name });
+      setBucketId([bucketId]);
     }
   }, []);
 
@@ -77,10 +82,14 @@ export default function CommandBar({ onBucketId, onAllTask }: CommandBarProps) {
     return name;    
   }, [bucketName]);
 
-
   const TaskRefreshClick = useCallback(() => {
     setRefreshData(!refreshData);
-    setRetrievingTasks(!refreshData);    
+    setRetrievingTasks(!refreshData);
+
+    if (filterSettings)
+      filterSettings.refreshData = true
+    
+    onTaskRefresh(clearTaskRefresh);
   }, [refreshData]);
 
   // initialize the filter settings for command bar
@@ -95,42 +104,16 @@ export default function CommandBar({ onBucketId, onAllTask }: CommandBarProps) {
         // Set the bucket name
         setBucketName("Bucket: " + renderSettings?.buckets.find((bucket) => bucket.id === filterSettings.bucketId)?.name || "Unknown Bucket");
       }
+
+      setBucketId([filterSettings.bucketId]);
     }    
   }, []);
-
-  // useEffect(() => {
-  //   if (filterSettings) {
-  //     if (filterService.current === undefined) {
-  //       filterService.current = new FilterService(filterSettings);
-      
-  //       const settings = filterService.current.getFilterSettings(configSettings.pageId);
-
-  //       filterSettings.showActiveTasks = settings.showActiveTasks;
-  //       filterSettings.bucketId = settings.bucketId;
-
-  //       onbucketId({ bucketId: settings.bucketId, bucketName: "" });
-  //       onAllTask(settings.showActiveTasks);
-  //     }
-  //   }  
-  // }, [filterService.current, filterSettings, configSettings.pageId]);
-
-  // useEffect(() => {
-  //   if (filterSettings) {
-  //     filterSettings.showActiveTasks = showActiveTasks;    
-  //     filterSettings.bucketId = bucketId;
-  //     filterSettings.refreshData = refreshData;      
-
-  //     if (filterService.current) {
-  //       filterService.current.saveFilterSettings(configSettings.pageId, filterSettings);
-  //     }
-  //   }
-  // }, [filterSettings, bucketId, showActiveTasks, refreshData]);
 
   const dropDownOptions = useMemo(() => {
     const options = [];
 
     options.push(<Option key="All" value="All" text="All Buckets">All Buckets</Option>);
-    renderSettings?.buckets.map((bucket: PlannerBucket) => {
+    renderSettings?.buckets.forEach((bucket: PlannerBucket) => {
       return options.push(<Option key={bucket.id} value={bucket.id} text={bucket.name ?? 'Unnamed Bucket'}>{bucket.name}</Option>);
     });
     
@@ -154,18 +137,18 @@ export default function CommandBar({ onBucketId, onAllTask }: CommandBarProps) {
             <label className={BucketDDLabelStyle}>Planner Bucket</label>
             <Tooltip content="Task filter" relationship="label">
               <Dropdown placeholder={DropDownPlaceHolder} 
-                        aria-labelledby={dropdownId}                        
-                        onOptionSelect={PlannerBucketSelect} >
-                {/* Render the dropdown options */}
+                        aria-labelledby={dropdownId}
+                        disabled={retrievingTasks}
+                        selectedOptions={bucketId}
+                        onOptionSelect={PlannerBucketSelect} >                
                 { dropDownOptions }              
               </Dropdown>
             </Tooltip>
             <Tooltip content="Refresh Timeline Tasks" relationship="label">
-                <ToggleButton
-                  checked={refreshData}
-                  style={{ width: '30px', height: '30px', marginLeft: '5px' }}
+                <ToggleButton                  
+                  style={{ width: '30px', height: '30px', marginLeft: '5px' }}                  
                   icon={<CalendarMonthRegular />}  
-                  appearance="subtle"
+                  appearance="subtle"                  
                   size="medium"
                   disabled={retrievingTasks}
                   onClick={TaskRefreshClick}
