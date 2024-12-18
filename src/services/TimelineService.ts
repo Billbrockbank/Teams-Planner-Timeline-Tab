@@ -32,6 +32,7 @@ export class TimeLineService implements ITimeLineService {
   constructor(graphClient: Client, configSettings: IConfigSettings) {
     this._graphClient = graphClient;
     this._timeLine.groupId = configSettings.groupId;
+    this._timeLine.planId = configSettings.planId;
     this._pageId = configSettings.pageId;
   }
 
@@ -55,39 +56,39 @@ export class TimeLineService implements ITimeLineService {
       // Set all users
       this._taskUsers = allUsers.value;
 
-      // Set to current planId
-      let planId = this._timeLine.planId;
+      // // Set to current planId
+      // let planId = this._timeLine.planId;
 
-      // Check plan id is empty
-      if (this._timeLine.planId === "") {
-        // Get all buckets
-        const plansData = await await this._graphClient
-          .api(
-            "/groups/" +
-              this._timeLine.groupId +
-              "/planner/plans?$select=id,title"
-          )
-          .get();     
+      // // Check plan id is empty
+      // if (this._timeLine.planId === "") {
+      //   // Get all buckets
+      //   const plansData = await await this._graphClient
+      //     .api(
+      //       "/groups/" +
+      //         this._timeLine.groupId +
+      //         "/planner/plans?$select=id,title"
+      //     )
+      //     .get();     
 
-        // Get first plan id
-        planId = plansData.value[0].id;
-      }
+      //   // Get first plan id
+      //   planId = plansData.value[0].id;
+      // }
 
-      if (planId) {        
-        // Set planID if different (first time)       
-        if (this._timeLine.planId !== planId)
-          this._timeLine.planId = planId;
+      if (this._timeLine.planId) {        
+        // // Set planID if different (first time)       
+        // if (this._timeLine.planId !== planId)
+        //   this._timeLine.planId = planId;
 
         // Get Plan Details
         const planDetails = await this._graphClient
-          .api("/planner/plans/" + planId + "/details")
+          .api("/planner/plans/" + this._timeLine.planId + "/details")
           .get();
 
         this._planDetails = planDetails;
 
         // Get all buckets        
         const bucketsData = await await this._graphClient
-          .api("/planner/plans/" + planId + "/buckets")
+          .api("/planner/plans/" + this._timeLine.planId + "/buckets")
           .get();
 
         // Set buckets
@@ -96,7 +97,7 @@ export class TimeLineService implements ITimeLineService {
         // Get all tasks        
         if (this._timeLine.planId) {
           const tasksData = await this._graphClient
-            .api("/planner/plans/" + planId + "/Tasks")
+            .api("/planner/plans/" + this._timeLine.planId + "/Tasks")
             .orderby("dueDateTime")
             .get();
 
