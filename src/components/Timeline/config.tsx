@@ -147,20 +147,13 @@ export default function Config() {
             </div>
             <div className="config-body">
               <div className="config-body-content">
-                <Tooltip content="Task filter" relationship="label">
+                <Tooltip content="Plan for Timeline to Render" relationship="label">
                   <Dropdown placeholder='Select a Plan' 
                             aria-labelledby={dropdownId}                                                        
                             onOptionSelect={PlanSelect} >                
                     { dropDownOptions }              
                   </Dropdown>
-                </Tooltip>
-                <h3>ADD: DROPDOWN OF PLANS FOR the Groups</h3>                
-                <div>
-                  if not available, ?? Option to create a new plan for the group.
-                </div>
-                <ul>
-                  <li>1. Pass group id in the entityId</li>                  
-                </ul>
+                </Tooltip>                
               </div>
             </div>
           </div>        
