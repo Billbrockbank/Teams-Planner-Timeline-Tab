@@ -41,9 +41,15 @@ export default function App() {
   const groupId = useMemo(() => {
     return context?.team?.groupId;
   }, [context]);
+
+  const planId = useMemo(() => {
+    const planSettings = context?.page?.id ? JSON.parse(context.page.id) : '';
+    return planSettings?.planId ?? ''
+  }, [context]);
   
   const pageId = useMemo(() => {
-    return context?.page?.id ?? ''
+    const planSettings = context?.page?.id ? JSON.parse(context.page.id) : '';
+    return planSettings?.uniqueId ?? '';
   } , [context]);
 
   const filterService = useMemo<FilterService>(() => {
@@ -61,7 +67,8 @@ export default function App() {
 
   const configSettings: IConfigSettings = {
     groupId: groupId ?? '',
-    pageId: pageId,  
+    pageId: pageId,
+    planId: planId,
   }
 
   const services: IServices = {
