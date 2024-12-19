@@ -90,14 +90,20 @@ Version|Date|Author|Comments
 
 - Clone repo
 - Open repo in VSCode
-- Press <kbd>F5</kbd>, follow the sign in prompts
-- When prompted, click on the link in the console to perform the tenant-wide admin consent
+- First, select the Teams Toolkit icon on the left in the VS Code toolbar.
+- In the Account section, sign in with your [Microsoft 365 account](https://docs.microsoft.com/microsoftteams/platform/toolkit/accounts) if you haven't already.
+- Press <kbd>F5</kbd> to start debugging which launches your app in Teams using a web browser. Select `Debug (Edge)` or `Debug (Chrome)`.
+- When Teams launches in the browser, select the Add button in the dialog to install your app to Teams.
 - Wait for deploy and provision tasks to complete.
 - The first time you run the code you will need to "Authorize permission to access Planner Tasks" 
+
+
 
     <p>
         <img src="images/Authorize.gif" width=550>
     </p>
+
+- On initial app run, Allow the following Graph API permissions via the consent prompt. <mark>Make sure popups are allowed in the browser to see the consent prompot</mark>.
 
     | Graph API Permissions |
     | --------------------- |
