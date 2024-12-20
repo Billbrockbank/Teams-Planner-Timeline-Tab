@@ -12,22 +12,42 @@ export const timelineContentStyle = mergeStyles({
 });
 
 export const isCompletedStyle = mergeStyles({
-  backgroundColor: palette.greenDark,
+  backgroundColor: palette.green,
   color: palette.white,
-  border: `1px solid ${palette.greenDark}`,
+  border: `1px solid ${palette.green}`,
+});
+
+export const darkIsCompletedStyle = mergeStyles({
+  backgroundColor: palette.greenLight,
+  color: palette.greenLight,
+  border: `1px solid ${palette.greenLight}`,
 });
 
 export const isOverDueStyle = mergeStyles({
   backgroundColor: palette.red,
-  color: palette.white,
+  color: palette.red,
   border: `1px solid ${palette.red}`,
 });
+
+export const darkIsOverDueStyle = mergeStyles({
+  backgroundColor: palette.orangeLighter,
+  color: palette.orangeLighter,
+  border: `1px solid ${palette.orangeLighter}`,
+});
+
 
 export const isPrimaryStyle = mergeStyles({
   backgroundColor: palette.blue,
   border: `1px solid ${palette.blue}`,
   color: palette.blue,
 });
+
+export const darkIsPrimaryStyle = mergeStyles({
+  backgroundColor: palette.blueLight,
+  border: `1px solid ${palette.blueLight}`,
+  color: palette.blueLight,
+});
+
 
 export const isOutlinedStyle = mergeStyles({
   backgroundColor: "#fff !important",
@@ -39,17 +59,34 @@ export const completedTaskStyle = mergeStyles({
   fontWeight: 400,
 });
 
+export const darkCompletedTaskStyle = mergeStyles({
+  color: palette.greenLight,
+  fontWeight: 400,
+});
+
 export const overDueTaskStyle = mergeStyles({
   color: palette.red,
   fontWeight: 400,
 });
+
+export const darkOverDueTaskStyle = mergeStyles({
+  color: palette.orangeLighter, 
+  fontWeight: 400,
+});
+
 
 export const inprogressTaskStyle = mergeStyles({
   color: palette.blue,
   fontWeight: 400,
 });
 
-export const notstartedTaskStyle = mergeStyles({
+export const darkInprogressTaskStyle = mergeStyles({
+  color: palette.blueLight,
+  fontWeight: 400,
+});
+
+
+export const notStartedTaskStyle = mergeStyles({
   fontWeight: 400,
 });
 

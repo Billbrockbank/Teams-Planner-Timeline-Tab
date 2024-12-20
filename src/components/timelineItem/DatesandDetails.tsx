@@ -14,20 +14,31 @@ import CalloutPane from './CalloutPane'; // Adjust the import path as necessary
 import { 
   timelineItemStyle,
   timelineContentStyle,
-  timelineMarkerStyle,
+  timelineMarkerStyle,  
   isCompletedStyle,
+  darkIsCompletedStyle,
   isOverDueStyle,
+  darkIsOverDueStyle,
   isPrimaryStyle,
-  isOutlinedStyle,
+  darkIsPrimaryStyle,  
   completedTaskStyle,
+  darkCompletedTaskStyle,
   overDueTaskStyle,
+  darkOverDueTaskStyle,
   inprogressTaskStyle,
-  notstartedTaskStyle,
-  taskItemTitleStyle,
+  darkInprogressTaskStyle,
+  isOutlinedStyle,
+  notStartedTaskStyle,
+  taskItemTitleStyle,  
   calloutStyles,
 } from '../../Styles';
 
+import { useContext } from 'react';
+import { TeamsFxContext } from '../Context';
+
 export default function TimelineDetails(task: PlannerTask) {
+  const { themeString } = useContext(TeamsFxContext);
+
   const aline: string = "right";
   
   const [isCalloutVisible, { toggle: toggleIsCalloutVisible }] = useBoolean(false);
@@ -57,17 +68,32 @@ export default function TimelineDetails(task: PlannerTask) {
   const gridClass = ['ms-Grid'];
 
   if (task.percentComplete === 100) {
-    timelineMarkerClass.push(isCompletedStyle);
-    gridClass.push(completedTaskStyle);
+    if (themeString === "dark") {
+      timelineMarkerClass.push(darkIsCompletedStyle);
+      gridClass.push(darkCompletedTaskStyle);
+    } else {
+      timelineMarkerClass.push(isCompletedStyle);
+      gridClass.push(completedTaskStyle);
+    }
   } else if (isOverDue) {
-    timelineMarkerClass.push(isOverDueStyle);
-    gridClass.push(overDueTaskStyle);
+    if (themeString === "dark") {
+      timelineMarkerClass.push(darkIsOverDueStyle);
+      gridClass.push(darkOverDueTaskStyle);
+    } else {
+      timelineMarkerClass.push(isOverDueStyle);
+      gridClass.push(overDueTaskStyle);
+    }
   } else if (task.percentComplete === 50) {
-    timelineMarkerClass.push(isPrimaryStyle);
-    gridClass.push(inprogressTaskStyle);
-  } else {
+    if (themeString === "dark") {
+      timelineMarkerClass.push(darkIsPrimaryStyle);
+      gridClass.push(darkInprogressTaskStyle);
+    } else {
+      timelineMarkerClass.push(isPrimaryStyle);
+      gridClass.push(inprogressTaskStyle);
+    }
+  } else {    
     timelineMarkerClass.push(isOutlinedStyle);
-    gridClass.push(notstartedTaskStyle);
+    gridClass.push(notStartedTaskStyle);
   }
 
   return (
