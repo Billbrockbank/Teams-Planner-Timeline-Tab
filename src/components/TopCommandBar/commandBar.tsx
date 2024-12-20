@@ -18,8 +18,12 @@ import {
 } from '@fluentui/react-components';
 import { PlannerBucket } from '@microsoft/microsoft-graph-types'
 import {
-  stackStyles,  
-  BucketDDLabelStyle,
+  stackStyles,
+  BucketLabelStyle,
+  barDivStyle,
+  activeTasksCheckboxStyle,
+  bucketDropdownStyle,
+  refreshButtonStyle,
 } from '../../Styles';
 
 interface CommandBarProps {
@@ -122,31 +126,35 @@ export default function CommandBar({ onBucketId, onAllTask, onTaskRefresh }: Com
 
   return (
     <>
-      { !filterSettings?.refreshData && 
-        <Stack enableScopedSelectors horizontal horizontalAlign="start" styles={stackStyles}>
-          <Tooltip content="Filter out completed Tasks" relationship="label">
-            <div className="activeTaskscheckbox">              
-              <Checkbox label="All Tasks" 
-                        checked={showActiveTasks} 
-                        labelPosition="before"
-                        disabled={retrievingTasks}
-                        onChange={AllTasksClick} />
+      <Stack enableScopedSelectors horizontal horizontalAlign="start" styles={stackStyles}>
+        <div dir="ltr" className={barDivStyle}>
+          <div className={barDivStyle}>
+            <div className={activeTasksCheckboxStyle}>              
+              <Tooltip content="Filter out completed Tasks" relationship="label">
+                <Checkbox label="All Tasks" 
+                          checked={showActiveTasks} 
+                          labelPosition="before"
+                          disabled={retrievingTasks}
+                          onChange={AllTasksClick} />
+              </Tooltip>
             </div>
-          </Tooltip>
-          <div>
-            <label className={BucketDDLabelStyle}>Planner Bucket</label>
-            <Tooltip content="Task filter" relationship="label">
-              <Dropdown placeholder={DropDownPlaceHolder} 
-                        aria-labelledby={dropdownId}
-                        disabled={retrievingTasks}
-                        selectedOptions={bucketId}
-                        onOptionSelect={PlannerBucketSelect} >                
-                { dropDownOptions }              
-              </Dropdown>
-            </Tooltip>
-            <Tooltip content="Refresh Timeline Tasks" relationship="label">
-                <ToggleButton                  
-                  style={{ width: '30px', height: '30px', marginLeft: '5px' }}                  
+            <div className={barDivStyle}>
+              <span className={BucketLabelStyle}>Planner Bucket</span>
+              <Tooltip content="Task filter" relationship="label">
+                <Dropdown placeholder={DropDownPlaceHolder} 
+                          className={bucketDropdownStyle}
+                          aria-labelledby={dropdownId}
+                          disabled={retrievingTasks}
+                          selectedOptions={bucketId}                          
+                          onOptionSelect={PlannerBucketSelect} >                
+                  { dropDownOptions }              
+                </Dropdown>
+              </Tooltip>
+            </div>
+            <div className={barDivStyle}>
+              <Tooltip content="Refresh Timeline Tasks" relationship="label">
+                <ToggleButton
+                  className={refreshButtonStyle}                  
                   icon={<CalendarMonthRegular />}  
                   appearance="subtle"                  
                   size="medium"
@@ -154,9 +162,10 @@ export default function CommandBar({ onBucketId, onAllTask, onTaskRefresh }: Com
                   onClick={TaskRefreshClick}
                 />
               </Tooltip>
-          </div>        
-        </Stack>
-      }
+            </div>        
+          </div>
+        </div>
+      </Stack>
     </>
   );
 }
