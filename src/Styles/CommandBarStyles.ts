@@ -2,8 +2,7 @@ import {
   mergeStyles,
   IStackStyles,
   DefaultPalette,
-  getTheme,
-  IDropdownStyles,
+  getTheme,  
   ICheckboxStyles, 
 } from "@fluentui/react";
 
@@ -11,9 +10,8 @@ const palette = getTheme().palette;
 
 export const stackStyles: IStackStyles = {
   root: {
-    paddingTop: 10,    
-    height: 50,    
-    background: DefaultPalette.whiteTranslucent40,
+    paddingTop: 5,    
+    height: 40,
   },
 };
 
@@ -29,20 +27,9 @@ export const barDivStyle = mergeStyles({
 });
 
 export const activeTasksCheckboxStyle = mergeStyles({
-  paddingTop: '5px',
-  paddingLeft: '10px',
-  paddingRight: '10px',
-  background: 'rgb(245, 245, 245)'
+  paddingLeft: '3px',  
+  verticalAlign: "middle"  
 });
-
-// export const activeTasksCheckboxStyle: ICheckboxStyles = {
-//   root: {
-//     paddingTop: 5,
-//     paddingLeft: 10,
-//     paddingRight: 10,
-//     background: DefaultPalette.neutralLighterAlt,
-//   },
-// };
 
 export const refreshButtonStyle = mergeStyles({
   width: '30px', 
@@ -51,12 +38,9 @@ export const refreshButtonStyle = mergeStyles({
 });
 
 export const bucketDropdownStyle = mergeStyles({
-  width: '200px'
-});
-
-export const dropdownStyles: Partial<IDropdownStyles> = {
   dropdown: {
+    paddingleft: 5,
     width: 250,
     verticalAlign: "middle",
   },
-};
+});

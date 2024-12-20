@@ -6,22 +6,23 @@ import {
 
 const palette = getTheme().palette;
 
-export const BucketNameStyle = mergeStyles({
-  paddingBottom: '10px', 
-  fontSize: '20px' 
-});
-
 export const pagePaddingStyle = mergeStyles({
-  paddingTop: "2rem",
+  paddingTop: "0.5rem",
   paddingBottom: "2rem",
   paddingLeft: "2rem",
   paddingRight: "2rem"
 });
 
-export const planTitleStyle = mergeStyles({
+export const listedTaskStyle = mergeStyles({
+  paddingBottom: '10px', 
+  marginLeft: "-0.5rem",
+  fontSize: '20px' 
+});
+
+export const BucketNameStyle = mergeStyles({
   fontSize: "1.5rem",
-  fontWeight: 600,
-  marginBottom: "0.5rem",
+  fontWeight: 600,  
+  marginLeft: "-1rem",
   paddingBottom: "1rem",
 });
 

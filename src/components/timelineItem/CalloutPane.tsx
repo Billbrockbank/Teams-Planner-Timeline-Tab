@@ -12,7 +12,13 @@ import {
   useEffect
 } from "react";
 import { TeamsFxContext } from "../Context";
-import { calloutStyles } from '../../Styles';
+import { 
+  calloutStyles,
+  labelsBlockStyle,
+  labelItemStyle,
+} from '../../Styles';
+import { mergeStyles } from "@fluentui/react";
+
 import { 
   ICategoryData
 } from '../../models';
@@ -91,27 +97,37 @@ const [taskDetails, setTaskDetails] = useState<PlannerTaskDetails | undefined>(u
     }
   }
 
+  // function to style the label
+  function labelItemColorStyle(label: ICategoryData): string {
+    const className = mergeStyles({
+      padding: "1px 5px",
+      fontSize: "10px",
+      backgroundColor: label.backgroundColor,
+      color: label.color,
+      borderRadius: '5px'
+    });
+
+    return className;
+  }
+  
   return (
       <>
         <Text block variant="large" className={calloutStyles.title} id={labelId}>
           <strong>{task.title}</strong>
         </Text>
-        {/* TODO: Update label from Planner settings
-            TODO: fix layout and styles for labels */}
         { labels.length > 0 &&
-          <div className="ms-Grid" dir="ltr">
-            <div className="ms-Grid-row" style={{ paddingBottom: '10px' }}>                              
+          <div dir="ltr">
+            <div className={labelsBlockStyle}>
                 {labels.map((label, index) => (
-                  <div className="ms-Grid-col" >
-                    <span key={index} style={{ padding: "1px 2px", fontSize: "10px", backgroundColor: label.backgroundColor, color: label.color, borderRadius: '5px' }}>
+                  <div key={index} className={labelItemStyle}>
+                    <div className={labelItemColorStyle(label)}>
                       {label.text}
-                    </span>
+                    </div>
                     </div>
                 ))}
             </div>
           </div>
-      } 
-              
+        }               
         <Text block variant="small" id={descriptionId}>                
           <strong>Bucket: </strong>{bucketName}
           <br />

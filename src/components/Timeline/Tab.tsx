@@ -25,7 +25,7 @@ import {
 import {
   pagePaddingStyle,
   errorStyle,
-  planTitleStyle,  
+  listedTaskStyle,  
   spinnerStyle,
   timelineHeaderStyle,
   timelineYearStyle,
@@ -171,7 +171,7 @@ export default function Tab() {
       return "In all buckets";
     } else {
       // Get the bucket name from buckets with the bucket id
-      return "Bucket: " + renderSettings?.buckets.find((bucket) => bucket.id === bucketId)?.name || "Unknown Bucket";
+      return renderSettings?.buckets.find((bucket) => bucket.id === bucketId)?.name || "Unknown Bucket";
     }
   }, [bucketId, renderSettings?.buckets]);
   
@@ -255,12 +255,12 @@ export default function Tab() {
                     <pre className={errorStyle}>Error: {timeLineData.current?.error}</pre>
                   }
                   <div>
-                    <div className={planTitleStyle}>
-                      <span>{showActiveTasks ? "All Planner Tasks" : "Active Planner Tasks"}</span>
-                    </div>
-                    {/* Bucket Name */}
                     <div className={BucketNameStyle}>
                       {bucketName}
+                    </div>
+                    {/* Bucket Name */}
+                    <div className={listedTaskStyle}>
+                      <span>{showActiveTasks ? "All Tasks" : "Active Tasks"}</span>                      
                     </div>
                     {/* Render the timeline */}
                     { tasks.map((task: PlannerTask) =>

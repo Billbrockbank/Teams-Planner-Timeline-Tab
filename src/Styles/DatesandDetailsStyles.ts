@@ -98,14 +98,3 @@ export const taskItemTitleStyle = mergeStyles({
   height: 30,
   whiteSpace: "nowrap",
 });
-
-export const calloutStyles = mergeStyleSets({
-  callout: {
-    width: 320,
-    padding: "20px 24px",
-  },
-  title: {
-    marginBottom: 12,
-    fontWeight: FontWeights.semilight,
-  },
-});

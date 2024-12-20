@@ -12,6 +12,7 @@
     "azureFunctions.showProjectWarning": false,
     "csharp.suppressDotnetRestoreNotification": true,
     "cSpell.words": [
-        "calloutsettings"
+        "calloutsettings",
+        "paddingleft"
     ]
 }

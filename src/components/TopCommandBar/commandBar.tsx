@@ -7,7 +7,11 @@ import {
 } from "react";
 import { TeamsFxContext } from "../Context";
 import { Stack } from '@fluentui/react';
-import { CalendarMonthRegular } from "@fluentui/react-icons";
+import { 
+  bundleIcon,
+  CalendarMonthRegular, 
+  CalendarMonthFilled  
+} from "@fluentui/react-icons";
 import {
   ToggleButton, 
   Tooltip,
@@ -41,6 +45,8 @@ export default function CommandBar({ onBucketId, onAllTask, onTaskRefresh }: Com
   const [retrievingTasks, setRetrievingTasks] = useState<boolean>(false);  
   const [refreshData, setRefreshData] = useState<boolean>(false);
   const [bucketId, setBucketId] = useState<string[]>([]);  
+
+  const CalendarMonth = bundleIcon(CalendarMonthFilled, CalendarMonthRegular);
 
   const clearTaskRefresh = () => {
     setRefreshData(false);    
@@ -82,7 +88,7 @@ export default function CommandBar({ onBucketId, onAllTask, onTaskRefresh }: Com
   }, []);
 
   const DropDownPlaceHolder = useMemo(() => {
-    const name = bucketName ? bucketName.replace("Bucket: ", "").replace("In all buckets", "All Buckets") : "Select a bucket";
+    const name = bucketName ? bucketName.replace("In all buckets", "All Buckets") : "Select a bucket";
     return name;    
   }, [bucketName]);
 
@@ -129,18 +135,17 @@ export default function CommandBar({ onBucketId, onAllTask, onTaskRefresh }: Com
       <Stack enableScopedSelectors horizontal horizontalAlign="start" styles={stackStyles}>
         <div dir="ltr" className={barDivStyle}>
           <div className={barDivStyle}>
-            <div className={activeTasksCheckboxStyle}>              
-              <Tooltip content="Filter out completed Tasks" relationship="label">
-                <Checkbox label="All Tasks" 
-                          checked={showActiveTasks} 
-                          labelPosition="before"
-                          disabled={retrievingTasks}
-                          onChange={AllTasksClick} />
-              </Tooltip>
-            </div>
+            <Tooltip content={showActiveTasks ? "Filter out completed Tasks" : "Show all Tasks"} relationship="label">
+              <Checkbox label="All Tasks" 
+                        checked={showActiveTasks} 
+                        className={activeTasksCheckboxStyle}
+                        labelPosition="before"
+                        disabled={retrievingTasks}
+                        onChange={AllTasksClick} />
+            </Tooltip>
             <div className={barDivStyle}>
-              <span className={BucketLabelStyle}>Planner Bucket</span>
-              <Tooltip content="Task filter" relationship="label">
+              <label id={dropdownId} className={BucketLabelStyle} aria-label="Plan Bucket">Plan Bucket </label>
+              <Tooltip content="Filter Tasks by Bucket" relationship="label">                
                 <Dropdown placeholder={DropDownPlaceHolder} 
                           className={bucketDropdownStyle}
                           aria-labelledby={dropdownId}
@@ -155,12 +160,12 @@ export default function CommandBar({ onBucketId, onAllTask, onTaskRefresh }: Com
               <Tooltip content="Refresh Timeline Tasks" relationship="label">
                 <ToggleButton
                   className={refreshButtonStyle}                  
-                  icon={<CalendarMonthRegular />}  
-                  appearance="subtle"                  
+                  icon={<CalendarMonth />}  
+                  appearance="transparent"                  
                   size="medium"
                   disabled={retrievingTasks}
                   onClick={TaskRefreshClick}
-                />
+                >Refresh</ToggleButton>
               </Tooltip>
             </div>        
           </div>
