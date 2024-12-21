@@ -31,6 +31,7 @@ import {
   notStartedTaskStyle,
   taskItemTitleStyle,  
   calloutStyles,
+  infoIconStyle,
 } from '../../Styles';
 
 import { useContext } from 'react';
@@ -114,7 +115,7 @@ export default function TimelineDetails(task: PlannerTask) {
                 <div className="ms-Grid-col">
                   <span>
                     <InfoIcon
-                      style={{ marginTop: '5px', marginRight: '5px', paddingBottom: '5px', cursor: 'pointer' }}
+                      className={infoIconStyle}
                       id={buttonId}
                       onClick={toggleIsCalloutVisible}/>                    
                   </span>
@@ -137,9 +138,8 @@ export default function TimelineDetails(task: PlannerTask) {
               isBeakVisible={true}
               beakWidth={20}
               onDismiss={toggleIsCalloutVisible}
-              directionalHint={DirectionalHint.bottomLeftEdge}
+              directionalHint={DirectionalHint.bottomCenter}
               setInitialFocus>
-
               <CalloutPane {...task} />
             </Callout>) : null }          
         </div>

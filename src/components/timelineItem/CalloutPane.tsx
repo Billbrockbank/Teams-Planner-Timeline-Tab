@@ -3,7 +3,13 @@ import {
   PlannerChecklistItem,
   PlannerTaskDetails,
 } from '@microsoft/microsoft-graph-types'
-import { Text } from "@fluentui/react";
+import { 
+  ArrowDown16Filled as LowIcon,
+  Important16Filled as ImportantIcon,
+  AlertUrgent16Filled as UrgentIcon,
+  Circle16Filled as MediumIcon,
+  CheckmarkCircleFilled as CompletedIcon,
+ } from "@fluentui/react-icons";
 import { useId } from '@fluentui/react-hooks';
 import moment from "moment";
 import { 
@@ -13,9 +19,23 @@ import {
 } from "react";
 import { TeamsFxContext } from "../Context";
 import { 
-  calloutStyles,
+  calloutTitleStyles,
   labelsBlockStyle,
   labelItemStyle,
+  bucketLabelStyle,
+  sectionTitleStyle,
+  priorityStatusStyle,
+  sectionHeadingStyle,
+  calloutNotesStyle,
+  checklistHeadingStyle,
+  checklistListStyle,
+  checklistItemStyle,
+  completeLabelStyle,
+  competedItemStyle,
+  urgentIconStyle,
+  lowIconStyle,
+  importantIconStyle,
+  CompletedIconStyle,
 } from '../../Styles';
 import { mergeStyles } from "@fluentui/react";
 
@@ -68,9 +88,10 @@ const [taskDetails, setTaskDetails] = useState<PlannerTaskDetails | undefined>(u
     bucketName = task.bucketId.split(':')[1];
   }
 
-  let aUsers: string = "- ";
+  let aUsers: string = "";
   // get the users assigned to the task
   if (task.assignments) {
+    aUsers = "- ";
     // loop through the assignments
     Object.keys(task.assignments).forEach((assignmentId: string) => {
       // find the user by the assignmentId
@@ -112,79 +133,106 @@ const [taskDetails, setTaskDetails] = useState<PlannerTaskDetails | undefined>(u
   
   return (
       <>
-        <Text block variant="large" className={calloutStyles.title} id={labelId}>
+        <div dir="ltr" id={labelId} className={calloutTitleStyles}>
           <strong>{task.title}</strong>
-        </Text>
+        </div>
         { labels.length > 0 &&
           <div dir="ltr">
             <div className={labelsBlockStyle}>
-                {labels.map((label, index) => (
-                  <div key={index} className={labelItemStyle}>
-                    <div className={labelItemColorStyle(label)}>
-                      {label.text}
-                    </div>
-                    </div>
-                ))}
+              {labels.map((label, index) => (
+                <div key={index} className={labelItemStyle}>
+                  <div className={labelItemColorStyle(label)}>
+                    {label.text}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        }               
-        <Text block variant="small" id={descriptionId}>                
-          <strong>Bucket: </strong>{bucketName}
-          <br />
-          { task.completedBy?.user?.displayName &&
-            <>
-              <strong>Created by: </strong>
-              <div>
-                {task.completedBy?.user.displayName}
-              </div>
-            </>
-          }
-          <span>
-            {task.priority === 1 && (<><strong>Priority: </strong> Urgent<br /></>)}
-            {task.priority === 3 && (<><strong>Priority: </strong> High<br /></>)}
-            {task.priority === 9 && (<><strong>Priority: </strong> Low<br /></>)}            
-          </span>                
-          { aUsers !== "" && (
-            <>
-              <strong>Assigned to:</strong>
-              <div>
-                {aUsers}
-              </div>
-            </>
-          )}
-          { taskDetails?.description &&
-              <>
-                <br />
-                <strong>Notes: </strong>
-                <div>
-                  {taskDetails?.description}
-                </div>
-                <br />
-              </>
-          }                
-          { task.percentComplete === 100 &&
-            <>
-              <strong>Completed: </strong>
-              <div>
-                By: {task.completedBy?.user?.displayName} on {completedDate}
-              </div>
-            </>
-          }
-          { checklist && checklist.length > 0 &&
-            <>
-              <strong>Checklist:</strong>
-              <ul>                      
-                {checklist.map((item: PlannerChecklistItem) => (
-                  <li key={item.orderHint}>
-                    <div>
-                      <strong>{item.isChecked && "Completed: "}</strong><span style={{ textDecoration: item.isChecked ? 'line-through' : 'none' }}>{item.title}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>  
-            </>
-          }
-        </Text>        
+        }        
+        <div className={bucketLabelStyle}>
+          Bucket: {bucketName}
+        </div>          
+        { task.completedBy?.user?.displayName &&
+          <div>
+            <div className={sectionTitleStyle}>
+              Created by: 
+            </div>
+            <div className={priorityStatusStyle}>
+              {task.completedBy?.user.displayName}
+            </div>            
+          </div>
+        }      
+        {task.priority === 1 && (
+          <div>
+            <div className={sectionTitleStyle}>Priority: </div>
+            <div className={priorityStatusStyle }>
+              <UrgentIcon className={urgentIconStyle}/>
+              Urgent
+            </div>
+          </div>)}
+        {task.priority === 3 && (
+          <div>
+            <div className={sectionTitleStyle}>Priority: </div>
+            <div className={priorityStatusStyle}>
+              <ImportantIcon className={importantIconStyle}/>
+              High
+            </div>
+          </div>)}
+        {task.priority === 9 && (
+          <div>
+            <div className={sectionTitleStyle}>Priority: </div>
+            <div className={priorityStatusStyle}>
+              <LowIcon className={lowIconStyle}/>
+              Low
+            </div>
+          </div>)}        
+        { aUsers.replace('- ', '') !== "" && (
+          <div>
+            <div className={sectionHeadingStyle}>
+              Assigned to:
+            </div>
+            <div>
+              { aUsers === "- " ? "" : aUsers }
+            </div>
+          </div>
+        )}
+        { taskDetails?.description &&
+          <>
+            <div className={sectionHeadingStyle}>
+              Notes:
+            </div>
+            <div className={calloutNotesStyle}>
+                {taskDetails?.description}
+            </div>                
+          </>
+        }                
+        { task.percentComplete === 100 &&
+          <>
+            <div className={sectionHeadingStyle}>
+              Completed:
+            </div>
+            <div>
+              By: {task.completedBy?.user?.displayName} on {completedDate}
+            </div>
+          </>
+        }
+        { checklist && checklist.length > 0 &&
+          <>
+            <div className={checklistHeadingStyle}>
+              Checklist:
+            </div>
+            <ul className={checklistListStyle}>
+              {checklist.map((item: PlannerChecklistItem) => (
+                <li key={item.orderHint}>
+                  <div >
+                    {item.isChecked && <div className={completeLabelStyle}><CompletedIcon className={CompletedIconStyle}/></div>}
+                    <div className={item.isChecked ? competedItemStyle : checklistItemStyle}>{item.title}</div>
+                  </div>
+                </li>
+              ))}
+            </ul>  
+          </>
+        }             
       </>
     )
 }

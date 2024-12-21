@@ -98,3 +98,10 @@ export const taskItemTitleStyle = mergeStyles({
   height: 30,
   whiteSpace: "nowrap",
 });
+
+export const infoIconStyle = mergeStyles({
+  marginTop: '5px', 
+  marginRight: '5px', 
+  paddingBottom: '5px', 
+  cursor: 'pointer'
+});

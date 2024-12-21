@@ -7,6 +7,13 @@ import {
 
 const palette = getTheme().palette;
 
+export const calloutTitleStyles = mergeStyles({
+  marginBottom: '10px',
+  color: palette.themeDarker,
+  fontWeight: FontWeights.semibold,
+  fontSize: '18px'
+});
+
 export const calloutStyles = mergeStyleSets({
   callout: {
     width: 320,
@@ -27,4 +34,82 @@ export const labelItemStyle = mergeStyles({
   display: 'inline-block', 
   paddingRight: '3px', 
   marginBottom: '5px'
+});
+
+export const bucketLabelStyle = mergeStyles({
+  marginTop: '-8px',
+  paddingBottom: '5px',  
+  fontSize: '16px',
+  fontWeight: FontWeights.bold  
+});
+
+export const sectionTitleStyle = mergeStyles({
+  display: 'inline-block',
+  paddingBottom: '3px',
+  fontSize: '16px',
+  fontWeight: FontWeights.semibold
+});
+
+export const sectionHeadingStyle = mergeStyles({
+  color: palette.themeDarker,
+  fontSize: '16px',
+  fontWeight: FontWeights.semibold
+});
+
+export const priorityStatusStyle = mergeStyles({
+  paddingLeft: '5px',
+  display: 'inline-block',
+  fontSize: '16px',
+  fontWeight: FontWeights.semilight
+});
+
+export const calloutNotesStyle = mergeStyles({
+  marginBottom: '10px',
+  fontSize: '14px'
+});
+
+export const checklistHeadingStyle = mergeStyles({
+  color: palette.themeDarker,
+  fontSize: '16px',
+  fontWeight: FontWeights.semibold
+});
+
+export const checklistListStyle = mergeStyles({
+  marginTop: '0px',
+  alignItems: 'center',
+  paddingBottom: '5px'
+});
+
+export const checklistItemStyle = mergeStyles({
+  display: 'inline-block', 
+  paddingRight: '3px',   
+});
+
+export const completeLabelStyle = mergeStyles({
+  display: 'inline-block',
+  paddingRight: '3px',  
+  verticalAlign: 'middle'
+});
+
+export const competedItemStyle = mergeStyles({
+  display: 'inline-block',
+  paddingRight: '3px',  
+  textDecoration: 'line-through',  
+  verticalAlign: 'middle'
+});
+
+export const urgentIconStyle = mergeStyles({
+  color: palette.red,
+});
+
+export const lowIconStyle = mergeStyles({
+  color: palette.blue,
+});
+
+export const importantIconStyle = mergeStyles({
+  color: palette.red,
+});
+
+export const CompletedIconStyle = mergeStyles({
+  color: palette.green,
 });
