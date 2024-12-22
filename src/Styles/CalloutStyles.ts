@@ -113,3 +113,7 @@ export const importantIconStyle = mergeStyles({
 export const CompletedIconStyle = mergeStyles({
   color: palette.green,
 });
+
+export const CheckListLineItemStyle = mergeStyles({
+  display: 'flex'
+});

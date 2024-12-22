@@ -50,6 +50,7 @@ export default function TimelineDetails(task: PlannerTask) {
 
   let startDate: string = "";  
   let dueDate: string = "";
+  let completionDate: string = "";
   let isOverDue: boolean = false;
   
   // if the task has a start date, get the start date
@@ -65,6 +66,10 @@ export default function TimelineDetails(task: PlannerTask) {
     isOverDue = moment(new Date(task.dueDateTime)).add(1, 'd').isBefore(new Date()); 
   }
   
+  if (task.completedDateTime) {
+    completionDate = "Completed: " + moment(new Date(task.completedDateTime)).format("MMM D, YYYY");
+  }
+
   const timelineMarkerClass = [mergeStyles(timelineMarkerStyle)];
   const gridClass = ['ms-Grid'];
 
@@ -108,7 +113,11 @@ export default function TimelineDetails(task: PlannerTask) {
                     <span>{dueDate}</span>
                   </div>
                   <div className="ms-Grid-col">
-                    <span>{startDate}</span>                    
+                    { completionDate !== "" ? 
+                      <span>{completionDate}</span> 
+                    : 
+                      <span>{startDate}</span>                    
+                    }
                   </div>
               </div> 
               <div className="ms-Grid-row">
@@ -126,7 +135,6 @@ export default function TimelineDetails(task: PlannerTask) {
               </div>
             </div>
           </div>
-          
           {isCalloutVisible ? (
             <Callout
               ariaLabelledBy={labelId}

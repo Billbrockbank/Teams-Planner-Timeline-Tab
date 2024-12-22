@@ -36,6 +36,7 @@ import {
   lowIconStyle,
   importantIconStyle,
   CompletedIconStyle,
+  CheckListLineItemStyle,
 } from '../../Styles';
 import { mergeStyles } from "@fluentui/react";
 
@@ -224,9 +225,14 @@ const [taskDetails, setTaskDetails] = useState<PlannerTaskDetails | undefined>(u
             <ul className={checklistListStyle}>
               {checklist.map((item: PlannerChecklistItem) => (
                 <li key={item.orderHint}>
-                  <div >
-                    {item.isChecked && <div className={completeLabelStyle}><CompletedIcon className={CompletedIconStyle}/></div>}
-                    <div className={item.isChecked ? competedItemStyle : checklistItemStyle}>{item.title}</div>
+                  <div className={CheckListLineItemStyle} >
+                    {item.isChecked && 
+                      <div className={completeLabelStyle} >
+                        <CompletedIcon className={CompletedIconStyle}/>
+                      </div>}
+                    <div className={item.isChecked ? competedItemStyle : checklistItemStyle}>
+                      {item.title}
+                    </div>
                   </div>
                 </li>
               ))}
