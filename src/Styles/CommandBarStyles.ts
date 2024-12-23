@@ -1,9 +1,7 @@
 import {
   mergeStyles,
   IStackStyles,
-  DefaultPalette,
-  getTheme,  
-  ICheckboxStyles, 
+  getTheme,
 } from "@fluentui/react";
 
 const palette = getTheme().palette;
@@ -12,6 +10,7 @@ export const stackStyles: IStackStyles = {
   root: {
     paddingTop: 5,    
     height: 40,
+    width: '100%',
   },
 };
 
