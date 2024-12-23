@@ -4,10 +4,6 @@ import {
   PlannerTaskDetails,
 } from '@microsoft/microsoft-graph-types'
 import { 
-  ArrowDown16Filled as LowIcon,
-  Important16Filled as ImportantIcon,
-  AlertUrgent16Filled as UrgentIcon,
-  // Circle16Filled as MediumIcon,
   CheckmarkCircleFilled as CompletedIcon,
  } from "@fluentui/react-icons";
 import { useId } from '@fluentui/react-hooks';
@@ -147,7 +143,7 @@ export default function CalloutPane( task: PlannerTask ) {
             </div>            
           </div>
         }
-        <PriorityIcon priority={task.priority ?? 0} />
+        <PriorityIcon priority={task.priority ?? 0} forTimeline={false} />
         { task.dueDateTime && (
           <div>
             <div className={sectionTitleStyle}>

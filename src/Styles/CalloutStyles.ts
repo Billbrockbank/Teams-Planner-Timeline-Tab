@@ -105,18 +105,22 @@ export const competedItemStyle = mergeStyles({
 
 export const urgentIconStyle = mergeStyles({
   color: palette.red,
+  marginRight: '3px',
 });
 
 export const lowIconStyle = mergeStyles({
   color: palette.blue,
+  marginRight: '3px',
 });
 
 export const importantIconStyle = mergeStyles({
   color: palette.red,
+  marginRight: '3px',
 });
 
 export const CompletedIconStyle = mergeStyles({
   color: palette.green,
+  marginRight: '3px',
 });
 
 export const CheckListLineItemStyle = mergeStyles({

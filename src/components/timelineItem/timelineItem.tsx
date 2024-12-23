@@ -4,8 +4,6 @@ import {
   TimelineMonth,
   TimelineDetails
 } from '..';
-import { mergeStyles } from "@fluentui/react";
- 
 import { 
   timelineItemStyle,
   timelineContentStyle,  

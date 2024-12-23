@@ -90,8 +90,8 @@ export const notStartedTaskStyle = mergeStyles({
   fontWeight: 400,
 });
 
-export const taskItemTitleStyle = mergeStyles({
-  display: "inline-block",
+export const taskItemTitleStyle = mergeStyles({  
+  display: "flex",
   verticalAlign: "top",
   paddingTop: 4,
   width: 240,
@@ -105,6 +105,19 @@ export const infoIconStyle = mergeStyles({
   paddingBottom: '5px', 
   cursor: 'pointer'
 });
+
+export const timelineTitleBlockStyle = mergeStyles({
+  display: "flex",
+  marginLeft: "0.5em",
+});
+
+export const priorityTimelineStatusStyle = mergeStyles({
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center"  
+});
+
 
 export function timelineRenderStyles(themeString: string, TaskPercentComplete: number, isOverDue: boolean): [string[], string[]] {
     const timelineMarkerClass = [mergeStyles(timelineMarkerStyle)];

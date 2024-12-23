@@ -17,6 +17,7 @@ import {
   taskItemTitleStyle,  
   calloutStyles,
   infoIconStyle,
+  timelineTitleBlockStyle,
 } from '../../Styles';
 import {PriorityIcon } from '.';
 import { useContext } from 'react';
@@ -85,18 +86,18 @@ export default function TimelineDetails(task: PlannerTask) {
                     }
                   </div>
               </div> 
-              <div className="ms-Grid-row">
-                <div className="ms-Grid-col">
-                  <span>
+              <div className="ms-Grid-row">                
+                <div className={timelineTitleBlockStyle}>
+                  <div>
                     <InfoIcon
                       className={infoIconStyle}
                       id={buttonId}
                       onClick={toggleIsCalloutVisible}/>                    
-                  </span>
-                  <span className={taskItemTitleStyle}>
-                    {/* <PriorityIcon priority={task.priority ?? 0} />   */}
+                  </div>
+                  <div className={taskItemTitleStyle}>
+                    <PriorityIcon priority={task.priority ?? 0} forTimeline={true} />  
                     {task.title}
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
