@@ -7,7 +7,7 @@ import {
   ArrowDown16Filled as LowIcon,
   Important16Filled as ImportantIcon,
   AlertUrgent16Filled as UrgentIcon,
-  Circle16Filled as MediumIcon,
+  // Circle16Filled as MediumIcon,
   CheckmarkCircleFilled as CompletedIcon,
  } from "@fluentui/react-icons";
 import { useId } from '@fluentui/react-hooks';
@@ -18,7 +18,8 @@ import {
   useEffect
 } from "react";
 import { TeamsFxContext } from "../Context";
-import { 
+import {
+  labelItemColorStyle,
   calloutTitleStyles,
   labelsBlockStyle,
   labelItemStyle,
@@ -38,7 +39,6 @@ import {
   CompletedIconStyle,
   CheckListLineItemStyle,
 } from '../../Styles';
-import { mergeStyles } from "@fluentui/react";
 
 import { 
   ICategoryData
@@ -46,8 +46,7 @@ import {
 
 export default function CalloutPane( task: PlannerTask ) {
   const labelId = useId('callout-label');
-  const descriptionId = useId('callout-description');
-const [taskDetails, setTaskDetails] = useState<PlannerTaskDetails | undefined>(undefined);
+  const [taskDetails, setTaskDetails] = useState<PlannerTaskDetails | undefined>(undefined);
 
   const { renderSettings, categorySettings, services} = useContext(TeamsFxContext);
   let completedDate: string = "";
@@ -76,7 +75,8 @@ const [taskDetails, setTaskDetails] = useState<PlannerTaskDetails | undefined>(u
     if (task.completedDateTime)
       completedDate = moment(new Date(task.completedDateTime)).format("MMM D, YYYY");
 
-  const checklistItems: Record<string, any> = taskDetails?.checklist || {};   
+  const checklistItems: Record<string, any> = taskDetails?.checklist || {};
+  
   if (checklistItems) {
     Object.keys(checklistItems).forEach((key: keyof typeof checklistItems) => {
       const checklistItem: PlannerChecklistItem = checklistItems[key];
@@ -119,19 +119,6 @@ const [taskDetails, setTaskDetails] = useState<PlannerTaskDetails | undefined>(u
     }
   }
 
-  // function to style the label
-  function labelItemColorStyle(label: ICategoryData): string {
-    const className = mergeStyles({
-      padding: "1px 5px",
-      fontSize: "10px",
-      backgroundColor: label.backgroundColor,
-      color: label.color,
-      borderRadius: '5px'
-    });
-
-    return className;
-  }
-  
   return (
       <>
         <div dir="ltr" id={labelId} className={calloutTitleStyles}>

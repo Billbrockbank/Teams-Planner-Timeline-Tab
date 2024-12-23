@@ -5,6 +5,11 @@ import {
   FontWeights,
 } from "@fluentui/react";
 
+import { 
+  ICategoryData
+} from '../models';
+
+
 const palette = getTheme().palette;
 
 export const calloutTitleStyles = mergeStyles({
@@ -117,3 +122,17 @@ export const CompletedIconStyle = mergeStyles({
 export const CheckListLineItemStyle = mergeStyles({
   display: 'flex'
 });
+
+ // function to style the label
+export function labelItemColorStyle(label: ICategoryData): string {
+  const className = mergeStyles({
+    padding: "1px 5px",
+    fontSize: "10px",
+    backgroundColor: label.backgroundColor,
+    color: label.color,
+    borderRadius: '5px'
+  });
+
+  return className;
+}
+  

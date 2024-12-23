@@ -1,6 +1,5 @@
 import { PlannerTask } from '@microsoft/microsoft-graph-types'
 import { 
-  mergeStyles,
   Callout,
   DirectionalHint  
  } from "@fluentui/react";
@@ -12,23 +11,9 @@ import moment from "moment";
 import { Info24Filled as InfoIcon } from "@fluentui/react-icons";
 import CalloutPane from './CalloutPane'; // Adjust the import path as necessary
 import { 
+  timelineRenderStyles,
   timelineItemStyle,
-  timelineContentStyle,
-  timelineMarkerStyle,  
-  isCompletedStyle,
-  darkIsCompletedStyle,
-  isOverDueStyle,
-  darkIsOverDueStyle,
-  isPrimaryStyle,
-  darkIsPrimaryStyle,  
-  completedTaskStyle,
-  darkCompletedTaskStyle,
-  overDueTaskStyle,
-  darkOverDueTaskStyle,
-  inprogressTaskStyle,
-  darkInprogressTaskStyle,
-  isOutlinedStyle,
-  notStartedTaskStyle,
+  timelineContentStyle,  
   taskItemTitleStyle,  
   calloutStyles,
   infoIconStyle,
@@ -46,61 +31,41 @@ export default function TimelineDetails(task: PlannerTask) {
   
   const buttonId = useId('callout-button');
   const labelId = useId('callout-label');
-  const descriptionId = useId('callout-description');
+  const descriptionId = useId('callout-description');  
 
-  let startDate: string = "";  
-  let dueDate: string = "";
-  let completionDate: string = "";
-  let isOverDue: boolean = false;
-  
-  // if the task has a start date, get the start date
-  if (task.startDateTime)
-    startDate = "Start: " + moment(new Date(task.startDateTime)).format("MMM D, YYYY");
-  else 
-    startDate = "Start anytime";
+  function isOverDue(task: PlannerTask) {
+    // if the task has a due date, get the due date
+    if (task.dueDateTime)
+      // check if the task is overdue by comparing the due date + 1 day to today's date
+      return moment(new Date(task.dueDateTime)).add(1, 'd').isBefore(new Date());
 
-  // if the task has a due date, get the due date
-  if (task.dueDateTime) {
-    dueDate = "Due: " + moment(new Date(task.dueDateTime)).format("MMM D, YYYY");
-    // check if the task is overdue by comparing the due date + 1 day to today's date
-    isOverDue = moment(new Date(task.dueDateTime)).add(1, 'd').isBefore(new Date()); 
+    return false;
   }
   
-  if (task.completedDateTime) {
-    completionDate = "Completed: " + moment(new Date(task.completedDateTime)).format("MMM D, YYYY");
+  function dueDate(task: PlannerTask) {
+    // if the task has a due date, get the due date
+    if (task.dueDateTime)
+      return "Due: " + moment(new Date(task.dueDateTime)).format("MMM D, YYYY");
+
+    return "No due date";
   }
 
-  const timelineMarkerClass = [mergeStyles(timelineMarkerStyle)];
-  const gridClass = ['ms-Grid'];
-
-  if (task.percentComplete === 100) {
-    if (themeString === "dark") {
-      timelineMarkerClass.push(darkIsCompletedStyle);
-      gridClass.push(darkCompletedTaskStyle);
-    } else {
-      timelineMarkerClass.push(isCompletedStyle);
-      gridClass.push(completedTaskStyle);
-    }
-  } else if (isOverDue) {
-    if (themeString === "dark") {
-      timelineMarkerClass.push(darkIsOverDueStyle);
-      gridClass.push(darkOverDueTaskStyle);
-    } else {
-      timelineMarkerClass.push(isOverDueStyle);
-      gridClass.push(overDueTaskStyle);
-    }
-  } else if (task.percentComplete === 50) {
-    if (themeString === "dark") {
-      timelineMarkerClass.push(darkIsPrimaryStyle);
-      gridClass.push(darkInprogressTaskStyle);
-    } else {
-      timelineMarkerClass.push(isPrimaryStyle);
-      gridClass.push(inprogressTaskStyle);
-    }
-  } else {    
-    timelineMarkerClass.push(isOutlinedStyle);
-    gridClass.push(notStartedTaskStyle);
+  function startDate(task: PlannerTask) {
+    // if the task has a start date, get the start date
+    if (task.startDateTime)
+      return "Start: " + moment(new Date(task.startDateTime)).format("MMM D, YYYY");
+    else 
+      return "Start anytime";
   }
+    
+  function completedDate(task: PlannerTask) {
+    if (task.completedDateTime)
+      return "Completed: " + moment(new Date(task.completedDateTime)).format("MMM D, YYYY");
+
+    return ""
+  }
+
+  const [timelineMarkerClass, gridClass] = timelineRenderStyles(themeString, task.percentComplete ?? 0, isOverDue(task));
 
   return (
       <>
@@ -110,13 +75,13 @@ export default function TimelineDetails(task: PlannerTask) {
             <div className={gridClass.join(' ')} dir={aline === 'right' ? 'ltr' : 'rtl'}>
               <div className="ms-Grid-row">                
                   <div className="ms-Grid-col">
-                    <span>{dueDate}</span>
+                    <span>{dueDate(task)}</span>
                   </div>
                   <div className="ms-Grid-col">
-                    { completionDate !== "" ? 
-                      <span>{completionDate}</span> 
+                    { task.completedDateTime ? 
+                      <span>{completedDate(task)}</span> 
                     : 
-                      <span>{startDate}</span>                    
+                      <span>{startDate(task)}</span>                    
                     }
                   </div>
               </div> 

@@ -1,9 +1,9 @@
 import {
   getTheme,
   mergeStyles,
-  mergeStyleSets,
-  FontWeights,
 } from "@fluentui/react";
+
+import {timelineMarkerStyle} from '.';
 
 const palette = getTheme().palette;
 
@@ -105,3 +105,39 @@ export const infoIconStyle = mergeStyles({
   paddingBottom: '5px', 
   cursor: 'pointer'
 });
+
+export function timelineRenderStyles(themeString: string, TaskPercentComplete: number, isOverDue: boolean): [string[], string[]] {
+    const timelineMarkerClass = [mergeStyles(timelineMarkerStyle)];
+    const gridClass = ['ms-Grid'];
+
+    if (TaskPercentComplete === 100) {
+      if (themeString === "dark") {
+        timelineMarkerClass.push(darkIsCompletedStyle);
+        gridClass.push(darkCompletedTaskStyle);
+      } else {
+        timelineMarkerClass.push(isCompletedStyle);
+        gridClass.push(completedTaskStyle);
+      }
+    } else if (isOverDue) {
+      if (themeString === "dark") {
+        timelineMarkerClass.push(darkIsOverDueStyle);
+        gridClass.push(darkOverDueTaskStyle);
+      } else {
+        timelineMarkerClass.push(isOverDueStyle);
+        gridClass.push(overDueTaskStyle);
+      }
+    } else if (TaskPercentComplete === 50) {
+      if (themeString === "dark") {
+        timelineMarkerClass.push(darkIsPrimaryStyle);
+        gridClass.push(darkInprogressTaskStyle);
+      } else {
+        timelineMarkerClass.push(isPrimaryStyle);
+        gridClass.push(inprogressTaskStyle);
+      }
+    } else {    
+      timelineMarkerClass.push(isOutlinedStyle);
+      gridClass.push(notStartedTaskStyle);
+    }
+
+    return [timelineMarkerClass, gridClass];
+  }
