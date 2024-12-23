@@ -144,6 +144,14 @@ export default function CalloutPane( task: PlannerTask ) {
           </div>
         }
         <PriorityIcon priority={task.priority ?? 0} forTimeline={false} />
+        <div>
+          <div className={sectionTitleStyle}>
+            Progress: 
+          </div>
+          <div className={priorityStatusStyle}>
+            {task.percentComplete === 100 ? "Completed" : task.percentComplete === 50 ? "In Progress" : "Not Started"}
+          </div>          
+        </div>
         { task.dueDateTime && (
           <div>
             <div className={sectionTitleStyle}>
