@@ -39,7 +39,7 @@ import {
   CompletedIconStyle,
   CheckListLineItemStyle,
 } from '../../Styles';
-
+import PriorityIcon from './PriorityIcon';
 import { 
   ICategoryData
 } from '../../models';
@@ -149,31 +149,18 @@ export default function CalloutPane( task: PlannerTask ) {
               {task.completedBy?.user.displayName}
             </div>            
           </div>
-        }      
-        {task.priority === 1 && (
+        }
+        <PriorityIcon priority={task.priority ?? 0} />
+        { task.dueDateTime && (
           <div>
-            <div className={sectionTitleStyle}>Priority: </div>
-            <div className={priorityStatusStyle }>
-              <UrgentIcon className={urgentIconStyle}/>
-              Urgent
+            <div className={sectionTitleStyle}>
+              Due:
             </div>
-          </div>)}
-        {task.priority === 3 && (
-          <div>
-            <div className={sectionTitleStyle}>Priority: </div>
-            <div className={priorityStatusStyle}>
-              <ImportantIcon className={importantIconStyle}/>
-              High
+            <div>
+              {moment(new Date(task.dueDateTime)).format("MMM D, YYYY")}
             </div>
-          </div>)}
-        {task.priority === 9 && (
-          <div>
-            <div className={sectionTitleStyle}>Priority: </div>
-            <div className={priorityStatusStyle}>
-              <LowIcon className={lowIconStyle}/>
-              Low
-            </div>
-          </div>)}        
+          </div>  
+        )}
         { aUsers.replace('- ', '') !== "" && (
           <div>
             <div className={sectionHeadingStyle}>

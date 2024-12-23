@@ -18,7 +18,7 @@ import {
   calloutStyles,
   infoIconStyle,
 } from '../../Styles';
-
+import {PriorityIcon } from '.';
 import { useContext } from 'react';
 import { TeamsFxContext } from '../Context';
 
@@ -94,6 +94,7 @@ export default function TimelineDetails(task: PlannerTask) {
                       onClick={toggleIsCalloutVisible}/>                    
                   </span>
                   <span className={taskItemTitleStyle}>
+                    {/* <PriorityIcon priority={task.priority ?? 0} />   */}
                     {task.title}
                   </span>
                 </div>
