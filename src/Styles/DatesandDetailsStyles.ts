@@ -94,9 +94,9 @@ export const taskItemTitleStyle = mergeStyles({
   display: "flex",
   verticalAlign: "top",
   paddingTop: 4,
-  width: 240,
   height: 30,
-  whiteSpace: "nowrap",
+  whiteSpace: "pre-wrap",
+  wordWrap: 'break-word !important',
 });
 
 export const infoIconStyle = mergeStyles({

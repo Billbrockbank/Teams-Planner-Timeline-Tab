@@ -95,8 +95,8 @@ export default function TimelineDetails(task: PlannerTask) {
                       onClick={toggleIsCalloutVisible}/>                    
                   </div>
                   <div className={taskItemTitleStyle}>
-                    <PriorityIcon priority={task.priority ?? 0} forTimeline={true} />  
-                    {task.title}
+                    <PriorityIcon priority={task.priority ?? 0} forTimeline={true} />
+                      {task.title}
                   </div>
                 </div>
               </div>
