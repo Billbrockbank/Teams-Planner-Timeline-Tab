@@ -31,10 +31,11 @@ import {
   timelineYearStyle,
   spinnerDiv,
   BucketNameStyle,
+  CommandBarBlockStyle,
 } from '../../Styles';
 
 export default function Tab() {
-  const { renderSettings, teamsUserCredential, configSettings, filterSettings, categorySettings, services } = useContext(TeamsFxContext);
+  const { themeString, renderSettings, teamsUserCredential, configSettings, filterSettings, categorySettings, services } = useContext(TeamsFxContext);
 
   // scopes
   const scopes = ['User.Read.All', 'Tasks.Read', 'GroupMember.Read.All', 'Tasks.ReadWrite', 'TeamSettings.Read.All'];
@@ -247,7 +248,7 @@ export default function Tab() {
             }
             { !retrievingTasks &&      
             <>
-              <div>
+              <div className={CommandBarBlockStyle(themeString)}>
                 <CommandBar onAllTask={allTaskHandler} onBucketId={bucketHandler} onTaskRefresh={TaskRefreshHandler} />
               </div>          
               <div className={pagePaddingStyle}>

@@ -118,7 +118,6 @@ export const priorityTimelineStatusStyle = mergeStyles({
   alignItems: "center"  
 });
 
-
 export function timelineRenderStyles(themeString: string, TaskPercentComplete: number, isOverDue: boolean): [string[], string[]] {
     const timelineMarkerClass = [mergeStyles(timelineMarkerStyle)];
     const gridClass = ['ms-Grid'];

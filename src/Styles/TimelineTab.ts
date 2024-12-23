@@ -10,7 +10,11 @@ export const pagePaddingStyle = mergeStyles({
   paddingTop: "0.5rem",
   paddingBottom: "2rem",
   paddingLeft: "2rem",
-  paddingRight: "2rem"
+  paddingRight: "2rem",
+  marginTop: "40px",
+  top: '40px', 
+  position: 'sticky', 
+  zIndex: 100
 });
 
 export const listedTaskStyle = mergeStyles({
@@ -43,3 +47,16 @@ export const spinnerStyle = mergeStyles({
     color: "#5b5fc7"
   }  
 });
+
+export function CommandBarBlockStyle(themeString: string): string {
+  const className = mergeStyles({
+    position: "fixed", 
+    top: 0, 
+    width: "100%", 
+    height: '45px', 
+    background: themeString === "dark" ? palette.themeDarker : palette.themeLighterAlt, 
+    zIndex: 1000,
+  });
+
+  return className;
+  }
