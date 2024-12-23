@@ -134,43 +134,38 @@ export default function CommandBar({ onBucketId, onAllTask, onTaskRefresh }: Com
     <>
       <Stack enableScopedSelectors horizontal horizontalAlign="start" styles={stackStyles}>
         <div dir="ltr" className={barDivStyle}>
+          <div className={barDivStyle}>          
+            <Checkbox label="All Tasks" 
+                checked={showActiveTasks} 
+                className={activeTasksCheckboxStyle}
+                labelPosition="before"
+                disabled={retrievingTasks}
+                onChange={AllTasksClick} />          
           <div className={barDivStyle}>
-            <Tooltip content={showActiveTasks ? "Filter out completed Tasks" : "Show all Tasks"} relationship="label">
-              <Checkbox label="All Tasks" 
-                        checked={showActiveTasks} 
-                        className={activeTasksCheckboxStyle}
-                        labelPosition="before"
-                        disabled={retrievingTasks}
-                        onChange={AllTasksClick} />
-            </Tooltip>
-            <div className={barDivStyle}>
-              <label id={dropdownId} className={BucketLabelStyle} aria-label="Plan Bucket">Plan Bucket </label>
-              <Tooltip content="Filter Tasks by Bucket" relationship="label">                
-                <Dropdown placeholder={DropDownPlaceHolder.replace("Bucket: ", "")} 
-                          className={bucketDropdownStyle}
-                          aria-labelledby={dropdownId}
-                          disabled={retrievingTasks}
-                          selectedOptions={bucketId}                          
-                          onOptionSelect={PlannerBucketSelect} >                
-                  { dropDownOptions }              
-                </Dropdown>
-              </Tooltip>
-            </div>
-            <div className={barDivStyle}>
-              <Tooltip content="Refresh Timeline Tasks" relationship="label">
-                <ToggleButton
-                  className={refreshButtonStyle}                  
-                  icon={<CalendarMonth />}  
-                  appearance="transparent"                  
-                  size="medium"
+            <label id={dropdownId} className={BucketLabelStyle} aria-label="Plan Bucket">Plan Bucket </label>            
+            <Dropdown placeholder={DropDownPlaceHolder.replace("Bucket: ", "")} 
+                  className={bucketDropdownStyle}
+                  aria-labelledby={dropdownId}
                   disabled={retrievingTasks}
-                  onClick={TaskRefreshClick}
-                >Refresh</ToggleButton>
-              </Tooltip>
-            </div>        
+                  selectedOptions={bucketId}                          
+                  onOptionSelect={PlannerBucketSelect} >                
+              { dropDownOptions }              
+            </Dropdown>
           </div>
+          <div className={barDivStyle}>
+            <Tooltip content="Refresh Timeline Tasks" relationship="label">
+              <ToggleButton className={refreshButtonStyle}                  
+                            icon={<CalendarMonth />}  
+                            appearance="transparent"                  
+                            size="medium"
+                            disabled={retrievingTasks}
+                            onClick={TaskRefreshClick}>
+                Refresh
+              </ToggleButton>
+            </Tooltip>
+          </div>        
         </div>
-      </Stack>
-    </>
-  );
+      </div>
+    </Stack>
+  </>);
 }
