@@ -16,13 +16,15 @@ import { useTeams } from "@microsoft/teamsfx-react";
 import { TeamsFxContext } from "../Context";
 import { Client } from "@microsoft/microsoft-graph-client";
 import { useGraphWithCredential } from "@microsoft/teamsfx-react";
-import { PlannerPlan } from '@microsoft/microsoft-graph-types'
+import { PlannerBucket, PlannerPlan } from '@microsoft/microsoft-graph-types'
 import {
   Tooltip,
+  Checkbox,
   Dropdown,
   Option,
   useId,
 } from '@fluentui/react-components';
+import { activeTasksCheckboxStyle } from '../../Styles';
 
 export default function Config() {
   const { themeString, configSettings, teamsUserCredential } = useContext(TeamsFxContext);
@@ -30,12 +32,17 @@ export default function Config() {
 
   const scopes = ['User.Read.All', 'Tasks.Read', 'GroupMember.Read.All', 'Tasks.ReadWrite', 'TeamSettings.Read.All'];
 
-  const dropdownId = useId('dropdown');
+  const planDropdownId = useId('planDropdown');
+  const bucketDropdownId = useId('bucketDropdown');
   const [needConsent, setNeedConsent] = useState(false);
   const [graphClient, setGraphClient] = useState<Client>();
-  const [planId, setPlanId] = useState<string>("");
+  const [planId, setPlanId] = useState<string>("All");
   const [plans, setPlans] = useState<PlannerPlan[]>([]);
+  const [buckets, setBuckets] = useState<PlannerBucket[]>([]);
+  const [bucketId, setBucketId] = useState<string>("");
+  const [showActiveTasks, setShowActiveTasks] = useState(true);
   const planName = useRef<string>("");
+  const bucketName = useRef<string>("");
   
   // Get the graph client
   const { loading, reload } = useGraphWithCredential(
@@ -87,11 +94,23 @@ export default function Config() {
 
   useEffect(() => {
     if (planId) {
-      entityId.current = JSON.stringify({ planId: planId, uniqueId: uniqueId });
+      entityId.current = JSON.stringify({ planId: planId, uniqueId: uniqueId, bucketId: bucketId === "" ? "All" : bucketId, showActiveTasks: showActiveTasks });
     }
-  }, [planId]);
+  }, [planId, uniqueId, bucketId, showActiveTasks]);
 
-  const dropDownOptions = useMemo(() => {
+  const bucketDropDownOptions = useMemo(() => {
+    const options: JSX.Element[] = [];
+    
+    options.push(<Option key="All" value="All" text="All Buckets">All Buckets</Option>);
+
+    buckets.forEach((bucket: PlannerBucket) => {      
+      return options.push(<Option key={bucket.id} value={bucket.id} text={bucket.name ?? 'Unnamed Bucket'}>{bucket.name}</Option>);
+    });
+    
+    return options;
+  }, [buckets, planId]);
+
+  const planDropDownOptions = useMemo(() => {
     const options: JSX.Element[] = [];
 
     // options.push(<Option key="new" value="new" text="Create New Plan">Create New Plan</Option>);
@@ -117,6 +136,25 @@ export default function Config() {
       }
     }, []);
 
+  const BucketSelect = useCallback((event: any, data: any) => {
+      if (data) {
+        // Set the bucket id from selection
+        const bucketId = data.optionValue || "All"
+        
+        // Set the bucket name from selection
+        bucketName.current = data.optionText || "";
+
+        setBucketId(bucketId);
+      }
+    }, []);
+
+    const AllTasksClick = useCallback(() => { 
+      // Set the show active tasks flag
+      setShowActiveTasks(!showActiveTasks);
+      
+    }, [showActiveTasks]);
+    
+
   useEffect(() => {
     if (graphClient && configSettings) {
       graphClient.api(`/groups/${configSettings.groupId}/planner/plans`)
@@ -129,6 +167,19 @@ export default function Config() {
         });
     }
   }, [graphClient, configSettings]);
+
+  useEffect(() => {
+    if (graphClient && planId) {
+      graphClient.api(`/planner/plans/${planId}/buckets`)
+        .get()
+        .then((response) => {
+          setBuckets(response.value);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [graphClient, planId]);
 
   return (
     <>
@@ -143,18 +194,45 @@ export default function Config() {
         <div className={themeString === "default" ? "light" : themeString === "dark" ? "dark" : "contrast"}>
           <div className="config-container">
             <div className="config-header">
-              <h1>Select Plan for Timeline</h1>
+              <h2>Timeline Configuration</h2>
+              <h3>Select Plan for Timeline</h3>
             </div>
             <div className="config-body">
               <div className="config-body-content">
                 <Tooltip content="Plan for Timeline to Render" relationship="label">
                   <Dropdown placeholder='Select a Plan' 
-                            aria-labelledby={dropdownId}                                                        
+                            aria-labelledby={planDropdownId}                                                        
                             onOptionSelect={PlanSelect} >                
-                    { dropDownOptions }              
+                    { planDropDownOptions }              
                   </Dropdown>
                 </Tooltip>                
               </div>
+            </div>
+            <div className="config-header">              
+              <h3>Select Plan Bucket</h3>
+            </div>
+            <div className="config-body">
+              <div className="config-body-content">
+                <Tooltip content="Bucket for Timeline to Render" relationship="label">
+                  <Dropdown placeholder='Select a Plan Bucket'
+                            aria-labelledby={bucketDropdownId}
+                            onOptionSelect={BucketSelect}
+                            disabled={planId === ""} >
+                    { bucketDropDownOptions }              
+                  </Dropdown>
+                </Tooltip>                
+              </div>
+            </div>
+            <div className="config-header">              
+              <h3>Filter</h3>
+            </div>
+            <div>
+              <Checkbox label={showActiveTasks ? "Show all Tasks" : "Filter out completed Tasks"}
+                        checked={showActiveTasks} 
+                        className={activeTasksCheckboxStyle}
+                        labelPosition="before"
+                        disabled={planId === ""}
+                        onChange={AllTasksClick} />            
             </div>
           </div>        
         </div>      

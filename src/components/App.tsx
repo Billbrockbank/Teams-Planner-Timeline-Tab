@@ -50,15 +50,25 @@ export default function App() {
   const pageId = useMemo(() => {
     const planSettings = context?.page?.id ? JSON.parse(context.page.id) : '';
     return planSettings?.uniqueId ?? '';
-  } , [context]);
+  }, [context]);
+
+  const bucketId = useMemo(() => {
+    const planSettings = context?.page?.id ? JSON.parse(context.page.id) : '';
+    return planSettings?.bucketId ?? 'All';
+  }, [context]);
+
+  const showActiveTasks = useMemo(() => {
+    const planSettings = context?.page?.id ? JSON.parse(context.page.id) : '';
+    return planSettings?.showActiveTasks ?? true;
+  }, [context]);
 
   const filterService = useMemo<FilterService>(() => {
     return new FilterService({
-      bucketId: "All",
-      showActiveTasks: true,
+      bucketId: bucketId ?? "All",
+      showActiveTasks: showActiveTasks ?? true,
       refreshData: false,
     });
-  }, []);
+  }, [bucketId, showActiveTasks]);
 
   const { loading, theme, themeString, teamsUserCredential } = useTeamsUserCredential({
     initiateLoginEndpoint: config.initiateLoginEndpoint!,
@@ -79,7 +89,7 @@ export default function App() {
     if (!pageId || !filterService) {
       return {
         bucketId: "All",
-        showActiveTasks: true,
+        showActiveTasks: showActiveTasks,
         refreshData: false,
       }
     } else {

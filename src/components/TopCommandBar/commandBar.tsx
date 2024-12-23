@@ -146,7 +146,7 @@ export default function CommandBar({ onBucketId, onAllTask, onTaskRefresh }: Com
             <div className={barDivStyle}>
               <label id={dropdownId} className={BucketLabelStyle} aria-label="Plan Bucket">Plan Bucket </label>
               <Tooltip content="Filter Tasks by Bucket" relationship="label">                
-                <Dropdown placeholder={DropDownPlaceHolder} 
+                <Dropdown placeholder={DropDownPlaceHolder.replace("Bucket: ", "")} 
                           className={bucketDropdownStyle}
                           aria-labelledby={dropdownId}
                           disabled={retrievingTasks}
