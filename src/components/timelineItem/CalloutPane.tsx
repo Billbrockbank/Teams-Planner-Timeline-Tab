@@ -33,9 +33,6 @@ import {
   checklistItemStyle,
   completeLabelStyle,
   competedItemStyle,
-  urgentIconStyle,
-  lowIconStyle,
-  importantIconStyle,
   CompletedIconStyle,
   CheckListLineItemStyle,
 } from '../../Styles';

@@ -6,25 +6,11 @@ import {
   CheckmarkCircleFilled as CompletedIcon,
   } from "@fluentui/react-icons";
   import {
-  labelItemColorStyle,
-  calloutTitleStyles,
-  labelsBlockStyle,
-  labelItemStyle,
-  bucketLabelStyle,
   sectionTitleStyle,
   priorityStatusStyle,
-  sectionHeadingStyle,
-  calloutNotesStyle,
-  checklistHeadingStyle,
-  checklistListStyle,
-  checklistItemStyle,
-  completeLabelStyle,
-  competedItemStyle,
   urgentIconStyle,
   lowIconStyle,
   importantIconStyle,
-  CompletedIconStyle,
-  CheckListLineItemStyle,
 } from '../../Styles';
 
 export default function PriorityIcon(props: { priority: number } ) {
