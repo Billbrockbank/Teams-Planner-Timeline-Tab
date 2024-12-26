@@ -67,9 +67,6 @@ export default function App() {
     return host ?? '';
   }, [context]);
   
-    //--------------------------------------------------------------------------------
-  
-
   const filterService = useMemo<FilterService>(() => {
     return new FilterService({
       bucketId: bucketId ?? "All",
