@@ -29,13 +29,6 @@ export const isOverDueStyle = mergeStyles({
   border: `1px solid ${palette.red}`,
 });
 
-export const darkIsOverDueStyle = mergeStyles({
-  backgroundColor: palette.orangeLighter,
-  color: palette.orangeLighter,
-  border: `1px solid ${palette.orangeLighter}`,
-});
-
-
 export const isPrimaryStyle = mergeStyles({
   backgroundColor: palette.blue,
   border: `1px solid ${palette.blue}`,
@@ -68,12 +61,6 @@ export const overDueTaskStyle = mergeStyles({
   color: palette.red,
   fontWeight: 400,
 });
-
-export const darkOverDueTaskStyle = mergeStyles({
-  color: palette.orangeLighter, 
-  fontWeight: 400,
-});
-
 
 export const inprogressTaskStyle = mergeStyles({
   color: palette.blue,
@@ -131,13 +118,8 @@ export function timelineRenderStyles(themeString: string, TaskPercentComplete: n
         gridClass.push(completedTaskStyle);
       }
     } else if (isOverDue) {
-      if (themeString === "dark") {
-        timelineMarkerClass.push(darkIsOverDueStyle);
-        gridClass.push(darkOverDueTaskStyle);
-      } else {
-        timelineMarkerClass.push(isOverDueStyle);
-        gridClass.push(overDueTaskStyle);
-      }
+      timelineMarkerClass.push(isOverDueStyle);
+      gridClass.push(overDueTaskStyle);      
     } else if (TaskPercentComplete === 50) {
       if (themeString === "dark") {
         timelineMarkerClass.push(darkIsPrimaryStyle);
