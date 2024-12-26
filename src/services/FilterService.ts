@@ -26,26 +26,26 @@ export class FilterService implements IFilterService {
   // get filter settings from session storage
   public getFilterSettings(pageId: string): IFilterSettings {
     // get filter settings from session storage
-    const fliterData = sessionStorage.getItem("_" + pageId + "TimeLineFilterData");
+    const filterData = sessionStorage.getItem("_" + pageId + "TimeLineFilterData");
 
     // check if filter settings are available
-    if (fliterData) {
+    if (filterData) {
       // parse filter settings
-      const fliterDataString = sessionStorage.getItem("_pms" + pageId + "FilterTime");
+      const filterDataString = sessionStorage.getItem("_pms" + pageId + "FilterTime");
 
       // check if filter settings time is available
-      if (fliterDataString) {
-        const filter = JSON.parse(fliterData);
+      if (filterDataString) {
+        const filter = JSON.parse(filterData);
         // parse filter settings time
-        const dataTime: Date = new Date(fliterDataString.replace(/"/g, ""));
+        const dataTime: Date = new Date(filterDataString.replace(/"/g, ""));
         // get current time
         const nowTime: Date = new Date();
         // calculate delay
-        const deplay: number =
+        const delay: number =
           (nowTime.getTime() - dataTime.getTime()) / (1000 * 60);
 
         // check if delay is less than 30 minutes
-        if (deplay < 30) {
+        if (delay < 30) {
           // create filter settings object
           const filterSet: IFilterSettings = {
             bucketId: filter.bucketId,
