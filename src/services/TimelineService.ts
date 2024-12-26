@@ -21,6 +21,7 @@ export class TimeLineService implements ITimeLineService {
   private _taskUsers: User[] = [];
   private _tasks: PlannerTask[] = [];
   private _planDetails: PlannerPlanDetails | undefined = undefined;
+  private _cacheData: boolean = false;
 
   private _timeLine: ITimeLineData = {
     groupId: "",
@@ -34,6 +35,7 @@ export class TimeLineService implements ITimeLineService {
     this._timeLine.groupId = configSettings.groupId;
     this._timeLine.planId = configSettings.planId;
     this._pageId = configSettings.pageId;
+    this._cacheData = "#web#desktop#".includes('#' + configSettings.clientType + '#');
   }
 
   public async getTimelineData(): Promise<ITimeLineData> {
@@ -56,29 +58,7 @@ export class TimeLineService implements ITimeLineService {
       // Set all users
       this._taskUsers = allUsers.value;
 
-      // // Set to current planId
-      // let planId = this._timeLine.planId;
-
-      // // Check plan id is empty
-      // if (this._timeLine.planId === "") {
-      //   // Get all buckets
-      //   const plansData = await await this._graphClient
-      //     .api(
-      //       "/groups/" +
-      //         this._timeLine.groupId +
-      //         "/planner/plans?$select=id,title"
-      //     )
-      //     .get();     
-
-      //   // Get first plan id
-      //   planId = plansData.value[0].id;
-      // }
-
       if (this._timeLine.planId) {        
-        // // Set planID if different (first time)       
-        // if (this._timeLine.planId !== planId)
-        //   this._timeLine.planId = planId;
-
         // Get Plan Details
         const planDetails = await this._graphClient
           .api("/planner/plans/" + this._timeLine.planId + "/details")
@@ -128,12 +108,6 @@ export class TimeLineService implements ITimeLineService {
 
   private async _getTaskDetails(tasks: PlannerTask[]): Promise<PlannerTask[]> {
     for (const task of tasks) {
-      // const detail = await this._graphClient
-      //   .api("/planner/tasks/" + task.id + "/details")
-      //   .get();
-
-      // task.details = detail;
-
       if (task.completedBy) {
         const user = this._taskUsers.find(
           (u) => u.id === task.completedBy?.user?.id
@@ -278,6 +252,10 @@ export class TimeLineService implements ITimeLineService {
 
   // Get timeline data from session storage
   private async _getTimelineData(): Promise<boolean> {
+    if (!this._cacheData) {
+      return true;
+    }
+
     const timelineData = sessionStorage.getItem("_" + this._pageId + "TimelineData");
 
     if (timelineData) {
@@ -306,11 +284,12 @@ export class TimeLineService implements ITimeLineService {
     tasks: PlannerTask[],
     planDetails: PlannerPlanDetails | undefined
   ) {
-    sessionStorage.setItem("_" + this._pageId + "TimelineData", JSON.stringify(timelineData));
-    sessionStorage.setItem("_" + this._pageId + "buckets", JSON.stringify(buckets));
-    sessionStorage.setItem("_" + this._pageId + "Users", JSON.stringify(Users));
-    sessionStorage.setItem("_" + this._pageId + "tasks", JSON.stringify(tasks));
-    sessionStorage.setItem("_" + this._pageId + "planDetails", JSON.stringify(planDetails));
+    if (this._cacheData) {
+      sessionStorage.setItem("_" + this._pageId + "TimelineData", JSON.stringify(timelineData));
+      sessionStorage.setItem("_" + this._pageId + "buckets", JSON.stringify(buckets));
+      sessionStorage.setItem("_" + this._pageId + "Users", JSON.stringify(Users));
+      sessionStorage.setItem("_" + this._pageId + "tasks", JSON.stringify(tasks));
+      sessionStorage.setItem("_" + this._pageId + "planDetails", JSON.stringify(planDetails));
+    }
   }
 }
-

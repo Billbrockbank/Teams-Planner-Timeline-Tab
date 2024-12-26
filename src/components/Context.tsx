@@ -29,6 +29,7 @@ export const TeamsFxContext = createContext<{
     groupId: "",
     pageId: "",
     planId: "",
+    clientType: "",
   },
   filterSettings: {
     bucketId: "All",

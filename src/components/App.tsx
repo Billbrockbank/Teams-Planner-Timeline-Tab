@@ -62,12 +62,20 @@ export default function App() {
     return planSettings?.showActiveTasks ?? true;
   }, [context]);
 
+  const clientType = useMemo(() => {
+    const host = context?.app.host.clientType;
+    return host ?? '';
+  }, [context]);
+  
+    //--------------------------------------------------------------------------------
+  
+
   const filterService = useMemo<FilterService>(() => {
     return new FilterService({
       bucketId: bucketId ?? "All",
       showActiveTasks: showActiveTasks ?? true,
       refreshData: false,
-    });
+    }, clientType);
   }, [bucketId, showActiveTasks]);
 
   const { loading, theme, themeString, teamsUserCredential } = useTeamsUserCredential({
@@ -79,6 +87,7 @@ export default function App() {
     groupId: groupId ?? '',
     pageId: pageId,
     planId: planId,
+    clientType: clientType,
   }
 
   const services: IServices = {
