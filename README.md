@@ -24,21 +24,16 @@ The purpose of this sample Teams Toolkit Tab is to render the buckets of tasks f
 - Coding is done with React Hooks.
 - The Azure Function is not needed and has been deleted from the sample.
 
-<img src="images/Planner-Timeline-tab.gif" width=700 />
+<img src="images/Planner-Timeline-tab.gif" />
 
 ### **Task details in callout**
-<img src="images/callout.gif" width=300 />    
+<img src="images/callout.gif" />    
 
 ## Tools and Frameworks
 
 ![drop](https://img.shields.io/badge/Teams&nbsp;Toolkit&nbsp;for&nbsp;VS&nbsp;Code-5.10.1-blue.svg)
 
 _Teams Toolkit pulls in some standard libraries and SDK's to Create React App. Since these are aligned with Teams Toolkit versions._
-
-### ___Steps used for removal of the Azure Function___
-
-**TODO:**
-1. Delete 
 
 ## Prerequisites
 
@@ -109,13 +104,17 @@ Version|Date|Author|Comments
     | --------------------- |
     | User.Read.All|
     | Tasks.Read |
-    |Tasks.ReadWrite|
+    | GroupMember.Read.All |
+    | Tasks.ReadWrite |
     | TeamSettings.Read.All |
 
     <img src="images/Accept-Permissions.gif" width=400>
 
-- The Planner Timeline renders the Tasks in the group Planner of Team of the Channel added to.
-- Can be added to different Channels of same teams.
+- The Planner Timeline renders the Plans in the group of Team of the Channel added to.
+- Can be added for different plans and buckets in any of the Teams Channels.
+
+    <img src="images/Configuration-Tab.gif">
+
 
 ## Help
 
@@ -143,3 +142,4 @@ Finally, if you have an idea for improvement, [make a suggestion](https://github
 
 **THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
+<img src="https://m365-visitor-stats.azurewebsites.net/teams-dev-samples/samples/tab-planner-timeline" />
