@@ -1,4 +1,4 @@
-# M365 Planner Timeline view Teams App
+# M365 Planner Timeline Teams Tab
 
 ## Table of Contents
 
@@ -9,6 +9,7 @@
 - [Features](#features)
 - [Minimal path to awesome](#minimal-path-to-awesome---debug-against-a-real-microsoft-365-tenant)
 - [Help](#help)
+- [How to Deploy Azure](#how-to-deploy-azure)
 - [References](#references)
 - [Disclaimer](#disclaimer)
 
@@ -17,23 +18,29 @@
 ![License.](https://img.shields.io/badge/license-MIT-green.svg)
 
 The purpose of this sample Teams Toolkit Tab is to render the buckets of tasks for a M365 Group's Planner.
-<br/>It also implements single sign-on authentication and access Planner Task in Microsoft Graph.
-<br/>The timeline is rendered in due date order with tags for years and months.
+<br/>It implements single sign-on authentication and access Plan Buckets and Tasks via Microsoft Graph.
+<br/>The timeline is rendered in task due date order with tags for years and months.
 
 - This sample was generated with Teams Toolkit as a "Tab => React with Fluent UI => Typescript".
-- Coding is done with React Hooks.
+- React Hooks is used in a Restify web app.
 - The Azure Function is not needed and has been deleted from the sample.
 
 <img src="images/Planner-Timeline-tab.gif" />
 
-### **Task details in callout**
+### **Task details popup**
 <img src="images/callout.gif" />    
 
 ## Tools and Frameworks
 
-![drop](https://img.shields.io/badge/Teams&nbsp;Toolkit&nbsp;for&nbsp;VS&nbsp;Code-5.10.1-blue.svg)
+![drop](https://img.shields.io/badge/Teams_Toolkit_for_VS_Code-5.10.1-blue.svg)
+
+![drop](https://img.shields.io/badge/TypeScript-4.1.2-green.svg)
+
+![drop](https://img.shields.io/badge/Microsoft_Graph_Types-2.40.0-red.svg)
 
 _Teams Toolkit pulls in some standard libraries and SDK's to Create React App. Since these are aligned with Teams Toolkit versions._
+
+_To access the Planner data the "Microsoft Graph Types" are used_
 
 ## Prerequisites
 
@@ -50,8 +57,6 @@ _Teams Toolkit pulls in some standard libraries and SDK's to Create React App. S
 3. Press F5 to start debugging which launches your app in Teams using a web browser. Select `Debug in Teams (Edge)` or `Debug in Teams (Chrome)`.
 4. When Teams launches in the browser, select the Add button in the dialog to install your app to Teams.
 
-_Please list any portions of the toolchain required to build and use the sample, along with download links_
-
 ## Version history
 
 Version|Date|Author|Comments
@@ -60,10 +65,11 @@ Version|Date|Author|Comments
 
 ## Features
 
-- React with Fluent Web application.
-- Access the Planner task via Microsoft Graph in the Web app (not through a Azure function)
+- React with Fluent UI Web application.
+- Access the Planner buckets and task via Microsoft Graph in the Web app (not through a Azure function)
 - Filter task by active or all tasks including completed.
-- Tasks rendering colors:
+- Filter task by plan bucket.
+- Tasks status rendered in colors:
 
     Color | Status | Criteria 
     ----------|------------|--------------------------------
@@ -72,13 +78,12 @@ Version|Date|Author|Comments
     **Blue** | In progress| Progress set to "In Progress"
     **Black** | Not Due | Progress set to "Not Started"
 
-- Filter by Task bucket in Planner.
 - Refresh Planner Tasks then re-rending with the selected filter settings.
-- Caches Planner Task and filter settings in the browser session Storage.
-- Callout on tasks for more details. **Insert IMAGE HERE**
----
+- With Teams desktop or in a web browser Plan Task and filter settings cached in the browser session Storage.
+- By clicking on the (i) the task details are rendered.
+- The tab has been configured to support Teams mobile App.
+- It support both Teams dark and light mode.
 
-**TO DO:** Add Steps to deploy Dev buld to Azure with Temas CLI
 ---
 
 ## Minimal path to awesome - Debug against a real Microsoft 365 tenant
@@ -91,14 +96,11 @@ Version|Date|Author|Comments
 - When Teams launches in the browser, select the Add button in the dialog to install your app to Teams.
 - Wait for deploy and provision tasks to complete.
 - The first time you run the code you will need to "Authorize permission to access Planner Tasks" 
-
-
-
     <p>
         <img src="images/Authorize.gif" width=550>
     </p>
 
-- On initial app run, Allow the following Graph API permissions via the consent prompt. <mark>Make sure popups are allowed in the browser to see the consent prompot</mark>.
+- On initial app run, Allow the following Graph API permissions via the consent prompt. </br> <mark>Make sure popups are allowed in the browser to see the consent prompot</mark>.
 
     | Graph API Permissions |
     | --------------------- |
@@ -110,11 +112,16 @@ Version|Date|Author|Comments
 
     <img src="images/Accept-Permissions.gif" width=400>
 
-- The Planner Timeline renders the Plans in the group of Team of the Channel added to.
+- The Planner Timeline renders the a Plan in the group of Teams of the Channel added to.
 - Can be added for different plans and buckets in any of the Teams Channels.
 
     <img src="images/Configuration-Tab.gif">
 
+## How to Deploy Azure
+
+_To deploy "Planner Timeline" into Azure see the following:_
+- Microsoft Teams Developer Resurces: [Deploy Microsoft Teams app to the cloud using Microsoft Visual Studio Code](https://learn.microsoft.com/en-us/microsoftteams/platform/toolkit/deploy)
+- Microsoft Learn Training module: [Deploy a Microsoft Teams app to Azure by using Teams Toolkit for Visual Studio Code](https://learn.microsoft.com/en-us/training/modules/teams-toolkit-vsc-deploy-apps/)
 
 ## Help
 
