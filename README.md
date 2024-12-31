@@ -6,13 +6,13 @@
 - [Tools and Frameworks](#tools-and-frameworks)
 - [Prerequisites](#prerequisites)
 - [Version history](#version-history)
+- [Disclaimer](#disclaimer)
 - [Features](#features)
 - [Minimal path to awesome](#minimal-path-to-awesome---debug-against-a-real-microsoft-365-tenant)
 - [Help](#help)
 - [How to Deploy Azure](#how-to-deploy-azure)
 - [References](#references)
-- [Disclaimer](#disclaimer)
-
+---
 ## Summary
 
 ![License.](https://img.shields.io/badge/license-MIT-green.svg)
@@ -34,9 +34,11 @@ The purpose of this sample Teams Toolkit Tab is to render the buckets of tasks f
 
 ![drop](https://img.shields.io/badge/Teams_Toolkit_for_VS_Code-5.10.1-blue.svg)
 
+![drop](https://img.shields.io/badge/Node.js-18.20.3-green.svg)
+
 ![drop](https://img.shields.io/badge/TypeScript-4.1.2-green.svg)
 
-![drop](https://img.shields.io/badge/Microsoft_Graph_Types-2.40.0-red.svg)
+![drop](https://img.shields.io/badge/Microsoft_Graph_Types-2.40.0-orange.svg)
 
 _Teams Toolkit pulls in some standard libraries and SDK's to Create React App. Since these are aligned with Teams Toolkit versions._
 
@@ -61,7 +63,11 @@ _To access the Planner data the "Microsoft Graph Types" are used_
 
 Version|Date|Author|Comments
 -------|----|----|--------
-1.0|January 15, 2025|Bill Brockbank|Initial release
+1.6.0|January 15, 2025|Bill Brockbank|Initial release
+
+## Disclaimer
+
+**THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
 ## Features
 
@@ -92,6 +98,9 @@ Version|Date|Author|Comments
 - Open repo in VSCode
 - First, select the Teams Toolkit icon on the left in the VS Code toolbar.
 - In the Account section, sign in with your [Microsoft 365 account](https://docs.microsoft.com/microsoftteams/platform/toolkit/accounts) if you haven't already.
+- Before running the Teams Tab code, you need to copy the following file in the "env" folder:
+>>- .env.local.sample --> ,env,local
+>>- .env.local.user.sample --> .env.local.user
 - Press <kbd>F5</kbd> to start debugging which launches your app in Teams using a web browser. Select `Debug (Edge)` or `Debug (Chrome)`.
 - When Teams launches in the browser, select the Add button in the dialog to install your app to Teams.
 - Wait for deploy and provision tasks to complete.
@@ -102,13 +111,13 @@ Version|Date|Author|Comments
 
 - On initial app run, Allow the following Graph API permissions via the consent prompt. </br> <mark>Make sure popups are allowed in the browser to see the consent prompot</mark>.
 
-    | Graph API Permissions |
-    | --------------------- |
-    | User.Read.All|
-    | Tasks.Read |
-    | GroupMember.Read.All |
-    | Tasks.ReadWrite |
-    | TeamSettings.Read.All |
+    >|Graph API Permissions|
+    >|-|
+    >|User.Read.All|
+    >|Tasks.Read|
+    >|GroupMember.Read.All|
+    >|Tasks.ReadWrite|
+    >|TeamSettings.Read.All|
 
     <img src="images/Accept-Permissions.gif" width=400>
 
@@ -119,7 +128,7 @@ Version|Date|Author|Comments
 
 ## How to Deploy Azure
 
-_To deploy "Planner Timeline" into Azure see the following:_
+___To deploy "Planner Timeline" into Azure see the following:___
 - Microsoft Teams Developer Resurces: [Deploy Microsoft Teams app to the cloud using Microsoft Visual Studio Code](https://learn.microsoft.com/en-us/microsoftteams/platform/toolkit/deploy)
 - Microsoft Learn Training module: [Deploy a Microsoft Teams app to Azure by using Teams Toolkit for Visual Studio Code](https://learn.microsoft.com/en-us/training/modules/teams-toolkit-vsc-deploy-apps/)
 
@@ -139,14 +148,11 @@ Finally, if you have an idea for improvement, [make a suggestion](https://github
 
 - [Teams Toolkit Documentations](https://docs.microsoft.com/microsoftteams/platform/toolkit/teams-toolkit-fundamentals)
 - [Teams Toolkit CLI](https://aka.ms/teamsfx-toolkit-cli)
+- [Microsoft Graph TypeScript Types](https://github.com/microsoftgraph/msgraph-typescript-typings/blob/main/README.md)
 - [Microsoft Teams SDK](https://learn.microsoft.com/en-us/javascript/api/overview/msteams-client?view=msteams-client-js-latest&tabs=npm)
 - Host your app in Azure by [provision cloud resources](https://learn.microsoft.com/microsoftteams/platform/toolkit/provision) and [deploy the code to cloud](https://learn.microsoft.com/microsoftteams/platform/toolkit/deploy)
 - [Teams Toolkit Samples](https://github.com/OfficeDev/TeamsFx-Samples)
 
 ---
-
-## Disclaimer
-
-**THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
 <img src="https://m365-visitor-stats.azurewebsites.net/teams-dev-samples/samples/tab-planner-timeline" />
