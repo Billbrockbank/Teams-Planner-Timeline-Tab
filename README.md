@@ -15,15 +15,17 @@
 ---
 ## Summary
 
-![License.](https://img.shields.io/badge/license-MIT-green.svg)
-
-The purpose of this sample Teams Toolkit Tab is to render the buckets of tasks for a M365 Group's Planner.
-<br/>It implements single sign-on authentication and access Plan Buckets and Tasks via Microsoft Graph.
-<br/>The timeline is rendered in task due date order with tags for years and months.
+>The purpose of this sample Teams Toolkit Tab is to render M365 Group Plan tasks. A timeline renders in
+</br> task due date order with tags for years and months in a vertical stack. With option to filter out completed tasks
+</br> and filter tasks for a plan's bucket. To view details of the task, click the (i) below the "Due Date" to popup the
+</br> task details. It Should be noted that a M365 Group Planner can have 0 to 200 plans assigned to it. The tab app 
+</br> support configuring multiple tab for different plans and buckets. Single sign-on authentication has been
+</br> used to access M365 Groups Planner data in Microsoft Graph.
 
 - This sample was generated with Teams Toolkit as a "Tab => React with Fluent UI => Typescript".
 - React Hooks is used in a Restify web app.
 - The Azure Function is not needed and has been deleted from the sample.
+- The bicep files has been modified to only provision the static wab service in Azure.
 
 <img src="images/Planner-Timeline-tab.gif" />
 
@@ -42,7 +44,7 @@ The purpose of this sample Teams Toolkit Tab is to render the buckets of tasks f
 
 _Teams Toolkit pulls in some standard libraries and SDK's to Create React App. Since these are aligned with Teams Toolkit versions._
 
-_To access the Planner data the "Microsoft Graph Types" are used_
+_To support accessing to Planner data  structures returned by Microsoft Graph, "Microsoft Graph Types" module is used._
 
 ## Prerequisites
 
@@ -71,6 +73,8 @@ Version|Date|Author|Comments
 
 ## Features
 
+- When adding the tab to a channel the configuration allows for selecting the default filter settings.
+- The Tab name is set to "`<plan name>` Timeline"
 - React with Fluent UI Web application.
 - Access the Planner buckets and task via Microsoft Graph in the Web app (not through a Azure function)
 - Filter task by active or all tasks including completed.
