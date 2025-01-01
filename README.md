@@ -15,7 +15,7 @@
 ---
 ## Summary
 
-</br>The purpose of this sample Teams Toolkit Tab is to render M365 Group Plan tasks. A timeline renders in
+The purpose of this sample Teams Toolkit Tab is to render M365 Group Plan tasks. A timeline renders in
 </br>task due date order with tags for years and months in a vertical stack. With option to filter out completed tasks
 </br>and filter tasks for a plan's bucket. To view details of the task, click the (i) below the "Due Date" to popup the
 </br>task details. It Should be noted that a M365 Group Planner can have 0 to 200 plans assigned to it. The tab app 
