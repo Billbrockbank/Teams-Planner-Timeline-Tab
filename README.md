@@ -1,4 +1,4 @@
-# M365 Planner Timeline Teams Tab
+# M365 Planner Timeline Tab
 
 ## Table of Contents
 
