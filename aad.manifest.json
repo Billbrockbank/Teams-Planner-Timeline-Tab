@@ -23,6 +23,14 @@
                 {
                     "id": "User.Read",
                     "type": "Scope"
+                },
+                {
+                    "id": "Tasks.Read",
+                    "type": "Scope"
+                },
+                {
+                    "id": "GroupMember.Read.All",
+                    "type": "Scope"
                 }
             ]
         }

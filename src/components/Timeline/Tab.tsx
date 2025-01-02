@@ -13,7 +13,10 @@ import {
   Spinner,  
 } from '@fluentui/react-components';
 import { PlannerTask } from '@microsoft/microsoft-graph-types'
-import { ITimeLineData } from "../../models"
+import { 
+  ITimeLineData, 
+  Scopes as scopes 
+} from "../../models"
 import { 
   TimeLineService,  
   ITimeLineService,
@@ -36,9 +39,6 @@ import {
 
 export default function Tab() {
   const { themeString, renderSettings, teamsUserCredential, configSettings, filterSettings, categorySettings, services } = useContext(TeamsFxContext);
-
-  // scopes
-  const scopes = ['User.Read.All', 'Tasks.Read', 'GroupMember.Read.All', 'Tasks.ReadWrite', 'TeamSettings.Read.All'];
   
   // states    
   const timeLineData = useRef<ITimeLineData | undefined>(undefined);
@@ -107,15 +107,18 @@ export default function Tab() {
   // Get the graph client
   const { loading, reload } = useGraphWithCredential(
     async (graph, teamsUserCredential, scope) => {      
-      if (needConsent) {
-        await teamsUserCredential.login(scopes);
-
-        setNeedConsent(false);
-      }
+      let setGraph = false;
       try {
+        if (needConsent) {
+          await teamsUserCredential.login(scopes);
+
+          setNeedConsent(false);
+        }
+      
         // Get token to confirm the user is logged in
         await teamsUserCredential.getToken(scopes);
         
+        setGraph = true;
         setNeedConsent(false);        
       } catch (error: any) {        
         if (error.message.includes('Failed to get access token cache silently, please login first')) {
@@ -125,7 +128,8 @@ export default function Tab() {
       }
 
       // Set the graph client
-      setGraphClient(graph);
+      if (setGraph)
+        setGraphClient(graph);
     }, { scope: scopes, credential: teamsUserCredential }); 
 
   // Function to set the categories text from te plan settings

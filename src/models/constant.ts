@@ -1,5 +1,7 @@
 import { IAppliedCategoryColors } from '.';
 
+export const Scopes = ['User.Read.All', 'Tasks.Read', 'GroupMember.Read.All'];
+
 export const AppliedCategoryColors: IAppliedCategoryColors = {
   "category1": { text: "pink", backgroundColor: "#fbddf0", color: "#c85f7e" },
   "category2": { text: "Red", backgroundColor: "#e9c7cd", color: "#9a0b55" },

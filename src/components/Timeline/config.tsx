@@ -6,10 +6,7 @@ import {
   useState,
   useCallback,
 } from "react";
-import {
-  Button, 
-  Spinner,  
-} from '@fluentui/react-components';
+import { Button } from '@fluentui/react-components';
 import{ v4 as uuidv4 } from 'uuid';
 import * as microsoftTeams from "@microsoft/teams-js";
 import { useTeams } from "@microsoft/teamsfx-react";
@@ -17,6 +14,7 @@ import { TeamsFxContext } from "../Context";
 import { Client } from "@microsoft/microsoft-graph-client";
 import { useGraphWithCredential } from "@microsoft/teamsfx-react";
 import { PlannerBucket, PlannerPlan } from '@microsoft/microsoft-graph-types'
+import { Scopes as scopes } from '../../models';
 import {
   Tooltip,
   Checkbox,
@@ -29,8 +27,6 @@ import { activeTasksCheckboxStyle } from '../../Styles';
 export default function Config() {
   const { themeString, configSettings, teamsUserCredential } = useContext(TeamsFxContext);
   const [{ context }] = useTeams();
-
-  const scopes = ['User.Read.All', 'Tasks.Read', 'GroupMember.Read.All', 'Tasks.ReadWrite', 'TeamSettings.Read.All'];
 
   const planDropdownId = useId('planDropdown');
   const bucketDropdownId = useId('bucketDropdown');
@@ -47,15 +43,18 @@ export default function Config() {
   // Get the graph client
   const { loading, reload } = useGraphWithCredential(
     async (graph, teamsUserCredential, scope) => {      
-      if (needConsent) {
-        await teamsUserCredential.login(scopes);
-
-        setNeedConsent(false);
-      }
+      let setGraph = false;
       try {
+        if (needConsent) {
+          await teamsUserCredential.login(scopes);
+
+          setNeedConsent(false);
+        }
+      
         // Get token to confirm the user is logged in
         await teamsUserCredential.getToken(scopes);
         
+        setGraph = true;
         setNeedConsent(false);        
       } catch (error: any) {        
         if (error.message.includes('Failed to get access token cache silently, please login first')) {
@@ -65,7 +64,8 @@ export default function Config() {
       }
 
       // Set the graph client
-      setGraphClient(graph);
+      if (setGraph)
+        setGraphClient(graph);
     }, { scope: scopes, credential: teamsUserCredential }); 
   
   const uniqueId = generateShortUniqueId();
