@@ -110,13 +110,16 @@ Version|Date|Author|Comments
 
 - On initial app run, Allow the following Graph API permissions via the consent prompt. </br> <mark>Make sure popups are allowed in the browser to see the consent prompot</mark>.
 
-    >|Graph API Permissions|
-    >|-|
-    >|User.Read.All|
-    >|Tasks.Read|
-    >|GroupMember.Read.All|
-    >|Tasks.ReadWrite|
-    >|TeamSettings.Read.All|
+    >|Graph API Permissions|Admin Consent required|
+    >|-|-|
+    >|User.Read.All|<mark>Yes</mark>|
+    >|Tasks.Read|No|
+    >|GroupMember.Read.All|<mark>Yes</mark>|
+
+- Because Microsoft Graph API permissions "GroupMember.Read.All" and "User.Read.All" both require Admin Consent,</br>
+the initial add of Planner Timeline tab to a channel should be an admin with rights to "Consent on behalf of your organization".</br>
+If this in not the case the Microsoft Graph API permissions will need to be consented in the Microsoft Entra admin center,</br>
+App registration with the display name "PlannerTimeline".</br>
 
     <img src="images/Accept-Permissions.gif" width=400>
 
