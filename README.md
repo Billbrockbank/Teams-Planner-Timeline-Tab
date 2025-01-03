@@ -15,11 +15,14 @@
 ---
 ## Summary
 
-The purpose of this sample Teams Toolkit Tab is to render M365 Group Plan tasks. A timeline renders in task due date order with tags for years and months in a vertical stack. With option to filter out completed tasks and filter tasks for a plan's bucket. To view details of the task, click the (i) below the "Due Date" to popup the task details. It Should be noted that a M365 Group Planner can have 0 to 200 plans assigned to it. The tab app support configuring multiple tab for different plans and buckets. Single sign-on authentication has been used to access M365 Groups Planner data in Microsoft Graph.
+The purpose of this Teams Toolkit Tab sample is to render M365 Group Plan tasks in a timeline ordered by the task due date with tags for years and months in a vertical stack. There are filter options to filter out completed tasks and tender tasks by a plan bucket. A task's detail can be viewed by clicking the (i) icon below the "Due Date" popping up a callout dialog with task details. It Should be noted that a M365 Group Planner can have 0 to 200 plans assigned to M365 Group. When configuring a Planner Timeline tab you must select the plan to be rendered, along with options for the plan bucket and completed task filter. These setting will be used when the tab is access. The configuration of multiple tab for different plans and buckets are supported.
+
+Single sign-on authentication is used to access M365 Groups Planner data in Microsoft Graph. 
+</br><mark>To complete the approval of Microsoft Graph permission, an Admin will need to Accept the permission request.</mark>
 
 - This sample was generated with Teams Toolkit as a "Tab => React with Fluent UI => Typescript".
-- React Hooks is used in a Restify web app.
-- The Azure Function is not needed and has been deleted from the sample.
+- React Hooks is used in the web app.
+- The Azure Function, not needed and has been deleted from the sample.
 - The bicep files has been modified to only provision the static wab service in Azure.
 
 <img src="images/Planner-Timeline-tab.gif" />
@@ -49,7 +52,7 @@ _To support accessing to Planner data  structures returned by Microsoft Graph, "
 > - Set up and install Teams Toolkit for Visual Studio Code v5.0 [How to install Teams Toolkit v5.0](https://learn.microsoft.com/en-us/microsoftteams/platform/toolkit/install-teams-toolkit?tabs=vscode).
 > - [Set up your dev environment for extending Teams apps across Microsoft 365](https://aka.ms/teamsfx-m365-apps-prerequisites)
 >   Please note that after you enrolled your developer tenant in Office 365 Target Release, it may take couple days for the enrollment to take effect.
-> - [Teams Toolkit Visual Studio Code Extension](https://aka.ms/teams-toolkit) version 5.0.0 and higher or [Teams Toolkit CLI](https://aka.ms/teamsfx-toolkit-cli)
+> - [Teams Toolkit Visual Studio Code Extension](https://aka.ms/teams-toolkit) version 5.10.1 or higher and the [Teams Toolkit CLI](https://aka.ms/teamsfx-toolkit-cli)
 
 1. First, select the Teams Toolkit icon on the left in the VS Code toolbar.
 2. In the Account section, sign in with your [Microsoft 365 account](https://docs.microsoft.com/microsoftteams/platform/toolkit/accounts) if you haven't already.
@@ -60,7 +63,9 @@ _To support accessing to Planner data  structures returned by Microsoft Graph, "
 
 Version|Date|Author|Comments
 -------|----|----|--------
-1.6.0|January 15, 2025|Bill Brockbank|Initial release
+1.0|January 8, 2025|Bill Brockbank|Initial release
+
+Teams manifest file version: 1.6.0
 
 ## Disclaimer
 
@@ -68,11 +73,11 @@ Version|Date|Author|Comments
 
 ## Features
 
-- When adding the tab to a channel the configuration allows for selecting the default filter settings.
+- When adding the tab to a channel, configuration M365 Group Plan and allows setting the default filter settings.
 - The Tab name is set to "`<plan name>` Timeline"
-- React with Fluent UI Web application.
+- The Web application is developed with React and Fluent UI.
 - Access the Planner buckets and task via Microsoft Graph in the Web app (not through a Azure function)
-- Filter task by active or all tasks including completed.
+- Filter task by active or all tasks (includes completed).
 - Filter task by plan bucket.
 - Tasks status rendered in colors:
 
