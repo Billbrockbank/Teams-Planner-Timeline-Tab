@@ -88,9 +88,9 @@ export class TimeLineService implements ITimeLineService {
           this._tasks = await this._getTaskDetails(tasks);
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Set error message
-      this._timeLine.error = error?.message;
+      this._timeLine.error = (error as Error)?.message;
     }
 
     // Save timeline data to session storage
@@ -170,8 +170,9 @@ export class TimeLineService implements ITimeLineService {
 
         taskDetails = detail;
 
-    } catch (error: any) {
-      console.error(error);
+    } catch (error: unknown) {
+      // Set error message
+      this._timeLine.error = (error as Error)?.message;
     }
 
     return taskDetails;
