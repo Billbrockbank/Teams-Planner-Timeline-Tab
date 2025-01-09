@@ -55,7 +55,7 @@ export default function Tab() {
   const [manualRefresh, setManualRefresh] = useState(false);
   
   // Callback sent into the CommandBar to handle the bucket change
-  const bucketHandler = ({bucketId, bucketName}: {bucketId: string; bucketName: string}) => {
+  const bucketHandler = ({bucketId, bucketName}: {bucketId: string; bucketName: string}): void => {
     // check if the filter settings are initialized
     if (filterSettings)
       // Set
@@ -68,7 +68,7 @@ export default function Tab() {
   }
 
   // Callback sent into the CommandBar to handle the all tasks flag change
-  const allTaskHandler = (allTasksFlag: boolean) => {
+  const allTaskHandler = (allTasksFlag: boolean): void => {
     // check if the filter settings are initialized
     if (filterSettings)
       // Set filter the show active tasks flag
@@ -81,7 +81,7 @@ export default function Tab() {
   }
 
   // Callback sent into the CommandBar to handle the task refresh
-  const TaskRefreshHandler = (callbackFunction: any) => {
+  const TaskRefreshHandler = (callbackFunction: () => void): void => {
     // Set the retrieving tasks flag
     setRetrievingTasks(true);
     // Set the refresh data flag

@@ -33,7 +33,7 @@ import {
 interface CommandBarProps {
   onBucketId: (params: { bucketId: string; bucketName: string }) => void;
   onAllTask: (showActiveTasks: boolean) => void;
-  onTaskRefresh: (callbackFunction: (callbackFunction: any) => void) => void;
+  onTaskRefresh: (callbackFunction: () => void) => void;
 }
 
 export default function CommandBar({ onBucketId, onAllTask, onTaskRefresh }: CommandBarProps) {
