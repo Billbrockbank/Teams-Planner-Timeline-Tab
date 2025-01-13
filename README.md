@@ -63,7 +63,7 @@ _To support accessing to Planner data  structures returned by Microsoft Graph, "
 
 Version|Date|Author|Comments
 -------|----|----|--------
-1.0|January 8, 2025|Bill Brockbank|Initial release
+1.0|January 15, 2025|Bill Brockbank|Initial release
 
 Teams manifest file version: 1.6.0
 
