@@ -63,7 +63,7 @@ _To support accessing to Planner data  structures returned by Microsoft Graph, "
 
 Version|Date|Author|Comments
 -------|----|----|--------
-1.0|January 15, 2025|Bill Brockbank|Initial release
+1.0|January 22, 2025|Bill Brockbank|Initial release
 
 Teams manifest file version: 1.6.0
 
@@ -132,6 +132,9 @@ App registration with the display name "PlannerTimeline".</br>
 - Can be added for different plans and buckets in any of the Teams Channels.
 
     <img src="images/Configuration-Tab.gif">
+
+### Note: ###
+To add a Planner Timeline app to Teams channel the Teams M365 Group must have a Plan assigned to the Group. To add a Plan, use the Planner App (tab) to create a new Plan for to the M365 Group in it's configuration dialog. You will be unable to add the Planner Timeline App to the channel without a M365 Group Panner.
 
 ## How to Deploy Azure
 
