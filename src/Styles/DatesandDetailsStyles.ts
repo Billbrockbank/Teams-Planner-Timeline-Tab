@@ -11,6 +11,16 @@ export const timelineContentStyle = mergeStyles({
   padding: "1em 0 0 2em"
 });
 
+export const startDate = mergeStyles({
+  paddingRight: "0.5em"
+});
+
+export const noDueDate = mergeStyles({
+  paddingRight: "0.5em",
+  fontWeight: 600,
+  color: palette.red
+});
+
 export const isCompletedStyle = mergeStyles({
   backgroundColor: palette.green,
   color: palette.white,

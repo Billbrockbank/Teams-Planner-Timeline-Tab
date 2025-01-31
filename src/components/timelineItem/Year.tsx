@@ -11,7 +11,7 @@ import {
 export default function Year(task: PlannerTask) {
   const {renderSettings} = useContext(TeamsFxContext);
 
-  let renderYear: boolean = true;
+  let renderYear: boolean = false;
   let dueDate: Date = new Date();
     
   if (task.dueDateTime) {

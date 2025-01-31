@@ -11,6 +11,8 @@ import moment from "moment";
 import { Info24Filled as InfoIcon } from "@fluentui/react-icons";
 import CalloutPane from './CalloutPane'; // Adjust the import path as necessary
 import { 
+  startDate as startDateStyle,
+  noDueDate,
   timelineRenderStyles,
   timelineItemStyle,
   timelineContentStyle,  
@@ -75,16 +77,13 @@ export default function TimelineDetails(task: PlannerTask) {
           <div className={timelineContentStyle}>
             <div className={gridClass.join(' ')} dir={aline === 'right' ? 'ltr' : 'rtl'}>
               <div className="ms-Grid-row">                
-                  <div className="ms-Grid-col">
-                    <span>{dueDate(task)}</span>
-                  </div>
-                  <div className="ms-Grid-col">
-                    { task.completedDateTime ? 
-                      <span>{completedDate(task)}</span> 
-                    : 
-                      <span>{startDate(task)}</span>                    
-                    }
-                  </div>
+                  <span className={task.dueDateTime ? startDateStyle : noDueDate}>{dueDate(task)}</span>
+                  { task.completedDateTime ? 
+                    <span>{completedDate(task)}</span> 
+                  : 
+                    <span>{startDate(task)}</span>                    
+                  }
+                </div>
               </div> 
               <div className="ms-Grid-row">                
                 <div className={timelineTitleBlockStyle}>
