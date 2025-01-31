@@ -77,13 +77,12 @@ export default function TimelineDetails(task: PlannerTask) {
           <div className={timelineContentStyle}>
             <div className={gridClass.join(' ')} dir={aline === 'right' ? 'ltr' : 'rtl'}>
               <div className="ms-Grid-row">                
-                  <span className={task.dueDateTime ? startDateStyle : noDueDate}>{dueDate(task)}</span>
-                  { task.completedDateTime ? 
-                    <span>{completedDate(task)}</span> 
-                  : 
-                    <span>{startDate(task)}</span>                    
-                  }
-                </div>
+                <span className={task.dueDateTime ? startDateStyle : noDueDate}>{dueDate(task)}</span>
+                { task.completedDateTime ? 
+                  <span>{completedDate(task)}</span> 
+                : 
+                  <span>{startDate(task)}</span>                    
+                }                
               </div> 
               <div className="ms-Grid-row">                
                 <div className={timelineTitleBlockStyle}>
