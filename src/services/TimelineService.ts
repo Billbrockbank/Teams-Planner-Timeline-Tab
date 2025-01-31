@@ -180,10 +180,29 @@ export class TimeLineService implements ITimeLineService {
 
   // Get Planner tasks
   public getTasks(sortBy: string): PlannerTask[] {
+    const tasksWithDate: PlannerTask[] = [];
+    const tasksNoDate: PlannerTask[] = [];
+
     if (sortBy.toLowerCase() === "duedate") {
-      return this._sortTasksByDueDate(this._tasks);
+      this._tasks.forEach((task) => {
+        if (task.dueDateTime) {
+          tasksWithDate.push(task);
+        } else {
+          tasksNoDate.push(task);
+        }
+      });
+
+      return tasksWithDate.length > 0 ? tasksNoDate.concat(this._sortTasksByDueDate(tasksWithDate)) : tasksNoDate;
     } else if (sortBy.toLowerCase() === "stratdate") {
-      return this._sortTasksByStartDate(this._tasks);
+      this._tasks.forEach((task) => {
+        if (task.startDateTime) {
+          tasksWithDate.push(task);
+        } else {
+          tasksNoDate.push(task);
+        }
+      });
+      
+      return tasksWithDate.length > 0 ? tasksNoDate.concat(this._sortTasksByStartDate(tasksWithDate)) : tasksNoDate;      
     } else {
       return this._tasks;
     }
