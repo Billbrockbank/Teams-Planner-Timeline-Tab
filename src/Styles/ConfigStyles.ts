@@ -1,17 +1,8 @@
 import {
-  getTheme,
-  DefaultPalette,
-  mergeStyles,
-  mergeStyleSets,
-  FontWeights,
-  ICheckboxStyles,
-  IDropdownStyles,
-  IStackStyles,
+  getTheme
 } from "@fluentui/react";
 
-import {
-  tabStyle,  
-  yearMonthStyle
-} from ".";
+export class ConfigStyles {
+  public static readonly palette = getTheme().palette;
+}
 
-const palette = getTheme().palette;
