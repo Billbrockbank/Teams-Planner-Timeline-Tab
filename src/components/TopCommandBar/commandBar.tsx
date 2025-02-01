@@ -21,14 +21,7 @@ import {
   useId,  
 } from '@fluentui/react-components';
 import { PlannerBucket } from '@microsoft/microsoft-graph-types'
-import {
-  stackStyles,
-  BucketLabelStyle,
-  barDivStyle,
-  activeTasksCheckboxStyle,
-  bucketDropdownStyle,
-  refreshButtonStyle,
-} from '../../Styles';
+import { CommandBarStyles } from '../../Styles';
 
 interface CommandBarProps {
   onBucketId: (params: { bucketId: string; bucketName: string }) => void;
@@ -132,19 +125,19 @@ export default function CommandBar({ onBucketId, onAllTask, onTaskRefresh }: Com
 
   return (
     <>
-      <Stack enableScopedSelectors horizontal horizontalAlign="start" styles={stackStyles}>
-        <div dir="ltr" className={barDivStyle}>
-          <div className={barDivStyle}>          
+      <Stack enableScopedSelectors horizontal horizontalAlign="start" styles={CommandBarStyles.stackStyles}>
+        <div dir="ltr" className={CommandBarStyles.barDivStyle}>
+          <div className={CommandBarStyles.barDivStyle}>          
             <Checkbox label="All Tasks" 
                 checked={showActiveTasks} 
-                className={activeTasksCheckboxStyle}
+                className={CommandBarStyles.activeTasksCheckboxStyle}
                 labelPosition="before"
                 disabled={retrievingTasks}
                 onChange={AllTasksClick} />          
-          <div className={barDivStyle}>
-            <label id={dropdownId} className={BucketLabelStyle} aria-label="Plan Bucket">Plan Bucket </label>            
+          <div className={CommandBarStyles.barDivStyle}>
+            <label id={dropdownId} className={CommandBarStyles.BucketLabelStyle} aria-label="Plan Bucket">Plan Bucket </label>            
             <Dropdown placeholder={DropDownPlaceHolder.replace("Bucket: ", "")} 
-                  className={bucketDropdownStyle}
+                  className={CommandBarStyles.bucketDropdownStyle}
                   aria-labelledby={dropdownId}
                   disabled={retrievingTasks}
                   selectedOptions={bucketId}                          
@@ -152,9 +145,9 @@ export default function CommandBar({ onBucketId, onAllTask, onTaskRefresh }: Com
               { dropDownOptions }              
             </Dropdown>
           </div>
-          <div className={barDivStyle}>
+          <div className={CommandBarStyles.barDivStyle}>
             <Tooltip content="Refresh Timeline Tasks" relationship="label">
-              <ToggleButton className={refreshButtonStyle}                  
+              <ToggleButton className={CommandBarStyles.refreshButtonStyle}                  
                             icon={<CalendarMonth />}  
                             appearance="transparent"                  
                             size="medium"
