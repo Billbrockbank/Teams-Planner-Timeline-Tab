@@ -1,12 +1,7 @@
 import { useContext } from "react";
 import { PlannerTask } from '@microsoft/microsoft-graph-types'
 import { TeamsFxContext } from "../Context";
-import {
-  timelineStyle,
-  timelineHeaderStyle,
-  timelineMonthStyle
-} from "../../Styles";
-
+import { MonthYearStyles } from "../../Styles";
 
 export default function Year(task: PlannerTask) {
   const {renderSettings} = useContext(TeamsFxContext);
@@ -31,9 +26,9 @@ export default function Year(task: PlannerTask) {
   return (
     <>
       {renderMonth && (
-        <div className={timelineStyle}>
-          <header className={timelineHeaderStyle}>
-            <span className={timelineMonthStyle}>{dueMonth}</span>            
+        <div className={MonthYearStyles.timelineStyle}>
+          <header className={MonthYearStyles.timelineHeaderStyle}>
+            <span className={MonthYearStyles.timelineMonthStyle}>{dueMonth}</span>            
           </header>
         </div>        
       )}

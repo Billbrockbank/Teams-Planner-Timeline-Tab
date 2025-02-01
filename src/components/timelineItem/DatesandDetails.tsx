@@ -11,15 +11,9 @@ import moment from "moment";
 import { Info24Filled as InfoIcon } from "@fluentui/react-icons";
 import CalloutPane from './CalloutPane'; // Adjust the import path as necessary
 import { 
-  startDate as startDateStyle,
-  noDueDate,
-  timelineRenderStyles,
-  timelineItemStyle,
-  timelineContentStyle,  
-  taskItemTitleStyle,  
-  calloutStyles,
-  infoIconStyle,
-  timelineTitleBlockStyle,
+  DatesAndDetailsStyles,
+  TimelineItemStyles,
+  CalloutStyles
 } from '../../Styles';
 import {PriorityIcon } from '.';
 import { useContext } from 'react';
@@ -68,16 +62,16 @@ export default function TimelineDetails(task: PlannerTask) {
     return ""
   }
 
-  const [timelineMarkerClass, gridClass] = timelineRenderStyles(themeString, task.percentComplete ?? 0, isOverDue(task));
+  const [timelineMarkerClass, gridClass] = DatesAndDetailsStyles.timelineRenderStyles(themeString, task.percentComplete ?? 0, isOverDue(task));
 
   return (
       <>
-        <div className={timelineItemStyle}>
+        <div className={TimelineItemStyles.timelineItemStyle}>
           <div className={timelineMarkerClass.join(' ')}></div>
-          <div className={timelineContentStyle}>
+          <div className={DatesAndDetailsStyles.timelineContentStyle}>
             <div className={gridClass.join(' ')} dir={aline === 'right' ? 'ltr' : 'rtl'}>
               <div className="ms-Grid-row">                
-                <span className={task.dueDateTime ? startDateStyle : noDueDate}>{dueDate(task)}</span>
+                <span className={task.dueDateTime ? DatesAndDetailsStyles.startDate : DatesAndDetailsStyles.noDueDate}>{dueDate(task)}</span>
                 { task.completedDateTime ? 
                   <span>{completedDate(task)}</span> 
                 : 
@@ -85,14 +79,14 @@ export default function TimelineDetails(task: PlannerTask) {
                 }                
               </div> 
               <div className="ms-Grid-row">                
-                <div className={timelineTitleBlockStyle}>
+                <div className={DatesAndDetailsStyles.timelineTitleBlockStyle}>
                   <div>
                     <InfoIcon
-                      className={infoIconStyle}
+                      className={DatesAndDetailsStyles.infoIconStyle}
                       id={buttonId}
                       onClick={toggleIsCalloutVisible}/>                    
                   </div>
-                  <div className={taskItemTitleStyle}>
+                  <div className={DatesAndDetailsStyles.taskItemTitleStyle}>
                     <PriorityIcon priority={task.priority ?? 0} forTimeline={true} />
                       {task.title}
                   </div>
@@ -105,7 +99,7 @@ export default function TimelineDetails(task: PlannerTask) {
               ariaLabelledBy={labelId}
               ariaDescribedBy={descriptionId}
               role="dialog"
-              className={calloutStyles.callout}
+              className={CalloutStyles.calloutStyles.callout}
               gapSpace={0}
               target={`#${buttonId}`}
               isBeakVisible={true}

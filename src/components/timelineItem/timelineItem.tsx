@@ -5,8 +5,8 @@ import {
   TimelineDetails
 } from '..';
 import { 
-  timelineItemStyle,
-  timelineContentStyle,  
+  TimelineItemStyles,
+  DatesAndDetailsStyles
 } from '../../Styles';
 
 export default function TimelineItem(task: PlannerTask) {  
@@ -14,8 +14,8 @@ export default function TimelineItem(task: PlannerTask) {
       <>
         <TimelineYear {...task} />
         <div>
-          <div className={timelineItemStyle}>
-            <div className={timelineContentStyle}></div>
+          <div className={TimelineItemStyles.timelineItemStyle}>
+            <div className={DatesAndDetailsStyles.timelineContentStyle}></div>
           </div>
           <TimelineMonth {...task} />
         </div>

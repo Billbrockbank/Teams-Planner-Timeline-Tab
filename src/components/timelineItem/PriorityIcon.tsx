@@ -5,14 +5,10 @@ import {
   // Circle16Filled as MediumIcon,
   } from "@fluentui/react-icons";
   import { Tooltip  } from '@fluentui/react-components';
-  import {
-  sectionTitleStyle,
-  priorityStatusStyle,
-  urgentIconStyle,
-  lowIconStyle,
-  importantIconStyle,
-  priorityTimelineStatusStyle,
-} from '../../Styles';
+  import { 
+    CalloutStyles,
+    DatesAndDetailsStyles
+  } from '../../Styles';
 
 export default function PriorityIcon(props: { priority: number, forTimeline: boolean } ) {
   
@@ -22,16 +18,16 @@ export default function PriorityIcon(props: { priority: number, forTimeline: boo
       {props.priority === 1 && (
         <div>
           { props.forTimeline ?
-            <div className={priorityTimelineStatusStyle}>
+            <div className={DatesAndDetailsStyles.priorityTimelineStatusStyle}>
               <Tooltip content="Urgent Priority" relationship="label">
-                <UrgentIcon className={urgentIconStyle}/>
+                <UrgentIcon className={CalloutStyles.urgentIconStyle}/>
               </Tooltip>        
             </div>
           :
             <>
-              <div className={sectionTitleStyle}>Priority: </div>
-              <div className={priorityStatusStyle}>              
-                <UrgentIcon className={urgentIconStyle}/>
+              <div className={CalloutStyles.sectionTitleStyle}>Priority: </div>
+              <div className={CalloutStyles.priorityStatusStyle}>              
+                <UrgentIcon className={CalloutStyles.urgentIconStyle}/>
                 Urgent
               </div>
             </>
@@ -40,16 +36,16 @@ export default function PriorityIcon(props: { priority: number, forTimeline: boo
       {props.priority === 3 && (
         <div>
           { props.forTimeline ?
-            <div className={priorityTimelineStatusStyle}>
+            <div className={DatesAndDetailsStyles.priorityTimelineStatusStyle}>
               <Tooltip content="Important Priority" relationship="label">
-                <ImportantIcon className={importantIconStyle}/>
+                <ImportantIcon className={CalloutStyles.importantIconStyle}/>
               </Tooltip>        
             </div>
           :
             <>
-              <div className={sectionTitleStyle}>Priority: </div>
-              <div className={priorityStatusStyle}>              
-                <ImportantIcon className={importantIconStyle}/>
+              <div className={CalloutStyles.sectionTitleStyle}>Priority: </div>
+              <div className={CalloutStyles.priorityStatusStyle}>              
+                <ImportantIcon className={CalloutStyles.importantIconStyle}/>
                 Important
               </div>
             </>
@@ -58,16 +54,16 @@ export default function PriorityIcon(props: { priority: number, forTimeline: boo
       {props.priority === 9 && (
         <div>
         { props.forTimeline ?
-          <div className={priorityTimelineStatusStyle}>
+          <div className={DatesAndDetailsStyles.priorityTimelineStatusStyle}>
             <Tooltip content="Low Priority" relationship="label">
-              <LowIcon className={lowIconStyle}/>
+              <LowIcon className={CalloutStyles.lowIconStyle}/>
             </Tooltip>        
           </div>
         :
           <>
-            <div className={sectionTitleStyle}>Priority: </div>
-            <div className={priorityStatusStyle}>              
-              <LowIcon className={lowIconStyle}/>
+            <div className={CalloutStyles.sectionTitleStyle}>Priority: </div>
+            <div className={CalloutStyles.priorityStatusStyle}>              
+              <LowIcon className={CalloutStyles.lowIconStyle}/>
               Low
             </div>
           </>

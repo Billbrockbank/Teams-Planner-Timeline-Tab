@@ -22,7 +22,7 @@ import {
   Option,
   useId,
 } from '@fluentui/react-components';
-import { activeTasksCheckboxStyle } from '../../Styles';
+import { CommandBarStyles } from '../../Styles';
 
 export default function Config() {
   const { themeString, configSettings, teamsUserCredential } = useContext(TeamsFxContext);
@@ -229,7 +229,7 @@ export default function Config() {
             <div>
               <Checkbox label={showActiveTasks ? "Show all Tasks" : "Filter out completed Tasks"}
                         checked={showActiveTasks} 
-                        className={activeTasksCheckboxStyle}
+                        className={CommandBarStyles.activeTasksCheckboxStyle}
                         labelPosition="before"
                         disabled={planId === ""}
                         onChange={AllTasksClick} />            

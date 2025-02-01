@@ -25,16 +25,9 @@ import {
   TimelineItem,
   CommandBar,
 } from '..';
-import {
-  pagePaddingStyle,
-  errorStyle,
-  listedTaskStyle,  
-  spinnerStyle,
-  timelineHeaderStyle,
-  timelineYearStyle,
-  spinnerDiv,
-  BucketNameStyle,
-  CommandBarBlockStyle,
+import { 
+  TimelineTabStyles,
+  MonthYearStyles
 } from '../../Styles';
 
 export default function Tab() {
@@ -246,25 +239,25 @@ export default function Tab() {
         <>
           <div>
             { retrievingTasks &&  
-              <div className={spinnerDiv}>
-                <Spinner className={spinnerStyle} labelPosition="below"  label="Retrieving Tasks..."/>
+              <div className={TimelineTabStyles.spinnerDiv}>
+                <Spinner className={TimelineTabStyles.spinnerStyle} labelPosition="below"  label="Retrieving Tasks..."/>
               </div>
             }
             { !retrievingTasks &&      
             <>
-              <div className={CommandBarBlockStyle(themeString)}>
+              <div className={TimelineTabStyles.CommandBarBlockStyle(themeString)}>
                 <CommandBar onAllTask={allTaskHandler} onBucketId={bucketHandler} onTaskRefresh={TaskRefreshHandler} />
               </div>          
-              <div className={pagePaddingStyle}>
+              <div className={TimelineTabStyles.pagePaddingStyle}>
                   { timeLineData.current?.error &&
-                    <pre className={errorStyle}>Error: {timeLineData.current?.error}</pre>
+                    <pre className={TimelineTabStyles.errorStyle}>Error: {timeLineData.current?.error}</pre>
                   }
                   <div>
-                    <div className={BucketNameStyle}>
+                    <div className={TimelineTabStyles.BucketNameStyle}>
                       {bucketName}
                     </div>
                     {/* Bucket Name */}
-                    <div className={listedTaskStyle}>
+                    <div className={TimelineTabStyles.listedTaskStyle}>
                       <span>{showActiveTasks ? "All Tasks" : "Active Tasks"}</span>                      
                     </div>
                     {/* Render the timeline */}
@@ -273,8 +266,8 @@ export default function Tab() {
                         <TimelineItem key={task.id} {...task}/>
                       </>
                     )}
-                    <header className={timelineHeaderStyle}>
-                      <span className={timelineYearStyle}>
+                    <header className={MonthYearStyles.timelineHeaderStyle}>
+                      <span className={MonthYearStyles.timelineYearStyle}>
                         { tasks.length > 0 ? "End" : tasks.length === 0 && "No Tasks" }
                       </span>
                     </header>                

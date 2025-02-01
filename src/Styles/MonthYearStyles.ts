@@ -3,41 +3,39 @@ import {
   mergeStyles,
 } from "@fluentui/react";
 
-import { 
-  tabStyle,
-  isMediumStyle,
-  yearMonthStyle
-} from ".";
+import { SharedStyles } from ".";
 
-const palette = getTheme().palette;
+export class MonthYearStyles {
+  public static palette = getTheme().palette;
 
-export const timelineStyle = mergeStyles({
-  display: "flex",
-  WebkitBoxOrient: "vertical",
-  WebkitBoxDirection: "normal",
-  msFlexDirection: "column",
-  flexDirection: "column"
-});
+  public static timelineStyle = mergeStyles({
+    display: "flex",
+    WebkitBoxOrient: "vertical",
+    WebkitBoxDirection: "normal",
+    msFlexDirection: "column",
+    flexDirection: "column"
+  });
 
-export const timelineHeaderStyle = mergeStyles({
-  width: "4em",
-  minWidth: "4em",
-  maxWidth: "8em",
-  wordWrap: "normal",
-  textAlign: "center",
-  display: "flex",
-  WebkitBoxPack: "center",
-  justifyContent: "center",  
-});
+  public static timelineHeaderStyle = mergeStyles({
+    width: "4em",
+    minWidth: "4em",
+    maxWidth: "8em",
+    wordWrap: "normal",
+    textAlign: "center",
+    display: "flex",
+    WebkitBoxPack: "center",
+    justifyContent: "center",  
+  });
   
-export const timelineYearStyle = mergeStyles(
-  tabStyle, 
-  isMediumStyle, 
-  yearMonthStyle
-);
+  public static timelineYearStyle = mergeStyles(
+    SharedStyles.tabStyle, 
+    SharedStyles.isMediumStyle, 
+    SharedStyles.yearMonthStyle
+  );
 
-export const timelineMonthStyle = mergeStyles(
-  tabStyle, 
-  yearMonthStyle
-);
+  public static timelineMonthStyle = mergeStyles(
+    SharedStyles.tabStyle, 
+    SharedStyles.yearMonthStyle
+  );
+}
 

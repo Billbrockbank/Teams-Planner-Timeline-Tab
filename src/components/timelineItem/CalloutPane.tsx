@@ -14,24 +14,7 @@ import {
   useEffect
 } from "react";
 import { TeamsFxContext } from "../Context";
-import {
-  labelItemColorStyle,
-  calloutTitleStyles,
-  labelsBlockStyle,
-  labelItemStyle,
-  bucketLabelStyle,
-  sectionTitleStyle,
-  priorityStatusStyle,
-  sectionHeadingStyle,
-  calloutNotesStyle,
-  checklistHeadingStyle,
-  checklistListStyle,
-  checklistItemStyle,
-  completeLabelStyle,
-  competedItemStyle,
-  CompletedIconStyle,
-  CheckListLineItemStyle,
-} from '../../Styles';
+import { CalloutStyles } from '../../Styles';
 import PriorityIcon from './PriorityIcon';
 import { 
   ICategoryData
@@ -114,15 +97,15 @@ export default function CalloutPane( task: PlannerTask ) {
 
   return (
       <>
-        <div dir="ltr" id={labelId} className={calloutTitleStyles}>
+        <div dir="ltr" id={labelId} className={CalloutStyles.calloutTitleStyles}>
           <strong>{task.title}</strong>
         </div>
         { labels.length > 0 &&
           <div dir="ltr">
-            <div className={labelsBlockStyle}>
+            <div className={CalloutStyles.labelsBlockStyle}>
               {labels.map((label, index) => (
-                <div key={index} className={labelItemStyle}>
-                  <div className={labelItemColorStyle(label)}>
+                <div key={index} className={CalloutStyles.labelItemStyle}>
+                  <div className={CalloutStyles.labelItemColorStyle(label)}>
                     {label.text}
                   </div>
                 </div>
@@ -130,31 +113,31 @@ export default function CalloutPane( task: PlannerTask ) {
             </div>
           </div>
         }        
-        <div className={bucketLabelStyle}>
+        <div className={CalloutStyles.bucketLabelStyle}>
           Bucket: {bucketName}
         </div>          
         { task.completedBy?.user?.displayName &&
           <div>
-            <div className={sectionTitleStyle}>
+            <div className={CalloutStyles.sectionTitleStyle}>
               Created by: 
             </div>
-            <div className={priorityStatusStyle}>
+            <div className={CalloutStyles.priorityStatusStyle}>
               {task.completedBy?.user.displayName}
             </div>            
           </div>
         }
         <PriorityIcon priority={task.priority ?? 0} forTimeline={false} />
         <div>
-          <div className={sectionTitleStyle}>
+          <div className={CalloutStyles.sectionTitleStyle}>
             Progress: 
           </div>
-          <div className={priorityStatusStyle}>
+          <div className={CalloutStyles.priorityStatusStyle}>
             {task.percentComplete === 100 ? "Completed" : task.percentComplete === 50 ? "In Progress" : "Not Started"}
           </div>          
         </div>
         { task.dueDateTime && (
           <div>
-            <div className={sectionTitleStyle}>
+            <div className={CalloutStyles.sectionTitleStyle}>
               Due:
             </div>
             <div>
@@ -164,7 +147,7 @@ export default function CalloutPane( task: PlannerTask ) {
         )}
         { aUsers.replace('- ', '') !== "" && (
           <div>
-            <div className={sectionHeadingStyle}>
+            <div className={CalloutStyles.sectionHeadingStyle}>
               Assigned to:
             </div>
             <div>
@@ -174,17 +157,17 @@ export default function CalloutPane( task: PlannerTask ) {
         )}
         { taskDetails?.description &&
           <>
-            <div className={sectionHeadingStyle}>
+            <div className={CalloutStyles.sectionHeadingStyle}>
               Notes:
             </div>
-            <div className={calloutNotesStyle}>
+            <div className={CalloutStyles.calloutNotesStyle}>
                 {taskDetails?.description}
             </div>                
           </>
         }                
         { task.percentComplete === 100 &&
           <>
-            <div className={sectionHeadingStyle}>
+            <div className={CalloutStyles.sectionHeadingStyle}>
               Completed:
             </div>
             <div>
@@ -194,18 +177,18 @@ export default function CalloutPane( task: PlannerTask ) {
         }
         { checklist && checklist.length > 0 &&
           <>
-            <div className={checklistHeadingStyle}>
+            <div className={CalloutStyles.checklistHeadingStyle}>
               Checklist:
             </div>
-            <ul className={checklistListStyle}>
+            <ul className={CalloutStyles.checklistListStyle}>
               {checklist.map((item: PlannerChecklistItem) => (
                 <li key={item.orderHint}>
-                  <div className={CheckListLineItemStyle} >
+                  <div className={CalloutStyles.CheckListLineItemStyle} >
                     {item.isChecked && 
-                      <div className={completeLabelStyle} >
-                        <CompletedIcon className={CompletedIconStyle}/>
+                      <div className={CalloutStyles.completeLabelStyle} >
+                        <CompletedIcon className={CalloutStyles.CompletedIconStyle}/>
                       </div>}
-                    <div className={item.isChecked ? competedItemStyle : checklistItemStyle}>
+                    <div className={item.isChecked ? CalloutStyles.competedItemStyle : CalloutStyles.checklistItemStyle}>
                       {item.title}
                     </div>
                   </div>
