@@ -16,8 +16,8 @@ import { useGraphWithCredential } from "@microsoft/teamsfx-react";
 import { PlannerBucket, PlannerPlan } from '@microsoft/microsoft-graph-types'
 import { Scopes as scopes } from '../../models';
 import {
-  Tooltip,
-  Checkbox,
+  Tooltip,  
+  Switch,
   Dropdown,
   Option,
   useId,
@@ -226,13 +226,14 @@ export default function Config() {
             <div className="config-header">              
               <h3>Filter</h3>
             </div>
-            <div>
-              <Checkbox label={showActiveTasks ? "Show all Tasks" : "Filter out completed Tasks"}
-                        checked={showActiveTasks} 
-                        className={CommandBarStyles.activeTasksCheckboxStyle}
-                        labelPosition="before"
-                        disabled={planId === ""}
-                        onChange={AllTasksClick} />            
+            <div>              
+              <Switch 
+                label={showActiveTasks ? "All Tasks" : "Active Tasks Only"}
+                checked={showActiveTasks} 
+                className={CommandBarStyles.activeTasksCheckboxStyle}
+                labelPosition="after"
+                disabled={planId === ""}
+                onChange={AllTasksClick} />            
             </div>
           </div>        
         </div>      

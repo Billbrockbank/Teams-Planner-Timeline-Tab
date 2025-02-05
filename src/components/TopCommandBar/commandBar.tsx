@@ -3,7 +3,7 @@ import {
   useState,
   useEffect,
   useMemo,
-  useCallback
+  useCallback,
 } from "react";
 import { TeamsFxContext } from "../Context";
 import { Stack } from '@fluentui/react';
@@ -12,10 +12,10 @@ import {
   CalendarMonthRegular, 
   CalendarMonthFilled  
 } from "@fluentui/react-icons";
-import {
-  ToggleButton, 
+import { ArrowSyncCircleRegular as Refresh } from '@fluentui/react-icons';
+import {  
   Tooltip,
-  Checkbox,
+  Switch,
   Dropdown,
   Option,
   useId,  
@@ -33,6 +33,7 @@ export default function CommandBar({ onBucketId, onAllTask, onTaskRefresh }: Com
   const { renderSettings, filterSettings, configSettings, filterService } = useContext(TeamsFxContext);
 
   const dropdownId = useId('dropdown');
+  const refreshId = useId('refreshButton');
   const [showActiveTasks, setShowActiveTasks] = useState(true)
   const [bucketName, setBucketName] = useState<string>("In all buckets");  
   const [retrievingTasks, setRetrievingTasks] = useState<boolean>(false);  
@@ -128,14 +129,15 @@ export default function CommandBar({ onBucketId, onAllTask, onTaskRefresh }: Com
       <Stack enableScopedSelectors horizontal horizontalAlign="start" styles={CommandBarStyles.stackStyles}>
         <div dir="ltr" className={CommandBarStyles.barDivStyle}>
           <div className={CommandBarStyles.barDivStyle}>          
-            <Checkbox label="All Tasks" 
-                checked={showActiveTasks} 
+            <Switch 
+                label={showActiveTasks ? "All" : "Active"}
+                checked={showActiveTasks}                
                 className={CommandBarStyles.activeTasksCheckboxStyle}
-                labelPosition="before"
+                labelPosition="after"
                 disabled={retrievingTasks}
                 onChange={AllTasksClick} />          
           <div className={CommandBarStyles.barDivStyle}>
-            <label id={dropdownId} className={CommandBarStyles.BucketLabelStyle} aria-label="Plan Bucket">Plan Bucket </label>            
+            <label id={dropdownId} className={CommandBarStyles.BucketLabelStyle} aria-label="Bucket">Bucket</label>            
             <Dropdown placeholder={DropDownPlaceHolder.replace("Bucket: ", "")} 
                   className={CommandBarStyles.bucketDropdownStyle}
                   aria-labelledby={dropdownId}
@@ -146,15 +148,8 @@ export default function CommandBar({ onBucketId, onAllTask, onTaskRefresh }: Com
             </Dropdown>
           </div>
           <div className={CommandBarStyles.barDivStyle}>
-            <Tooltip content="Refresh Timeline Tasks" relationship="label">
-              <ToggleButton className={CommandBarStyles.refreshButtonStyle}                  
-                            icon={<CalendarMonth />}  
-                            appearance="transparent"                  
-                            size="medium"
-                            disabled={retrievingTasks}
-                            onClick={TaskRefreshClick}>
-                Refresh
-              </ToggleButton>
+            <Tooltip content="Refresh Timeline Tasks" relationship="label">              
+              <Refresh className={CommandBarStyles.refreshButtonStyle} onClick={TaskRefreshClick} id={refreshId} />              
             </Tooltip>
           </div>        
         </div>
